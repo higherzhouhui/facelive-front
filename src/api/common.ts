@@ -8,36 +8,11 @@ export const loginReq = (data: any) => {
   });
 };
 
-export const h5PcLoginReq = (data: any) => {
-  return service<any>({
-    url: '/user/h5PcLogin',
-    method: 'POST',
-    data,
-  });
-};
-
-
 export const updateUserReq = (data: any) => {
   return service<any>({
     url: '/user/update',
     method: 'POST',
     data,
-  });
-};
-
-export const getUserListReq = (params: any) => {
-  return service<any>({
-    url: '/user/list',
-    method: 'GET',
-    params,
-  });
-};
-
-export const getSubUserListReq = (params: any) => {
-  return service<any>({
-    url: '/user/subList',
-    method: 'GET',
-    params,
   });
 };
 export const getMyScoreHistoryReq = (params: any) => {
@@ -47,15 +22,27 @@ export const getMyScoreHistoryReq = (params: any) => {
     params,
   });
 };
-
-
-export const getSubUserTotalReq = () => {
+export const getUserListReq = (params: any) => {
   return service<any>({
-    url: '/user/subTotal',
+    url: '/user/list',
     method: 'GET',
+    params,
   });
 };
-
+export const getUserGameListReq = (params: any) => {
+  return service<any>({
+    url: '/user/gamelist',
+    method: 'GET',
+    params,
+  });
+};
+export const getSubUserListReq = (params: any) => {
+  return service<any>({
+    url: '/user/subList',
+    method: 'GET',
+    params,
+  });
+};
 
 export const getUserInfoReq = () => {
   return service<any>({
@@ -80,7 +67,6 @@ export const bindWalletReq = (data: any) => {
   });
 };
 
-
 export const getCheckInRewardListReq = () => {
   return service<any>({
     url: '/checkInReward/list',
@@ -88,56 +74,82 @@ export const getCheckInRewardListReq = () => {
   });
 };
 
-export const startFarmingReq = () => {
-  return service<any>({
-    url: '/user/startFarming',
-    method: 'GET',
-  });
-};
-
-export const getRewardFarmingReq = () => {
-  return service<any>({
-    url: '/user/getRewardFarming',
-    method: 'GET',
-  });
-};
-
-export const getMagicPrizeReq = () => {
-  return service<any>({
-    url: '/user/getMagicPrize',
-    method: 'GET',
-  });
-};
-
-
-export const getSystemConfigReq = () => {
+export const getSystemReq = () => {
   return service<any>({
     url: '/system/getConfig',
-    method: 'GET'
-  })
-}
+    method: 'GET',
+  });
+};
 
-export const getBtcPriceReq = (dev: boolean, symbol: string) => {
-  const url = dev ? 'https://api.binance.com/api/v3/ticker/price' : '/binance'
+
+export const getPriceReq = (dev: boolean, type: string) => {
+  const url = dev ? 'https://www.binance.com/api/v3/ticker' : '/binancePrice';
   return service<any>({
     url: url,
-    params: { symbol: symbol },
-    method: 'GET'
-  })
-}
-
-export const getSubTotalAndListReq = (params: any) => {
-  return service<any>({
-    url: '/user/subtotallist',
     method: 'GET',
-    params
-  })
+    params: {
+      symbol: type
+    }
+  });
 }
 
-
-export const getCertifiedsReq = () => {
+export const getLevelListReq = () => {
   return service<any>({
-    url: '/user/getcertifieds',
+    url: '/system/getLevelList',
     method: 'GET',
-  })
-}
+  });
+};
+
+export const getPieceListReq = () => {
+  return service<any>({
+    url: '/system/pieceList',
+    method: 'GET',
+  });
+};
+
+
+export const userBuySkinOrPieceReq = (data: any) => {
+  return service<any>({
+    url: '/bag/buy',
+    method: 'POST',
+    data,
+  });
+};
+
+export const useCoinBuyPieceReq = (data: any) => {
+  return service<any>({
+    url: '/bag/buyPiece',
+    method: 'POST',
+    data,
+  });
+};
+
+export const getBagListReq = () => {
+  return service<any>({
+    url: '/bag/list',
+    method: 'GET',
+  });
+};
+
+export const userUpgradeReq = (data: any) => {
+  return service<any>({
+    url: '/user/upgrade',
+    method: 'POST',
+    data,
+  });
+};
+
+export const getSubUserTotalReq = () => {
+  return service<any>({
+    url: '/user/subTotal',
+    method: 'GET',
+  });
+};
+
+export const getTonPriceReq = (address: string) => {
+  return service<any>({
+    url: `/ton/v2/getWalletInformation?address=${address}`,
+    method: 'GET',
+    params: {api_key: '43c9443c5b88cad8ca1a35237a5caef73708f7a8e890d60ff58b57ba35dbba68'}
+  });
+};

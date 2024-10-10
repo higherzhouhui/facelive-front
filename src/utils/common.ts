@@ -2,12 +2,11 @@ import { Toast } from "antd-mobile";
 import moment from "moment";
 
 export function stringToColor(string: string) {
-  if (!string) {
-    return '#fff'
-  }
   let hash = 0;
   let i;
-
+  if (!string) {
+    return ''
+  }
   /* eslint-disable no-bitwise */
   for (i = 0; i < string.length; i += 1) {
     hash = string.charCodeAt(i) + ((hash << 5) - hash);
@@ -24,7 +23,7 @@ export function stringToColor(string: string) {
   return color;
 }
 
-export function formatNumber(num: any, hz?: number) {
+export function formatNumber(num: any) {
   if (isNaN(num)) {
     return num
   }
@@ -32,29 +31,16 @@ export function formatNumber(num: any, hz?: number) {
   if (num < 1000) {
     return num;
   }
-  let fixed = 2
-  if (hz != undefined) {
-    fixed = hz
-  }
+
   // 超过千  
   if (num < 1000000) {
-    return (num / 1000).toFixed(fixed) + 'K';
+    return (num / 1000).toFixed(2) + 'K';
   } else if (num < 1000000000) {
-    return (num / 1000000).toFixed(fixed) + 'M';
+    return (num / 1000000).toFixed(2) + 'M';
   } else {
-    return (num / 1000000000).toFixed(fixed) + 'B';
+    return (num / 1000000000).toFixed(2) + 'B';
   }
 }
-export function secondsToTimeFormat(seconds: number) {
-  let minutes: any = Math.floor(seconds / 60);
-  let secs: any = seconds % 60;
-
-  minutes = minutes < 10 ? '0' + minutes : minutes;
-  secs = secs < 10 ? '0' + secs : secs;
-
-  return minutes + ':' + secs;
-}
-
 
 
 export function judgeIsCheckIn(time: any) {
@@ -78,42 +64,6 @@ export function judgeIsCheckIn(time: any) {
   return flag
 }
 
-export function judgeIsStartFarming(end_farm_time: any, last_farming_time: any) {
-  let canFarming = true
-  let score: any = 0
-  let percent = 0
-  let leftTime = 180
-  const total = 1080
-  if (end_farm_time && last_farming_time) {
-    const now = new Date().getTime()
-    const end = new Date(end_farm_time).getTime()
-    const last = new Date(last_farming_time).getTime()
-    const start = end - 3 * 60 * 60 * 1000
-    // 如果采摘时间大于结束时间，说明已经完全收完，可以开始下一次
-    if (now < end) {
-      canFarming = false
-      score = Math.abs(Math.round((now - start) / 1000) * 0.1)
-      score = score.toFixed(1)
-      percent = Math.ceil(score / total * 100)
-      leftTime = Math.ceil(180 * (100 - percent) / 100) || 1
-    } else {
-      if (last < end) {
-        canFarming = false
-        score = total
-        percent = 100
-        leftTime = 0
-      }
-    }
-  }
-
-  return {
-    canFarming,
-    score,
-    percent,
-    leftTime
-  }
-}
-
 
 export function formatWalletAddress(address: any) {
   let str = address
@@ -128,8 +78,7 @@ export function formatWalletAddress(address: any) {
   return str
 }
 
-
-export function handleCopyLink(link: string, toast?: string) {
+export function handleCopyLink(link: string, str?: string) {
   const textToCopy = link; // 替换为你想要复制的内容  
   const textArea = document.createElement("textarea");
   textArea.value = textToCopy;
@@ -137,8 +86,31 @@ export function handleCopyLink(link: string, toast?: string) {
   textArea.select();
   document.execCommand("copy");
   document.body.removeChild(textArea);
-  Toast.show({ content: toast || 'The link has been copied to the clipboard.', position: 'top', duration: 3000 })
+  Toast.show({ content: str || 'The link has been copied to the clipboard.', position: 'top', duration: 3000 })
+
 }
+
+export function formatNumTen(money: number, length = 2) {
+  let curZero = 1
+  if (money) {
+    if (length) {
+      for (let i = 0; i < length; i++) {
+        curZero *= 10
+      }
+    }
+    return Math.round(money * curZero) / curZero
+  } else {
+    return 0
+  }
+}
+
+export function scaleDownByNumber(number: number, wei = 9) {
+  for (let i = 0; i < wei; i++) {
+    number = number / 10
+  }
+  return formatNumTen(number, 3)
+}
+
 
 type ThrottleHandler = (args: any[]) => void;
 
@@ -146,8 +118,8 @@ export function throttle(handler: ThrottleHandler, limit: number) {
   let inThrottle: boolean = false;
   let lastArgs: any[] = [];
 
-  return function (...args: any[]) {
-    const context = this;
+  return function (this: any, ...args: any) {
+    const context = this
 
     if (!inThrottle) {
       handler.apply(context, args);
@@ -159,16 +131,4 @@ export function throttle(handler: ThrottleHandler, limit: number) {
       lastArgs = args;
     }
   };
-}
-
-
-export const accordingEthToBtc = (result: any) => {
-  let btc = 0
-  try {
-    const { ethbtc, ethusd } = result
-    btc = Math.round(ethusd / ethbtc * 100) / 100
-  } catch (error) {
-    console.error(error)
-  }
-  return btc
 }

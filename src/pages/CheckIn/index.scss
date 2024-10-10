@@ -1,8 +1,7 @@
 .checkIn-container {
-  height: 100vh;
+  height: 100%;
   overflow: hidden;
   z-index: 999;
-  background: var(--bgColor);
   width: 100%;
   .checkIn-first {
     display: flex;
@@ -41,7 +40,7 @@
       font-size: 1.8rem;
     }
     .rewards-container {
-      background: #515151;
+      background: rgba($color: #000000, $alpha: 0.2);
       display: flex;
       align-items: center;
       border-radius: 10px;
@@ -90,7 +89,7 @@
     .rewards-one {
       flex: 1;
       text-align: center;
-      background: #313131;
+      background: rgba($color: #000000, $alpha: 0.2);
       border-radius: 12px;
       padding: 15px 0;
       img {
@@ -120,7 +119,7 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 2px;
     .rewards-item {
-      background: #2E2E2E;
+      background: rgba($color: #000000, $alpha: 0.3);
       display: flex;
       justify-content: space-between;
       padding: 0.7rem 0.8rem;

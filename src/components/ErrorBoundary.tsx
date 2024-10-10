@@ -16,6 +16,7 @@ interface ErrorBoundaryState {
 
 export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   state: ErrorBoundaryState = {};
+
   // eslint-disable-next-line max-len
   static getDerivedStateFromError: GetDerivedStateFromError<ErrorBoundaryProps, ErrorBoundaryState> = (error) => ({ error });
 
@@ -33,6 +34,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
         children,
       },
     } = this;
+
     return 'error' in this.state
       ? typeof Fallback === 'function'
         ? <Fallback error={error} />

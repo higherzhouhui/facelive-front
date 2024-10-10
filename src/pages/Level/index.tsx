@@ -1,81 +1,126 @@
+import Header from '@/components/Header'
 import './index.scss'
-import { Space, Swiper, SwiperRef } from 'antd-mobile'
+import { SwiperRef, Swiper, Toast } from 'antd-mobile'
 import { useEffect, useRef, useState } from 'react'
-import { levelListReq } from '@/api/game'
-import { useSelector } from 'react-redux'
+import { getBagListReq, userUpgradeReq } from '@/api/common'
+import { useDispatch, useSelector } from 'react-redux'
+import { setUserInfoAction } from '@/redux/slices/userSlice'
 import EventBus from '@/utils/eventBus'
 
-function LevelPage() {
-  const ref = useRef<SwiperRef>(null)
-  const [levelList, setLevelList] = useState([])
-  const userInfo = useSelector((state: any) => state.user.info);
+export default function () {
+  const userInfo = useSelector((state: any) => state.user.info)
+  const systemInfo = useSelector((state: any) => state.user.system)
   const eventBus = EventBus.getInstance()
-  const [percent, setPercent] = useState(0)
-  const [level, setLevel] = useState(1)
-  useEffect(() => {
+
+  const [myLevelInfo, setMyLevelInfo] = useState<any>({})
+  const ref = useRef<SwiperRef>(null)
+  const [skinList, setSkinList] = useState([])
+  const [progress, setProgress] = useState(0)
+  const [upPiece, setUpPiece] = useState(0)
+  const dispatch = useDispatch()
+  const initData = async () => {
     eventBus.emit('loading', true)
-    levelListReq().then(res => {
-      eventBus.emit('loading', false)
-      if (res.code == 0) {
-        setLevelList(res.data)
-        for (let i = 0; i < res.data.length; i++ ) {
-          if (res.data[i].score > userInfo?.score) {
-            setLevel(res.data[i].level)
-            let last_score = 0
-            if (i != 0) {
-              last_score = res.data[i - 1].score
-            }
-            const _p = (userInfo.score - last_score) / (res.data[i].score - last_score) * 100
-            setPercent(_p)
-            break;
-          }
-        }
-      }
-    })
+    const res = await getBagListReq()
+    eventBus.emit('loading', false)
+    if (res.code == 0) {
+      setSkinList(res.data)
+    }
+  }
+  const handleUpgrade = async () => {
+    eventBus.emit('loading', true)
+    const res = await userUpgradeReq({piece: upPiece})
+    eventBus.emit('loading', false)
+    if (res.code == 0) {
+      Toast.show({
+        content: res.msg
+      })
+      dispatch(setUserInfoAction(res.data))
+    }
+  }
+  useEffect(() => {
+    initData()
   }, [])
 
-  const items = levelList.map((item, index) => (
+  useEffect(() => {
+    try {
+      const _info = systemInfo?.level[userInfo?.current_level]
+      setMyLevelInfo(_info)
+      const levelDis = systemInfo?.level[userInfo?.current_level + 1].exp - _info.exp
+      const extraExp = userInfo?.exp - _info.exp
+      const _progress = (extraExp / levelDis) * 100
+      setUpPiece(systemInfo?.level[userInfo?.current_level + 1].exp - userInfo?.exp)
+      setProgress(_progress)
+    } catch (error) {
+      console.error(error)
+    }
+  }, [userInfo])
+  const items = skinList.map((item: any, index) => (
     <Swiper.Item key={index}>
-      <div
-        className='list-item'
-      >
+      <div className='swiper-item'>
         <div className='img-wrapper'>
-          <img src='/assets/wallet/lv.png' alt='lv' />
-          <div className='lv-num'>{item.level}</div>
+          <img src={`/assets/shop/${item.skin.skin}.png`} className='skin-img' />
+          <div className='level'>LV.{userInfo.current_level}</div>
         </div>
-        {
-          level == item.level ? <div className='current'>Current driver level</div> : null
-        }
-        <div className='label'>{item.name}</div>
-        <div className='normal-score'>
-          {
-            index == levelList.length - 1 ? <span>{Number(item.score).toLocaleString()} &nbsp;points or more</span>
-              : item.level == 1 ? <span>{Number(levelList[0].score).toLocaleString()} &nbsp;points or less</span>
-              : <span><span>{Number(item.score).toLocaleString()} ~ </span>{Number(levelList[index + 1].score).toLocaleString()} &nbsp;PTS</span>
-          }
+
+        <div className='column'>
+          <div className='label'>Speed:</div>
+          <div className='value'>{item.skin.speed * 100}%</div>
         </div>
-        {
-          level == item.level ? <div className='progress'>
-          <div className='percent' style={{width: `${percent}%`}}/>
-        </div> : null
-        }
-        <svg onClick={() => {
-            ref.current?.swipePrev()
-          }} viewBox="0 0 1024 1024" className='icon left' version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4487" width="32" height="32"><path d="M512 64C264.8 64 64 264.8 64 512s200.8 448 448 448 448-200.8 448-448S759.2 64 512 64z m158.4 674.4L625.6 784l-272-272 272-272 45.6 45.6L444 512l226.4 226.4z" p-id="4488" fill="#cdcdcd"></path></svg>
-          <svg onClick={() => {
-            ref.current?.swipeNext()
-          }} viewBox="0 0 1024 1024" className='icon right' version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2275" width="32" height="32"><path d="M512 64C264.8 64 64 264.8 64 512s200.8 448 448 448 448-200.8 448-448S759.2 64 512 64zM398.4 784l-45.6-45.6L580 512 353.6 285.6l45.6-45.6 272 272-272.8 272z" p-id="2276" fill="#cdcdcd"></path></svg>
+        <div className='column'>
+          <div className='label'>Life:</div>
+          <div className='value'>{item.skin.life}</div>
+        </div>
+        <div className='column'>
+          <div className='label'>Strike:</div>
+          <div className='value'>{item.skin.strike * 100}%</div>
+        </div>
+        <div className='column'>
+          <div className='label'>Attack:</div>
+          <div className='value'>{myLevelInfo?.attack}</div>
+        </div>
+        <div className='column'>
+          <div className='label'>Efficiency:</div>
+          <div className='value'>{myLevelInfo?.efficiency * 100}%</div>
+        </div>
       </div>
     </Swiper.Item>
   ))
-  return (
-    <div className='level-page'>
-      <Space direction='vertical' block>
-        <Swiper allowTouchMove={false} ref={ref} loop>
+
+
+  return <div className='level-page fadeIn'>
+    <Header title='Level' />
+    <div className='level-wrapper'>
+      <div className='level-content'>
+        <Swiper allowTouchMove={false} ref={ref} loop indicator={false}>
           {items}
         </Swiper>
-      </Space>
+        {
+          userInfo?.current_level == 0 ? <div className='level-desc'>{systemInfo?.level[userInfo?.current_level + 1].exp} pieces or less</div> :
+          <div className='level-desc'>{`${myLevelInfo.exp} ~ ${systemInfo?.level[userInfo?.current_level + 1].exp}`} pieces</div>
+        }
+        <div className='level-progress'>
+          <div className='progress'><div className='p-bar' style={{ width: progress + '%' }} /></div>
+        </div>
+        <div className='total'>total: {userInfo?.piece} <img src="/assets/shop/piece.png" alt="piece" /></div>
+        <div className='up-btn' onClick={() => handleUpgrade()}>
+          <span>Upgrade {upPiece}</span>
+          <img src="/assets/shop/piece.png" alt="piece" />
+        </div>
+        {/* <Button
+          onClick={() => {
+            ref.current?.swipePrev()
+          }}
+        >
+          上一张
+        </Button>
+        <Button
+          onClick={() => {
+            ref.current?.swipeNext()
+          }}
+        >
+          下一张
+        </Button> */}
+      </div>
     </div>
-  )
+  </div>
 }
-export default LevelPage;

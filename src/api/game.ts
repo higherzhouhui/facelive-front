@@ -7,6 +7,13 @@ export const beginGameReq = () => {
   });
 };
 
+export const getGameInfoReq = () => {
+  return service<any>({
+    url: '/game/info',
+    method: 'GET',
+  });
+};
+
 export const endGameReq = (data: any) => {
   return service<any>({
     url: '/game/end',
@@ -16,26 +23,9 @@ export const endGameReq = (data: any) => {
 };
 
 
-export const recordGameReq = (params: any) => {
+export const getGameListReq = () => {
   return service<any>({
-    url: '/game/record',
-    method: 'GET',
-    params
-  });
-};
-
-
-export const addgasGameReq = () => {
-  return service<any>({
-    url: '/game/addgas',
-    method: 'GET',
-  });
-};
-
-
-export const levelListReq = () => {
-  return service<any>({
-    url: '/levellist/list',
+    url: '/system/getGameList',
     method: 'GET',
   });
 };

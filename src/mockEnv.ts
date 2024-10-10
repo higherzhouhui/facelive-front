@@ -3,7 +3,7 @@ import { mockTelegramEnv, parseInitData, retrieveLaunchParams } from '@telegram-
 // It is important, to mock the environment only for development purposes. When building the
 // application, import.meta.env.DEV will become false, and the code inside will be tree-shaken,
 // so you will not see it in your final bundle.
-if (import.meta.env.DEV || import.meta.env.PROD) {
+if (import.meta.env.DEV) {
   let shouldMock: boolean;
 
   // Try to extract launch parameters to check if the current environment is Telegram-based.
@@ -22,17 +22,17 @@ if (import.meta.env.DEV || import.meta.env.PROD) {
   if (shouldMock) {
     const initDataRaw = new URLSearchParams([
       ['user', JSON.stringify({
-        id: 77777777,
+        id: 188455,
         first_name: 'Andrew',
         last_name: 'isMockUser_258218',
-        username: 'mockuser',
+        username: 'efafae',
         language_code: 'en',
         is_premium: true,
         allows_write_to_pm: true,
       })],
       ['hash', '89d6079ad6762351f38c6dbbc41bb53048019256a9443988af7a48bcad16ba31'],
       ['auth_date', `${Math.round(new Date().getTime() / 1000)}`],
-      ['start_param', `${btoa('645848634')}`],
+      ['start_param', `${btoa('987817')}`],
       ['chat_type', 'sender'],
       ['chat_instance', '8428209589180549439'],
     ]).toString();

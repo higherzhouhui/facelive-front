@@ -8,7 +8,7 @@ import moment from 'moment'
 import BackTop from '@/components/BackTop'
 import { useSelector } from 'react-redux'
 
-function FrensDetailPage() {
+function FriendPage() {
   const userInfo = useSelector((state: any) => state.user.info);
   const [list, setList] = useState<any>([])
   const [hasMore, setHasMore] = useState(true)
@@ -32,7 +32,7 @@ function FrensDetailPage() {
       type = 'Register'
     }
     if (type == 'checkIn_parent') {
-      type = 'Checking In'
+      type = 'checkIn'
     }
     if (type == 'play_game_reward_parent') {
       type = 'Drop Game'
@@ -40,7 +40,7 @@ function FrensDetailPage() {
     if (type == 'play_game_reward_parent' || type == 'play_game_reward') {
       type = 'Drop Game'
     }
-    if (type == 'harvest_farming') {
+    if (type == 'harvest_farming' || type == 'harvest_farming_parent') {
       type = 'Farming'
     }
     if (type == 'share_playGame') {
@@ -93,13 +93,13 @@ function FrensDetailPage() {
     </div>
     <List>
       {
-        list.map((item, index) => {
+        list.map((item: any, index: number) => {
           return <List.Item key={index}>
             <div className='frens-list'>
               <div className='frens-detail-left'>
-                <div className='score'>+&nbsp;{item.score.toLocaleString()}<img src='/assets/common/cat.webp' /></div>
+                <div className='score'>+&nbsp;{item?.coin?.toLocaleString()}<img src='/assets/common/coin.png' /></div>
                 {
-                  item.ticket ? <div className='score'>+&nbsp;{item.ticket}<img src='/assets/common/ticket.webp' /></div> : null
+                  item.ticket ? <div className='score'>+&nbsp;{item.ticket}<img src='/assets/common/ticket.png' /></div> : <div></div>
                 }
                 <div className='frens-detail-time'>{moment(item.createdAt).format('YYYY-MM-DD HH:mm')}</div>
               </div>
@@ -123,4 +123,4 @@ function FrensDetailPage() {
   </div>
 }
 
-export default FrensDetailPage
+export default FriendPage

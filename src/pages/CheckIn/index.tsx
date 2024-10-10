@@ -25,7 +25,7 @@ function CheckInPage() {
   }
 
   const handleContinue = () => {
-    navigate('/home')
+    navigate('/')
   }
   useEffect(() => {
     checkIn()
@@ -57,24 +57,24 @@ function CheckInPage() {
         Daily Rewards
       </div>
       {
-        !changeScale ? <div className={`rewards-container ${checkObj?.reward_score ? 'fadeIn' : ''}`}>
+        !changeScale ? <div className={`rewards-container ${checkObj?.reward_coin ? 'fadeIn' : ''}`}>
           <span>Rewards</span>
-          <img src="/assets/common/cat.webp" alt="logo" className='rewards-logo' />
-          {checkObj?.reward_score}
+          <img src="/assets/common/coin.png" alt="logo" className='rewards-logo' />
+          {checkObj?.reward_coin}
         </div> : null
       }
       <div className={`${changeScale ? 'fadeIn' : ''} rewards-detail`}>
         <div className='rewards-detail-top'>
           <div className='rewards-two'>
             <div className='rewards-one'>
-              <img src='/assets/common/cat.webp' alt='logo' />
-              <div className='reward-number'>{checkObj?.reward_score}</div>
-              <div className='unit'>$CAT</div>
+              <img src='/assets/common/coin.png' alt='logo' />
+              <div className='reward-number'>{checkObj?.reward_coin}</div>
+              <div className='unit'>Coin</div>
             </div>
             <div className='rewards-one'>
-              <img src='/assets/common/ticket.webp' alt='logo' />
+              <img src='/assets/common/ticket.png' alt='logo' />
               <div className='reward-number'>{checkObj?.reward_ticket}</div>
-              <div className='unit'>Tickets</div>
+              <div className='unit'>Ticket</div>
             </div>
           </div>
           <div className='check-in-title'>Daily Check-in Rewards</div>
@@ -90,12 +90,12 @@ function CheckInPage() {
                     {
                       checkObj?.day > index ? <img src="/assets/toast-success.webp" alt="check" /> : <>
                         <div className='score-ticket'>
-                          {formatNumber(item.score, 0)}&nbsp;
-                          <img src='/assets/common/cat.webp' alt='logo' />
+                          {formatNumber(item.score)}&nbsp;
+                          <img src='/assets/common/coin.png' alt='logo' />
                         </div>
                         <div className='score-ticket ticket-pic'>
                           {item.ticket}&nbsp;
-                          <img src='/assets/common/ticket.webp' alt='logo' />
+                          <img src='/assets/common/ticket.png' alt='logo' />
                         </div>
                       </>
                     }
