@@ -1,0 +1,50 @@
+.footer {
+  padding: 12px;
+  min-height: fit-content;
+  .list {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #161F34;
+    border-radius: 50px;
+    padding: 12px 0;
+    .menu-wrapper {
+      flex: 1;
+    }
+
+    .menu {
+      text-align: center;
+      cursor: pointer;
+    }
+    .title {
+      color: var(--darkColor);
+      font-size: 0.9rem;
+      line-height: 1rem;
+    }
+    svg {
+      fill: var(--darkColor);
+    }
+    .active {
+
+      svg {
+        fill: #fff;
+
+      }
+
+      .title {
+        color: #fff;
+        text-shadow: 
+        0 0 10px var(--highColor), /* 中间阴影 */
+        0 0 20px var(--highColor), /* 外层阴影 */
+        0 0 30px var(--highColor), /* 最外层阴影 */
+        0 0 40px var(--highColor); /* 最外层阴影的颜色改为紫色 */
+
+      }
+    }
+
+    svg {
+      width: 26px;
+      height: 26px;
+    }
+  }
+}
