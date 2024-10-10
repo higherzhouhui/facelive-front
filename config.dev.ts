@@ -1,9 +1,7 @@
 import { defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths';
-import react from "@vitejs/plugin-react";
+import react from '@vitejs/plugin-react-swc';
 import basicSsl from '@vitejs/plugin-basic-ssl';
-import { nodePolyfills } from "vite-plugin-node-polyfills";
-
 import path from 'path';
 
 // 定义一个函数来解析路径
@@ -23,23 +21,22 @@ export default defineConfig({
     // Allows using self-signed certificates to run the dev server using HTTPS.
     // https://www.npmjs.com/package/@vitejs/plugin-basic-ssl
     basicSsl(),
-    nodePolyfills(),
   ],
   build: {
-    outDir: 'dist'
+    outDir: 'docs'
   },
   server: {
-    port: 6953,
+    port: 2001,
     proxy: {
-      '/binance': {
-        target: 'https://api.binance.com', // 获取比特币价格
+      '/api/ton/': {
+        target: 'https://toncenter.com', // 本地开发
         changeOrigin: true, // 是否改变源地址
-        rewrite: (path) => path.replace(/^\/binance/, ''), // 重写路径
+        rewrite: (path) => path.replace(/^\/api\/ton/, '/api/'), // 重写路径
       },
-      '/race': {
-        target: 'http://localhost:6954/api', // 本地开发服务器地址
+      '/api/': {
+        target: 'http://localhost:2002', // 本地开发
         changeOrigin: true, // 是否改变源地址
-        rewrite: (path) => path.replace(/^\/race/, ''), // 重写路径
+        rewrite: (path) => path.replace(/^\/api/, '/api/'), // 重写路径
       },
     },
     fs: {

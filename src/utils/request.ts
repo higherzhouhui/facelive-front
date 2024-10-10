@@ -1,13 +1,15 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, {AxiosRequestConfig, AxiosResponse} from 'axios';
 import { addPending, removePending } from './pending';
+import WebApp from '@twa-dev/sdk'
+import { Toast } from 'antd-mobile';
 
 // 处理响应
 const handleResponse = (data: GlobalRequest.Response<any>) => {
-  const { code } = data;
+  const {code} = data;
   if (code === 403) {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('authorization');
-      window.location.href = `/#/wallet`;
+      window.location.href = `/`;
     }
   }
 };
@@ -16,13 +18,13 @@ const handleError = (res: any) => {
   if (!res) {
     return;
   }
-
+ 
 };
 
 // 创建请求实例
 const instance = axios.create({
-  baseURL: '',
-  timeout: 50000,
+  baseURL: '/api',
+  timeout: 500000,
   headers: {
     'Content-Type': 'application/json;charset=UTF-8',
   },
@@ -39,9 +41,6 @@ instance.interceptors.request.use(
           'authorization': `Bearer ${authorization}`,
         };
       }
-    }
-    if (!config.url.includes('binance')) {
-      config.url = `/race${config.url}`
     }
     removePending(config);
     addPending(config);
@@ -61,12 +60,17 @@ instance.interceptors.response.use(
     // 对响应数据做些什么
     removePending(response);
     handleResponse(data);
+    if (data.code != 0) {
+      Toast.show({
+        content: data.msg,
+        position: 'top'
+      })
+    }
     return response;
   },
   (err) => {
     // 对响应错误做些什么
     handleError(err.response);
-    console.error('httpError:', `${err}`)
     return Promise.reject(err);
   }
 );
