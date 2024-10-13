@@ -7,11 +7,7 @@
     "dev": "vite --host --force --config config.dev.ts",
     "build": "tsc && set GH_PAGES=false && vite build --config config.prod.ts",
     "build:dev": "tsc && vite build",
-    "preview": "vite preview",
-    "delete": "rmdir /s /q ..\\telegram-mini\\assets",
-    "move": "xcopy .\\docs ..\\telegram-mini /s /e /i /Y",
-    "execBat": "cd ..\\ && cd telegram-mini && auto_commit.bat",
-    "build:git": "tsc && set GH_PAGES=true && vite build --config config.prod.ts && npm run delete && npm run move && npm run execBat"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.6",
@@ -26,10 +22,12 @@
     "antd-mobile-icons": "^0.3.0",
     "axios": "^1.7.2",
     "eruda": "^2.11.3",
+    "macy": "^2.5.1",
     "moment": "^2.30.1",
     "phaser": "~3.85.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-intl": "^6.7.2",
     "react-json-view": "^1.21.3",
     "react-redux": "^9.1.2",
     "react-router-dom": "^6.24.1",

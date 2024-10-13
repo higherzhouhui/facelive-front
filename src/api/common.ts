@@ -76,7 +76,7 @@ export const getCheckInRewardListReq = () => {
 
 export const getSystemReq = () => {
   return service<any>({
-    url: '/system/getConfig',
+    url: '/system/getAllConfig',
     method: 'GET',
   });
 };
@@ -146,10 +146,43 @@ export const getSubUserTotalReq = () => {
   });
 };
 
-export const getTonPriceReq = (address: string) => {
+
+export const getAnchorList = (params: any) => {
   return service<any>({
-    url: `/ton/v2/getWalletInformation?address=${address}`,
+    url: '/anchor/list',
     method: 'GET',
-    params: {api_key: '43c9443c5b88cad8ca1a35237a5caef73708f7a8e890d60ff58b57ba35dbba68'}
+    params
+  });
+};
+
+export const getAnchorInfo = (params: any) => {
+  return service<any>({
+    url: '/anchor/info',
+    method: 'GET',
+    params
+  });
+};
+
+export const getNextAnchorInfo = (params: any) => {
+  return service<any>({
+    url: '/anchor/next',
+    method: 'GET',
+    params
+  });
+};
+
+export const beginChatReq = (params: any) => {
+  return service<any>({
+    url: '/anchor/begin',
+    method: 'GET',
+    params
+  });
+};
+
+export const followAnchorReq = (data: any) => {
+  return service<any>({
+    url: '/anchor/follow',
+    method: 'POST',
+    data
   });
 };

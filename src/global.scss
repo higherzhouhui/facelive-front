@@ -11,6 +11,12 @@
   font-weight: normal;
   font-style: normal;
 }
+@font-face {
+  font-family: 'Flag';
+  src: url('./assets/font/TwemojiCountryFlags.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
 
 html,
 body,
@@ -97,15 +103,17 @@ html {
   --elevation-light-1: 0px 10px 60px rgba(0, 0, 0, .1);
   --elevation-dark-1: 0px 10px 60px rgba(0, 0, 0, .7);
   --tg-theme-button-color: red;
-  --highColor: #aef507;
+  --highColor: #F22B79;
   --btnBg: #24ee7b;
   --bgColor: #222;
+  --contentColor: #111;
   --adm-color-primary: #30d158 !important;
   --darkColor: #c9c3c3;
   --textColor: #fff;
-  --adm-color-background: rgba(0, 0, 0, 0.1) !important;
+  --adm-color-background: rgba(0, 0, 0, 0.3) !important;
   --rise: #04f36c;
   --fall: #e72914;
+  --onLine: #85E985;
 }
 
 .fadeIn {
@@ -209,5 +217,23 @@ html {
     background: var(--btnBg);
     color: #000;
     border: none;
+  }
+}
+.adm-modal-content {
+  color: #fff;
+}
+.adm-modal-footer {
+  .adm-space-item {
+    button {
+      color: #fff;
+      background: var(--highColor);
+    }
+    &:last-child  {
+      button {
+        color: #fff!important;
+        background: var(--darkColor);
+
+      }
+    }
   }
 }

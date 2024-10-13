@@ -26,7 +26,7 @@ if (import.meta.env.DEV) {
         first_name: 'Andrew',
         last_name: 'isMockUser_258218',
         username: 'efafae',
-        language_code: 'en',
+        language_code: 'zh-hans',
         is_premium: true,
         allows_write_to_pm: true,
       })],

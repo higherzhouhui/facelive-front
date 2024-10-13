@@ -42,6 +42,76 @@ export function formatNumber(num: any) {
   }
 }
 
+export function getFileUrl(file: string) {
+  const dev = import.meta.env.DEV
+  const url = dev ? 'http://localhost:2002' : 'http://localhost:2002'
+  return `${url}${file}`
+}
+
+function isObjectEqual(obj1: any, obj2: any) {
+  // 比较属性数量
+  if (Object.keys(obj1).length !== Object.keys(obj2).length) return false;
+ 
+  // 比较属性值
+  for (const key in obj1) {
+    if (obj1[key] === obj2[key]) {
+      const propValue1 = obj1[key];
+      const propValue2 = obj2[key];
+      if ((typeof propValue1 === 'object' && propValue1 !== null) 
+          && !isObjectEqual(propValue1, propValue2)) {
+        return false;
+      }
+    } else {
+      // 不匹配的属性值
+      return false;
+    }
+  }
+ 
+  // 所有属性值都相等
+  return true;
+}
+
+export function isArrayEqual(arr1: any[], arr2: any[]) {
+  // 如果数组长度不相等，返回false
+  if (arr1.length !== arr2.length) return false;
+ 
+  // 比较每个元素
+  for (let i = 0; i < arr1.length; i++) {
+    if (typeof arr1[i] === 'object' && arr1[i] !== null) {
+      // 对象元素，递归比较
+      if (!isObjectEqual(arr1[i], arr2[i])) return false;
+    } else if (arr1[i] !== arr2[i]) {
+      // 非对象元素，直接比较
+      return false;
+    }
+  }
+ 
+  // 所有元素都相等
+  return true;
+}
+
+export function objectsEqual(obj1: any, obj2: any) {
+  if (obj1 === obj2) return true;
+  if (typeof obj1 !== 'object' || obj1 === null || typeof obj2 !== 'object' || obj2 === null) {
+    return false;
+  }
+  const keys1 = Object.keys(obj1);
+  const keys2 = Object.keys(obj2);
+  if (keys1.length !== keys2.length) return false;
+ 
+  for (let key of keys1) {
+    const val1 = obj1[key];
+    const val2 = obj2[key];
+    if (val1 === val2) {
+      if (typeof val1 === 'object' && val1 !== null) {
+        if (!objectsEqual(val1, val2)) return false;
+      }
+    } else {
+      return false;
+    }
+  }
+  return true;
+}
 
 export function judgeIsCheckIn(time: any) {
   let flag = false

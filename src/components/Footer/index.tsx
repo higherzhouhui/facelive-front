@@ -45,7 +45,7 @@ export default function () {
             backButton.show();
         }
     }, [myLocation.pathname])
-    return <footer className="footer" style={{ display: isShowFooter ? 'block' : 'none', paddingBottom: isIos ? '1.5rem' : '0.5rem' }}>
+    return <footer className="footer" style={{ display: isShowFooter ? 'block' : 'none', paddingBottom: isIos ? '1.5rem' : '1rem' }}>
         <div className='list'>
             {
                 menu.map((item => {

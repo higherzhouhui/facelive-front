@@ -21,16 +21,21 @@ import { routes } from '@/navigation/routes';
 import { useDispatch } from 'react-redux';
 import { getSystemReq, loginReq } from '@/api/common';
 import { setSystemAction, setUserInfoAction } from '@/redux/slices/userSlice';
-import Congrates from './Congrates';
 import EventBus from '@/utils/eventBus';
 import Loading from './Loading';
 import { Toast } from 'antd-mobile';
-import moment from 'moment';
 import Footer from './Footer';
+import { IntlProvider, FormattedMessage } from 'react-intl';
+import en from '@/locale/en.json'
+import zh from '@/locale/zh.json'
+const messages: any = {
+  en,
+  zh,
+};
+
 
 export const App: FC = () => {
   const [backButton] = initBackButton()
-  const [swipeBehavior] = initSwipeBehavior();
   const [viewport] = initViewport();
   const [miniApp] = initMiniApp()
   const launchParams = retrieveLaunchParams()
@@ -41,7 +46,7 @@ export const App: FC = () => {
   const [showTime, setShowTime] = useState(1500)
   const eventBus = EventBus.getInstance()
   const [loading, setLoading] = useState(true)
-
+  const [locale, setLocale] = useState<any>('en')
   const login = async () => {
     setLoading(true)
     try {
@@ -50,6 +55,11 @@ export const App: FC = () => {
       if (initData && initData.user && initData.user.id) {
         const user = initData.initData.user
         const data = { ...initData.initData, ...user }
+        if (!localStorage.getItem('lang')) {
+          const lang = data.languageCode == 'zh-hans' ? 'zh' : 'en'
+          localStorage.setItem('lang', lang)
+          setLocale(lang)
+        }
         resArray = await Promise.all([loginReq(data), getSystemReq()])
       }
       const [res, sys] = resArray
@@ -103,8 +113,12 @@ export const App: FC = () => {
     const onLoading = (flag: boolean) => {
       setLoading(flag)
     }
+    const onShiftLanguage = (lang: any) => {
+      setLocale(lang)
+    }
     eventBus.addListener('showCongrates', onMessage)
     eventBus.addListener('loading', onLoading)
+    eventBus.addListener('shiftLanguage', onShiftLanguage)
   }, [])
 
   useEffect(() => {
@@ -119,6 +133,9 @@ export const App: FC = () => {
       position: 'top',
       duration: 3000
     })
+
+    // const locale = localStorage.getItem('locale') || 'zh'
+    // setLocale(locale)
   }, [])
 
   useEffect(() => {
@@ -134,18 +151,20 @@ export const App: FC = () => {
       appearance={miniApp.isDark ? 'dark' : 'light'}
       platform={['macos', 'ios'].includes(launchParams.platform) ? 'ios' : 'base'}
     >
-      <div className='layout'>
-        <div className='content'>
-          <Routes>
-            {routes.map((route) => <Route key={route.path} {...route} />)}
-            <Route path='*' element={<Navigate to='/' />} />
-          </Routes>
+      <IntlProvider locale={locale} messages={messages[locale]}>
+        <div className='layout'>
+          <div className='content'>
+            <Routes>
+              {routes.map((route) => <Route key={route.path} {...route} />)}
+              <Route path='*' element={<Navigate to='/' />} />
+            </Routes>
+          </div>
+          <Footer />
+          {
+            loading ? <Loading /> : null
+          }
         </div>
-        <Footer />
-        {
-          loading ? <Loading /> : null
-        }
-      </div>
+      </IntlProvider>
     </AppRoot>
   );
 };

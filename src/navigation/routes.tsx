@@ -5,13 +5,13 @@ import HomePage from '@/pages/Home';
 import GamePage from '@/pages/Game';
 import LeaderBoardPage from '@/pages/LeaderBoard';
 import FrensPage from '@/pages/Frens';
-import DetailPage from '@/pages/Detail';
+import DetailPage from '@/pages/Anchor';
 import SecondPage from '@/pages/Second'
-import ShopPage from '@/pages/Shop';
 import CheckInlPage from '@/pages/CheckIn';
 import GameLeaderBoardPage from '@/pages/GameLeaderBoard';
 import LevelPage from '@/pages/Level';
 import TaskPage from '@/pages/Task';
+import MyselfPage from '@/pages/My';
 const FrensDetailPage = lazy(() => import('@/pages/Frens/Detail'))
 
 interface Route {
@@ -23,7 +23,7 @@ interface Route {
 
 export const routes: Route[] = [
   { path: '/', Component: HomePage },
-  { path: '/my', Component: HomePage },
+  { path: '/my', Component: MyselfPage },
   { path: '/level', Component: LevelPage },
   { path: '/task', Component: TaskPage },
   { path: '/begin', Component: BeginPage },
@@ -32,7 +32,7 @@ export const routes: Route[] = [
   { path: '/gameleaderboard', Component: GameLeaderBoardPage },
   { path: '/frens', Component: FrensPage },
   { path: '/game', Component: GamePage },
-  { path: '/detail', Component: DetailPage },
+  { path: '/anchor', Component: DetailPage },
   { path: '/checkIn', Component: CheckInlPage },
   { path: '/frens-detail', Component: FrensDetailPage },
 ];

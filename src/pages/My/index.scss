@@ -1,0 +1,125 @@
+.my-page {
+  padding: 1.3rem;
+  .title {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    .username {
+      font-size: 1.3rem;
+      font-family: 'Bold';
+    }
+    .icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-transform: uppercase;
+      text-shadow: -1px -1px 0 #000;
+      font-size: 1.1rem;
+    }
+  }
+  .balance-wrapper {
+    background-image: url('/assets/balance.svg');
+    background-size: cover;
+    width: 100%;
+    background-position: center;
+    border-radius: 12px;
+    padding: 12px;
+    margin-top: 12px;
+    .balance {
+      font-size: 1.2rem;
+      .count {
+        color: var(--highColor);
+        font-size: 2rem;
+        font-weight: bold;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      .yue-desc {
+        color: var(--darkColor);
+        font-size: 10px;
+      }
+    }
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 1rem;
+      .btn {
+        flex: 1;
+        border-radius: 8px;
+        background: #fff;
+        height: 2.4rem;
+        color: #000;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+      .recharge-btn {
+        background: var(--highColor);
+        color: #fff;
+        gap: 4px;
+        img {
+          width: 22px;
+        }
+      }
+    }
+  }
+  
+  .join-tg {
+    margin-top: 1rem;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 20px;
+    background: linear-gradient(90deg, rgba(46, 39, 35, 0.93) 0%, rgb(46, 29, 29) 30%, rgb(56, 35, 35) 100%);
+    align-items: center;
+    .left {
+      display: flex;
+      align-items: center;
+      margin-left: 12px;
+      gap: 8px;
+    }
+  }
+  .menu {
+    margin-top: 1rem;
+    background: var(--contentColor);
+    border-radius: 12px;
+    padding: 12px 0;
+    .menu-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px;
+      border-bottom: 1px solid #474747;
+      align-items: center;
+      .left {
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        .label {
+          font-size: 1.2rem;
+        }
+        svg {
+          width: 26px;
+          height: 26px;
+        }
+      }
+      .right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        span {
+          font-size: 1.2rem;
+        }
+        svg {
+          width: 18px;
+        }
+      }
+    }
+    .menu-item:last-child {
+      border: none;
+    }
+  }
+}
