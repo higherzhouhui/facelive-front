@@ -9,7 +9,9 @@
     overflow: auto;
     padding: 18px 12px 0 12px;
   }
-
+  .high {
+    color: var(--highColor);
+  }
   .sub-container {
     background-color: rgba($color: #000000, $alpha: 0.2);
     border-radius: 6px;
@@ -138,7 +140,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 18px 1rem;
+    padding: 22px 1rem;
     .invite-link {
       word-break: break-all;
       background: var(--btnBg);

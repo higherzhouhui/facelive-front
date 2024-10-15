@@ -9,7 +9,7 @@ import {
 } from '@telegram-apps/sdk';
 
 import { AppRoot } from '@telegram-apps/telegram-ui';
-import { type FC, useEffect, useState } from 'react';
+import { type FC, useEffect, useRef, useState } from 'react';
 import {
   Navigate,
   Route,
@@ -25,7 +25,7 @@ import EventBus from '@/utils/eventBus';
 import Loading from './Loading';
 import { Toast } from 'antd-mobile';
 import Footer from './Footer';
-import { IntlProvider, FormattedMessage } from 'react-intl';
+import { IntlProvider } from 'react-intl';
 import en from '@/locale/en.json'
 import zh from '@/locale/zh.json'
 const messages: any = {
@@ -42,23 +42,29 @@ export const App: FC = () => {
   const myLocation = useLocation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const [rotate, setRotate] = useState(0)
   const [isShowCongrates, setShowCongrates] = useState(false)
   const [showTime, setShowTime] = useState(1500)
   const eventBus = EventBus.getInstance()
   const [loading, setLoading] = useState(true)
   const [locale, setLocale] = useState<any>('en')
+  const timer = useRef<any>(null)
   const login = async () => {
     setLoading(true)
+    
     try {
       const initData = initInitData() as any;
       let resArray: any;
       if (initData && initData.user && initData.user.id) {
         const user = initData.initData.user
         const data = { ...initData.initData, ...user }
-        if (!localStorage.getItem('lang')) {
+        const storageLang = localStorage.getItem('lang')
+        if (!storageLang) {
           const lang = data.languageCode == 'zh-hans' ? 'zh' : 'en'
-          localStorage.setItem('lang', lang)
           setLocale(lang)
+          localStorage.setItem('lang', lang)
+        } else {
+          setLocale(storageLang)
         }
         resArray = await Promise.all([loginReq(data), getSystemReq()])
       }
@@ -88,7 +94,6 @@ export const App: FC = () => {
       console.log('current Version:', version)
       if (version > 7.7) {
         const [swipeBehavior] = initSwipeBehavior();
-        console.log('disableVerticalSwipe')
         swipeBehavior.disableVerticalSwipe();
       }
     } catch (error) {
@@ -114,6 +119,7 @@ export const App: FC = () => {
       setLoading(flag)
     }
     const onShiftLanguage = (lang: any) => {
+      localStorage.setItem('lang', lang)
       setLocale(lang)
     }
     eventBus.addListener('showCongrates', onMessage)
@@ -146,6 +152,19 @@ export const App: FC = () => {
     }
   }, [myLocation.pathname])
 
+  useEffect(() => {
+    const rotate = [-90 ,-45, 0, 45, 90]
+    let index = 0
+    timer.current = setInterval(() => {
+      index += 1
+      index = index % 5
+      setRotate(rotate[index])
+    }, 800);
+    return () => {
+      clearInterval(timer.current)
+    }
+  }, [])
+
   return (
     <AppRoot
       appearance={miniApp.isDark ? 'dark' : 'light'}
@@ -153,7 +172,7 @@ export const App: FC = () => {
     >
       <IntlProvider locale={locale} messages={messages[locale]}>
         <div className='layout'>
-          <div className='content'>
+          <div className='content' style={{ background: `linear-gradient(${rotate}deg, rgba(111, 66, 44, 0.05) 0%, rgba(111, 66, 44, 0.1) 30%, rgba(111, 66, 44, 0.93) 100%)` }}>
             <Routes>
               {routes.map((route) => <Route key={route.path} {...route} />)}
               <Route path='*' element={<Navigate to='/' />} />

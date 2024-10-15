@@ -11,7 +11,6 @@ export default function () {
   const userInfo = useSelector((state: any) => state.user.info)
   const systemInfo = useSelector((state: any) => state.user.system)
   const eventBus = EventBus.getInstance()
-
   const [myLevelInfo, setMyLevelInfo] = useState<any>({})
   const ref = useRef<SwiperRef>(null)
   const [skinList, setSkinList] = useState([])

@@ -108,7 +108,8 @@ html {
   --bgColor: #222;
   --contentColor: #111;
   --adm-color-primary: #30d158 !important;
-  --darkColor: #c9c3c3;
+  --dividerColor: #665f5f;
+  --darkColor: #a39a9a;
   --textColor: #fff;
   --adm-color-background: rgba(0, 0, 0, 0.3) !important;
   --rise: #04f36c;
@@ -143,6 +144,13 @@ html {
   .content {
     flex: 1;
     overflow: auto;
+    .top-bg {
+      height: 200px;
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+    }
   }
 }
 

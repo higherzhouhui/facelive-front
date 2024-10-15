@@ -9,13 +9,13 @@
   }
   
   .adm-list-item-content {
-    border-top-color: #312d2d;
+    border-top-color: var(--dividerColor);
   }
   .frens-title {
     font-size: 2rem;
     margin-bottom: 1rem;
-    border-bottom: 1px solid #aaa;
-    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--dividerColor);
+    padding: 0 1rem 1rem 1rem;
     font-weight: bold;
 
     span {
@@ -53,7 +53,7 @@
         align-items: center;
         gap: 4px;
         img {
-          width: 16px;
+          width: 20px;
         }
       }
 

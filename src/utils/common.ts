@@ -1,5 +1,24 @@
 import { Toast } from "antd-mobile";
 import moment from "moment";
+import en from '@/locale/en.json'
+import zh from '@/locale/zh.json'
+
+const message: any = {
+  en, 
+  zh,
+}
+
+
+export function getLabel(id: string) {
+  const lang = localStorage.getItem('lang') || 'en'
+  let label = ''
+  try {
+    label = message[lang][id]
+  } catch {
+    label = id
+  }
+  return label || id
+}
 
 export function stringToColor(string: string) {
   let hash = 0;
@@ -156,7 +175,7 @@ export function handleCopyLink(link: string, str?: string) {
   textArea.select();
   document.execCommand("copy");
   document.body.removeChild(textArea);
-  Toast.show({ content: str || 'The link has been copied to the clipboard.', position: 'top', duration: 3000 })
+  Toast.show({ content: str || getLabel('copied'), position: 'top', duration: 3000 })
 
 }
 
@@ -201,4 +220,17 @@ export function throttle(handler: ThrottleHandler, limit: number) {
       lastArgs = args;
     }
   };
+}
+
+
+export function secondsToTime(seconds: number) {
+  // 获取分钟
+  var minutes = Math.floor(seconds / 60);
+  // 获取秒钟，对60取余保证秒数不会超过59
+  var secs = seconds % 60;
+  // 将分钟和秒数转换为字符串，位数不足前面补零
+  minutes = minutes < 10 ? '0' + minutes : minutes;
+  secs = secs < 10 ? '0' + secs : secs;
+  // 返回格式化的时间字符串
+  return minutes + ':' + secs;
 }

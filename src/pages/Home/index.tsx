@@ -26,10 +26,10 @@ export default function Home() {
   const utils = initUtils()
   const navigate = useNavigate()
   const [visible, setVisible] = useState(false)
-  const [countryList, setCountryList] = useState(config.country)
-  const [groupList, setGroupList] = useState(config.group)
-  const [styleList, setStyleList] = useState(config.style)
-  const [languageList, setLanguageList] = useState(config.language)
+  const [countryList, setCountryList] = useState([])
+  const [groupList, setGroupList] = useState([])
+  const [styleList, setStyleList] = useState([])
+  const [languageList, setLanguageList] = useState([])
   const [oldFilter, setOldFilter] = useState<any>({})
   const [filter, setFilter] = useState<any>({})
 
@@ -341,9 +341,18 @@ export default function Home() {
     }, 800);
     return () => clearInterval(timer.current)
   }, [])
+
+  useEffect(() => {
+    if (config) {
+      setCountryList(config.country)
+      setLanguageList(config.language)
+      setStyleList(config.style)
+      setGroupList(config.group)
+    }
+  }, [config])
   return (
     <div className='home-page'>
-      <div className='top-content' style={{ background: `linear-gradient(${rotate}deg, rgba(111, 66, 44, 0.05) 0%, rgba(111, 66, 44, 0.1) 30%, rgba(111, 66, 44, 0.93) 100%)` }}>
+      <div className='top-content'>
         <div className='recommend-list'>
           {
             recommendList.map((item: any) => {
@@ -387,6 +396,7 @@ export default function Home() {
             })
           }
         </div>
+        <div className='image-content'>
         <div className='image-list'>
           {
             list.map((item: any, index: number) => {
@@ -401,6 +411,7 @@ export default function Home() {
               </div>
             })
           }
+        </div>
         </div>
       </div>
       <InfiniteScroll loadMore={() => loadMore()} hasMore={hasMore}>

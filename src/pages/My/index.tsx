@@ -1,22 +1,40 @@
 import { stringToColor } from '@/utils/common';
 import './index.scss'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 import { initUtils } from '@telegram-apps/sdk';
+import { useEffect } from 'react';
+import { getUserInfoReq } from '@/api/common';
+import { setUserInfoAction } from '@/redux/slices/userSlice';
+import moment from 'moment';
 
 function MyselfPage() {
   const userinfo = useSelector((state: any) => state.user.info);
   const navigate = useNavigate()
   const config = useSelector((state: any) => state.user.system);
   const utils = initUtils()
-
+  const dispatch = useDispatch()
   const handleJoinTg = () => {
     utils.openTelegramLink(config.base.tg_link)
   }
 
-  const handleRouter = (url: string) => {
-    navigate(url)
+  const handleRouter = (url?: string) => {
+    if (url) {
+      navigate(url)
+    } else {
+      utils.openTelegramLink(config.base.help_link)
+    }
+  }
+
+  const handleName = () => {
+    let name = ''
+    if (userinfo?.firstName || userinfo?.lastName) {
+      name = userinfo?.firstName + " " + userinfo?.lastName
+    } else {
+      name = userinfo?.username || userinfo.id
+    }
+    return name 
   }
 
   const handleCount = (str?: string) => {
@@ -43,27 +61,35 @@ function MyselfPage() {
       label: <FormattedMessage id='lgtdzb' />,
       value: handleCount(userinfo?.chat_anchor),
       rightIcon: right,
-      link: '/follow',
+      link: '/chat',
     },
     {
       icon: language,
       label: <FormattedMessage id='language' />,
       value: <FormattedMessage id='zh' />,
       rightIcon: right,
-      link: '/follow',
+      link: '/language',
     },
     {
       icon: help,
       label: <FormattedMessage id='helpfk' />,
-      link: '/follow',
     },
   ]
+
+  useEffect(() => {
+    getUserInfoReq().then(res => {
+      if (res.code == 0) {
+        dispatch(setUserInfoAction(res.data))
+      }
+    })
+  }, [])
   return <div className='my-page'>
     <div className='title'>
       <div className='icon' style={{ background: stringToColor(userinfo?.username) }}>{userinfo?.username?.substring(0, 2)}</div>
       <div className='name'>
-        <div className='username'>{userinfo?.username}</div>
+        <div className='username'>{handleName()}</div>
         <div>Id: {userinfo?.user_id}</div>
+        <div>Join: {moment(userinfo?.createdAt).format('YYYY-MM-DD HH:mm')}</div>
       </div>
     </div>
     <div className='balance-wrapper'>
@@ -72,7 +98,7 @@ function MyselfPage() {
         <span className='yue-desc'><FormattedMessage id='yue' /></span>
       </div>
       <div className='btn-group'>
-        <div className='btn' onClick={() => handleRouter('/invite')}>
+        <div className='btn' onClick={() => handleRouter('/frens')}>
           <FormattedMessage id='freeCoin' />
         </div>
         <div className='btn recharge-btn' onClick={() => handleRouter('/recharge')}>
@@ -93,7 +119,7 @@ function MyselfPage() {
     <div className='menu'>
       {
         list.map((item: any, index: number) => {
-          return <div key={index} className='menu-item'>
+          return <div key={index} className='menu-item' onClick={() => handleRouter(item.link)}>
             <div className='left'>
               {item.icon}
               <div className='label'>{item.label}</div>

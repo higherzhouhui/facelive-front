@@ -1,0 +1,72 @@
+.product-page {
+  padding: 1.5rem 1.5rem 2rem 1.5rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  .title {
+    font-size: 1.7rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+  }
+  .list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 12px;
+    column-gap: 12px;
+    .list-item {
+      background: var(--contentColor);
+      border-radius: 12px;
+      padding: 12px;
+      border: 2px solid transparent;
+      .top {
+        background: rgba($color: #383737, $alpha: 0.3);
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 12px;
+        .img-coin {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          
+          img {
+            width: 22px;
+            margin-left: -14px;
+          }
+          .img:first-child {
+            margin-left: 0;
+          }
+        }
+        .score {
+          text-align: center;
+          width: 100%;
+          margin-top: 12px;
+          font-size: 1.2rem;
+          font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+      }
+      .bot {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: var(--highColor);
+      }
+    }
+    .selected {
+      border: 2px solid var(--highColor);
+    }
+  }
+  .recharge-btn {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--highColor);
+    border-radius: 12px;
+    font-size: 1.3rem;
+    font-weight: bold;
+  }
+}

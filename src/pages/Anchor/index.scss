@@ -176,6 +176,13 @@
         background: var(--onLine);
         animation: light .5s infinite alternate;
       }
+      .time {
+        width: 40px;
+        color: #fff;
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
       @keyframes light {
         0% {
           box-shadow: 0 0 0 currentColor;
@@ -190,6 +197,17 @@
     .next-btn {
       text-align: center;
       padding: 0.5rem 0;
+    }
+  }
+  .coin {
+    position: fixed;
+    left: 20px;
+    top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    img {
+      width: 18px;
     }
   }
 }

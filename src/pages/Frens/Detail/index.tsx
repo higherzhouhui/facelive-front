@@ -7,6 +7,7 @@ import { stringToColor } from '@/utils/common'
 import moment from 'moment'
 import BackTop from '@/components/BackTop'
 import { useSelector } from 'react-redux'
+import { FormattedMessage } from 'react-intl'
 
 function FriendPage() {
   const userInfo = useSelector((state: any) => state.user.info);
@@ -33,18 +34,6 @@ function FriendPage() {
     }
     if (type == 'checkIn_parent') {
       type = 'checkIn'
-    }
-    if (type == 'play_game_reward_parent') {
-      type = 'Drop Game'
-    }
-    if (type == 'play_game_reward_parent' || type == 'play_game_reward') {
-      type = 'Drop Game'
-    }
-    if (type == 'harvest_farming' || type == 'harvest_farming_parent') {
-      type = 'Farming'
-    }
-    if (type == 'share_playGame') {
-      type = 'Share Game'
     }
     return type
   }
@@ -88,7 +77,7 @@ function FriendPage() {
   return <div className="frens-detail-page">
     <div className="frens-title">
       {
-        isMyself ? <span>My Scores</span> : <span>{total}&nbsp;frens</span>
+        isMyself ? <span>My Scores</span> : <span>{total}&nbsp;<FormattedMessage id='friends' /></span>
       }
     </div>
     <List>
@@ -97,27 +86,26 @@ function FriendPage() {
           return <List.Item key={index}>
             <div className='frens-list'>
               <div className='frens-detail-left'>
-                <div className='score'>+&nbsp;{item?.coin?.toLocaleString()}<img src='/assets/common/coin.png' /></div>
-                {
-                  item.ticket ? <div className='score'>+&nbsp;{item.ticket}<img src='/assets/common/ticket.png' /></div> : <div></div>
-                }
+                <div className='score'>+&nbsp;{item?.score?.toLocaleString()}<img src='/assets/coin.png' /></div>
                 <div className='frens-detail-time'>{moment(item.createdAt).format('YYYY-MM-DD HH:mm')}</div>
               </div>
               <div className='frens-detail-right'>
                 <div className='by-user'>
-                  by<div className="user-icon" style={{ background: stringToColor(item.from_username) }}>
-                    {item.from_username.slice(0, 2)}
+                  by<div className="user-icon" style={{ background: stringToColor(item?.from_username) }}>
+                    {item?.from_username.slice(0, 2)}
                   </div>
-                  <div className='frens-detail-name'>{item.from_username == userInfo.username ? <span style={{ color: 'var(--highColor)' }}>me</span> : item.from_username}</div>
+                  <div className='frens-detail-name'>{item?.from_user == userInfo.id ? <span style={{ color: 'var(--highColor)' }}>me</span> : item.from_username}</div>
                 </div>
-                <div className='type'>{getType(item.type)}</div>
+                <div className='type'><FormattedMessage id={getType(item.type)} /></div>
               </div>
             </div>
           </List.Item>
         })
       }
     </List>
-    <InfiniteScroll loadMore={loadMore} hasMore={hasMore} />
+    <InfiniteScroll loadMore={loadMore} hasMore={hasMore}>
+      <div></div>
+    </InfiniteScroll>
     <BackTop scrollName={'content'} />
 
   </div>

@@ -83,7 +83,9 @@
     }
   }
   .main-content {
-    padding: 0 1rem 1rem 1rem;
+    .image-content {
+      padding: 1rem;
+    }
     .anchor-wrapper {
       position: relative;
       display: inline-block;
@@ -124,7 +126,7 @@
     background: var(--bgColor);
     display: flex;
     align-items: center;
-    padding: 1rem 0;
+    padding: 1rem;
     display: flex;
     align-items: center;
     gap: 10px;

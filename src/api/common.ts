@@ -186,3 +186,28 @@ export const followAnchorReq = (data: any) => {
     data
   });
 };
+
+export const followAnchorListReq = (params?: any) => {
+  return service<any>({
+    url: '/anchor/followList',
+    method: 'GET',
+    params
+  });
+};
+
+export const chatAnchorListReq = (params?: any) => {
+  return service<any>({
+    url: '/anchor/chatList',
+    method: 'GET',
+    params
+  });
+};
+
+
+export const getProductListReq = (params?: any) => {
+  return service<any>({
+    url: '/product/list',
+    method: 'GET',
+    params
+  });
+};
