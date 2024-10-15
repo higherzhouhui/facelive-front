@@ -22,12 +22,12 @@ function RechargePage() {
     setList(res.data)
   }
 
-  const handleRecharge = async (index: number) => {
+  const handleRecharge = async () => {
     if (!tonConnectUI.connected) {
       tonConnectUI.modal.open()
       return
     }
-    const item = list[index] as any
+    const item = list[current] as any
     eventBus.emit('loading', true)
     const transaction = {
       validUntil: new Date().getTime() + 300 * 1000,
