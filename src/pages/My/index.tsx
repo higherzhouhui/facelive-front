@@ -16,7 +16,7 @@ function MyselfPage() {
   const utils = initUtils()
   const dispatch = useDispatch()
   const handleJoinTg = () => {
-    utils.openTelegramLink(config.base.tg_link)
+    utils.openTelegramLink(config.base.channel_url)
   }
 
   const handleRouter = (url?: string) => {

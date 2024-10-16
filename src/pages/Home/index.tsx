@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { getFileUrl, objectsEqual } from '@/utils/common';
 import CountryFlag from '@/components/Flag';
 import { FormattedMessage } from 'react-intl';
-import { Empty, InfiniteScroll, Popup } from 'antd-mobile';
+import { Empty, InfiniteScroll, Popup, Skeleton } from 'antd-mobile';
 import EventBus from '@/utils/eventBus';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -16,9 +16,9 @@ export default function Home() {
   const hapticFeedback = useHapticFeedback()
   const [list, setList] = useState<any>([])
   const [recommendList, setRecommendList] = useState<any>([])
-  const [rotate, setRotate] = useState(0)
-  const timer = useRef<any>(null)
-  const [hasMore, setHasMore] = useState(true)
+  // const [rotate, setRotate] = useState(0)
+  // const timer = useRef<any>(null)
+  const [hasMore, setHasMore] = useState(false)
   const [masonry, setMasonry] = useState<any>(null);
   const [page, setPage] = useState(1)
   const eventBus = EventBus.getInstance()
@@ -32,7 +32,7 @@ export default function Home() {
   const [languageList, setLanguageList] = useState([])
   const [oldFilter, setOldFilter] = useState<any>({})
   const [filter, setFilter] = useState<any>({})
-
+  const [loading, setLoading] = useState(true)
   //触底后立即触发该方法
   async function loadMore(cPage?: number, cFilter?: any) {
     eventBus.emit('loading', true)
@@ -47,6 +47,7 @@ export default function Home() {
       }
     }
     const append: any = await getAnchorList(where)
+    setLoading(false)
     if (where.page == 1) {
       setList(append.data)
     } else {
@@ -55,12 +56,13 @@ export default function Home() {
     setTimeout(() => {
       eventBus.emit('loading', false)
     }, 500);
+
     setHasMore(append.data.length > 0)
-    setPage(p => where.page + 1)
+    setPage(where.page + 1)
   }
 
   const handleJoinTg = () => {
-    utils.openTelegramLink(config.base.tg_link)
+    utils.openTelegramLink(config.base.channel_url)
   }
 
 
@@ -201,9 +203,9 @@ export default function Home() {
       let masonry = new Macy({
         container: '.image-list', // 图像列表容器
         trueOrder: false,
-        waitForImages: false,
         useOwnImageLoader: false,
         debug: true,
+        waitForImages: true,
         margin: { x: 2, y: 2 },    // 设计列与列的间距
         columns: 2,    // 设置列数
       })
@@ -317,6 +319,11 @@ export default function Home() {
   }
 
   useEffect(() => {
+    loadMore(1)
+  }, [])
+
+
+  useEffect(() => {
     getMacy()
   }, [list])
 
@@ -331,17 +338,17 @@ export default function Home() {
     }
   }, [visible])
 
-  useEffect(() => {
-    initData()
-    const rotate = [45, 135, 225, 320]
-    let index = 0
-    timer.current = setInterval(() => {
-      index += 1
-      index = index % 4
-      setRotate(rotate[index])
-    }, 800);
-    return () => clearInterval(timer.current)
-  }, [])
+  // useEffect(() => {
+  //   initData()
+  //   const rotate = [45, 135, 225, 320]
+  //   let index = 0
+  //   timer.current = setInterval(() => {
+  //     index += 1
+  //     index = index % 4
+  //     setRotate(rotate[index])
+  //   }, 800);
+  //   return () => clearInterval(timer.current)
+  // }, [])
 
   useEffect(() => {
     if (config) {
@@ -398,21 +405,28 @@ export default function Home() {
           }
         </div>
         <div className='image-content'>
-        <div className='image-list'>
+          <div className='skeleton-wrapper'>
           {
-            list.map((item: any, index: number) => {
-              return <div className='anchor-wrapper' key={index} onClick={() => handleToDetail(item.id)}>
-                <img src={getFileUrl(item.cover)} alt='anchor' className='anchor-cover' />
-                <div className='status'>
-                </div>
-                <div className='name'>
-                  <div className='name-text'>{item.name}</div>
-                  <CountryFlag country={item.country} />
-                </div>
-              </div>
-            })
+            loading ? [...Array(6).fill('')].map((item: any, index: number) => {
+              return <Skeleton className='skeleton' animated key={index} />
+            }) : null
           }
-        </div>
+          </div>
+          <div className='image-list'>
+            {
+              list.map((item: any, index: number) => {
+                return <div className='anchor-wrapper' key={index} onClick={() => handleToDetail(item.id)}>
+                  <img src={getFileUrl(item.cover)} alt='anchor' className='anchor-cover' />
+                  <div className='status'>
+                  </div>
+                  <div className='name'>
+                    <div className='name-text'>{item.name}</div>
+                    <CountryFlag country={item.country} />
+                  </div>
+                </div>
+              })
+            }
+          </div>
         </div>
       </div>
       <InfiniteScroll loadMore={() => loadMore()} hasMore={hasMore}>
