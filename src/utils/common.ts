@@ -225,9 +225,9 @@ export function throttle(handler: ThrottleHandler, limit: number) {
 
 export function secondsToTime(seconds: number) {
   // 获取分钟
-  var minutes = Math.floor(seconds / 60);
+  let minutes: any = Math.floor(seconds / 60);
   // 获取秒钟，对60取余保证秒数不会超过59
-  var secs = seconds % 60;
+  let secs: any  = seconds % 60;
   // 将分钟和秒数转换为字符串，位数不足前面补零
   minutes = minutes < 10 ? '0' + minutes : minutes;
   secs = secs < 10 ? '0' + secs : secs;

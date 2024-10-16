@@ -197,6 +197,7 @@ export default function Home() {
       //当数据更新时，会重新计算并排版
       masonry?.reInit()
     } else {
+      //@ts-ignore
       let masonry = new Macy({
         container: '.image-list', // 图像列表容器
         trueOrder: false,

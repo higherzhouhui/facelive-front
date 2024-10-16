@@ -87,8 +87,7 @@ function FollowPage() {
       ]}
       onAction={(action, index) => handleRoute(index)}
       closeOnMaskClick
-    >
-    </Modal>
+    />
     <BackTop />
   </div>
 }

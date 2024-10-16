@@ -38,14 +38,14 @@ export default defineConfig({
     // Allows using self-signed certificates to run the dev server using HTTPS.
     // https://www.npmjs.com/package/@vitejs/plugin-basic-ssl
     basicSsl(),
-    phaserMsg(),
+    // phaserMsg(),
   ],
   build: {
     outDir: 'facelive-front',
     rollupOptions: {
       output: {
         manualChunks: {
-          phaser: ['phaser']
+          // phaser: ['phaser']
         }
       }
     },

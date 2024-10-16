@@ -388,8 +388,7 @@ function AnchorDetail() {
       ]}
       onAction={(action, index) => handleRoute(index)}
       closeOnMaskClick
-    >
-    </Modal>
+    />
     <Modal visible={visibleQuit} content={<FormattedMessage id='hintQuit' />} title={<FormattedMessage id='hint' />} closeOnAction
       onClose={() => {
         setVisibleQuit(false)
@@ -406,8 +405,7 @@ function AnchorDetail() {
       ]}
       onAction={(action, index) => handelConfirmQuit(index)}
       closeOnMaskClick
-    >
-    </Modal>
+    />
     <Modal visible={visibleNext} content={<FormattedMessage id='hintNext' />} title={<FormattedMessage id='hint' />} closeOnAction
       onClose={() => {
         setVisibleNext(false)
@@ -424,8 +422,7 @@ function AnchorDetail() {
       ]}
       onAction={(action, index) => handelConfirmNext(index)}
       closeOnMaskClick
-    >
-    </Modal>
+    />
     <Modal visible={visibleCoin} content={<div> <FormattedMessage id='ksytsplt' />
       （{detail.coin}
       <FormattedMessage id='coin' />/<FormattedMessage id='minute' />）<div><FormattedMessage id='yue' />: <b>{userinfo?.score} Coins</b></div></div>} title={<FormattedMessage id='qrks' />} closeOnAction
@@ -444,8 +441,7 @@ function AnchorDetail() {
       ]}
       onAction={(action, index) => handleConfirm(index)}
       closeOnMaskClick
-    >
-    </Modal>
+    />
   </div>
 }
 
