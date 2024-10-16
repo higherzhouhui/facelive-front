@@ -13,6 +13,7 @@ function MyselfPage() {
   const userinfo = useSelector((state: any) => state.user.info);
   const navigate = useNavigate()
   const config = useSelector((state: any) => state.user.system);
+  const storageLang = useSelector((state: any) => state.user.lang);
   const utils = initUtils()
   const dispatch = useDispatch()
   const handleJoinTg = () => {
@@ -66,7 +67,7 @@ function MyselfPage() {
     {
       icon: language,
       label: <FormattedMessage id='language' />,
-      value: <FormattedMessage id='zh' />,
+      value: <FormattedMessage id={storageLang} />,
       rightIcon: right,
       link: '/language',
     },
@@ -88,8 +89,8 @@ function MyselfPage() {
       <div className='icon' style={{ background: stringToColor(userinfo?.username) }}>{userinfo?.username?.substring(0, 2)}</div>
       <div className='name'>
         <div className='username'>{handleName()}</div>
-        <div>Id: {userinfo?.user_id}</div>
-        <div>Join: {moment(userinfo?.createdAt).format('YYYY-MM-DD HH:mm')}</div>
+        <div>ID: {userinfo?.user_id}</div>
+        <div><FormattedMessage id='join' />: {moment(userinfo?.createdAt).format('YYYY-MM-DD HH:mm')}</div>
       </div>
     </div>
     <div className='balance-wrapper'>

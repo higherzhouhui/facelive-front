@@ -2,7 +2,7 @@ import './index.scss'
 import Macy from 'macy'
 import { initUtils, useHapticFeedback } from '@telegram-apps/sdk-react';
 import { getAnchorList } from '@/api/common';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getFileUrl, objectsEqual } from '@/utils/common';
 import CountryFlag from '@/components/Flag';
 import { FormattedMessage } from 'react-intl';
@@ -205,6 +205,7 @@ export default function Home() {
         trueOrder: false,
         useOwnImageLoader: false,
         debug: true,
+        mobileFirst: true,
         waitForImages: true,
         margin: { x: 2, y: 2 },    // 设计列与列的间距
         columns: 2,    // 设置列数
@@ -320,11 +321,14 @@ export default function Home() {
 
   useEffect(() => {
     loadMore(1)
+    initData()
   }, [])
 
 
   useEffect(() => {
-    getMacy()
+    if (list.length) {
+      getMacy()
+    }
   }, [list])
 
   useEffect(() => {

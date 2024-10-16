@@ -30,7 +30,7 @@
     display: flex;
     justify-content: space-between;
     border-radius: 20px;
-    background: linear-gradient(45deg, rgba(46, 39, 35, 0.93) 0%, rgb(46, 29, 29) 30%, rgb(56, 35, 35) 100%);
+    background: var(--contentColor);
     align-items: center;
     .left {
       display: flex;

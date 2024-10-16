@@ -18,9 +18,9 @@ import {
   useNavigate,
 } from 'react-router-dom';
 import { routes } from '@/navigation/routes';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getSystemReq, loginReq } from '@/api/common';
-import { setSystemAction, setUserInfoAction } from '@/redux/slices/userSlice';
+import { setLangAction, setSystemAction, setUserInfoAction } from '@/redux/slices/userSlice';
 import EventBus from '@/utils/eventBus';
 import Loading from './Loading';
 import { Toast } from 'antd-mobile';
@@ -43,10 +43,9 @@ export const App: FC = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [rotate, setRotate] = useState(0)
-  const [isShowCongrates, setShowCongrates] = useState(false)
-  const [showTime, setShowTime] = useState(1500)
   const eventBus = EventBus.getInstance()
   const [loading, setLoading] = useState(true)
+  const storeLang = useSelector((state: any) => state.user.lang);
   const [locale, setLocale] = useState<any>('en')
   const timer = useRef<any>(null)
   const login = async () => {
@@ -61,10 +60,10 @@ export const App: FC = () => {
         const storageLang = localStorage.getItem('lang')
         if (!storageLang) {
           const lang = data.languageCode == 'zh-hans' ? 'zh' : 'en'
-          setLocale(lang)
+          dispatch(setLangAction(lang))
           localStorage.setItem('lang', lang)
         } else {
-          setLocale(storageLang)
+          dispatch(setLangAction(storageLang))
         }
         resArray = await Promise.all([loginReq(data), getSystemReq()])
       }
@@ -111,20 +110,16 @@ export const App: FC = () => {
 
   useEffect(() => {
     login()
-    const onMessage = ({ visible, time }: { visible: boolean, time?: number }) => {
-      setShowCongrates(visible)
-      setShowTime(time || 1500)
-    }
+   
     const onLoading = (flag: boolean) => {
       setLoading(flag)
     }
-    const onShiftLanguage = (lang: any) => {
-      localStorage.setItem('lang', lang)
-      setLocale(lang)
-    }
-    eventBus.addListener('showCongrates', onMessage)
+    // const onShiftLanguage = (lang: any) => {
+    //   localStorage.setItem('lang', lang)
+    //   setLocale(lang)
+    // }
     eventBus.addListener('loading', onLoading)
-    eventBus.addListener('shiftLanguage', onShiftLanguage)
+    // eventBus.addListener('shiftLanguage', onShiftLanguage)
   }, [])
 
   useEffect(() => {
@@ -170,7 +165,7 @@ export const App: FC = () => {
       appearance={miniApp.isDark ? 'dark' : 'light'}
       platform={['macos', 'ios'].includes(launchParams.platform) ? 'ios' : 'base'}
     >
-      <IntlProvider locale={locale} messages={messages[locale]}>
+      <IntlProvider locale={storeLang} messages={messages[storeLang]}>
         <div className='layout'>
           <div className='content' style={{ background: `linear-gradient(${rotate}deg, rgba(111, 66, 44, 0.05) 0%, rgba(111, 66, 44, 0.1) 30%, rgba(111, 66, 44, 0.93) 100%)` }}>
             <Routes>

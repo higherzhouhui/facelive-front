@@ -8,10 +8,12 @@ import { FormattedMessage } from 'react-intl';
 import CountryFlag from '@/components/Flag';
 import { initUtils } from '@telegram-apps/sdk';
 import { useDispatch, useSelector } from 'react-redux';
-import { Modal } from 'antd-mobile';
+import { DotLoading, Modal } from 'antd-mobile';
 import { setUserInfoAction } from '@/redux/slices/userSlice';
+import { useHapticFeedback } from '@telegram-apps/sdk-react';
 
 function AnchorDetail() {
+  const hapticFeedback = useHapticFeedback()
   const userinfo = useSelector((state: any) => state.user.info);
   const dispatch = useDispatch()
   const myLocation = useLocation()
@@ -21,7 +23,6 @@ function AnchorDetail() {
   const utils = initUtils()
   const [next, setNext] = useState(false)
   const [oldCover, setOldCover] = useState('')
-  const [play, setPlay] = useState(false)
   const [visible, setVisible] = useState(false)
   const [visibleNext, setVisibleNext] = useState(false)
   const [visibleQuit, setVisibleQuit] = useState(false)
@@ -36,6 +37,14 @@ function AnchorDetail() {
   const lastTouch = useRef<any>(null)
   const anchorId = useRef<any>(null)
   const [loading, setLoading] = useState(true)
+  const videoRef = useRef<any>(null)
+  const audioRef = useRef<any>(null)
+  const endAudioRef = useRef<any>(null)
+  const loadingTimer = useRef<any>(null)
+  const [videoIsLoad, setVideoIsLoad] = useState(false)
+  const [chatLoading, setChatLoading] = useState(false)
+  const [coverLoading, setCoverLoading] = useState(false)
+
   const getAnchorDetail = async () => {
     eventBus.emit('loading', true)
     const res = await getAnchorInfo({ id })
@@ -59,54 +68,71 @@ function AnchorDetail() {
   }
   const handleOverChat = () => {
     setVisibleQuit(true)
+    hapticFeedback.notificationOccurred('warning')
   }
+
   const handleConfirm = async (index: number) => {
+    if (index == 0) {
+      hapticFeedback.notificationOccurred('success')
+      setChatLoading(true)
+      audioRef.current.play()
+      loadingTimer.current = setTimeout(() => {
+        handlePlayVideo()
+        setChatLoading(false)
+        audioRef.current.pause()
+      }, Math.random() * 10000);
+    } else {
+      setVisibleCoin(false)
+    }
+  }
+  const handlePlayVideo = async () => {
     if (timer.current) {
       clearTimeout(timer.current)
     }
     if (timer.current) {
       clearInterval(inTimer.current)
     }
-    const video: any = document.getElementById('video')
-
-    if (index == 0) {
-      const res = await beginChatReq({ id: detail.id })
-      setVisibleCoin(false)
-      if (res.code == 0) {
-        setDetail({
-          ...detail,
-          time: res.data.time
-        })
-        dispatch(setUserInfoAction(res.data))
-        if (video) {
-          setPlay(!play)
-          if (play) {
-            video.pause()
-          } else {
-            video.play()
-            setIsPlaying(true)
-            if (!countTime.current) {
-              countTime.current = 0
-            }
-            inTimer.current = setInterval(() => {
-              countTime.current += 1
-              setCount(countTime.current)
-            }, 1000);
+    const res = await beginChatReq({ id: detail.id })
+    setVisibleCoin(false)
+    if (res.code == 0) {
+      setDetail({
+        ...detail,
+        time: res.data.time
+      })
+      dispatch(setUserInfoAction(res.data))
+      const execPlay = () => {
+        if (isPlaying) {
+          videoRef.current.pause()
+          setIsPlaying(false)
+        } else {
+          videoRef.current.play()
+          setIsPlaying(true)
+          if (!countTime.current) {
+            countTime.current = 0
           }
-          timer.current = setTimeout(() => {
-            handleConfirm(0)
-            clearTimeout(timer.current)
-            clearTimeout(inTimer.current)
-          }, 60000);
+          inTimer.current = setInterval(() => {
+            countTime.current += 1
+            setCount(countTime.current)
+          }, 1000);
         }
-      } else if (res.code = 388) {
-        video.pause()
-        setPlay(false)
-        setIsPlaying(false)
-        setVisible(true)
+        timer.current = setTimeout(() => {
+          handleConfirm(0)
+          clearTimeout(timer.current)
+          clearTimeout(inTimer.current)
+        }, 60000);
       }
-    } else {
-      setVisibleCoin(false)
+      if (videoRef.current.readyState >= 3) {
+        execPlay()
+      } else {
+        // 否则，等待视频加载完成
+        videoRef.current.addEventListener('canplaythrough', function () {
+          execPlay()
+        });
+      }
+    } else if (res.code = 388) {
+      videoRef.current.pause()
+      setIsPlaying(false)
+      setVisible(true)
     }
   }
 
@@ -115,12 +141,9 @@ function AnchorDetail() {
       clearTimeout(timer.current)
       clearInterval(inTimer.current)
       setIsPlaying(false)
-      setPlay(false)
+      endAudioRef.current.play()
       countTime.current = 0
-      const video: any = document.getElementById('video')
-      if (video) {
-        video.pause()
-      }
+      videoRef.current.pause()
     } else {
       setVisibleQuit(false)
     }
@@ -154,9 +177,9 @@ function AnchorDetail() {
     }
     if (index == 0) {
       setNext(true)
-      setPlay(false)
       setIsPlaying(false)
       countTime.current = 0
+      setVideoIsLoad(false)
       if (timer.current) {
         clearTimeout(timer.current)
       }
@@ -165,6 +188,7 @@ function AnchorDetail() {
       setLoading(false)
       if (res.code == 0) {
         setDetail(res.data)
+        
         anchorId.current = res.data.id
         setTimeout(() => {
           setOldCover(res.data.cover)
@@ -178,13 +202,28 @@ function AnchorDetail() {
     }
   }
 
+  const judgeCoverLoadDone = (src: string) => {
+    const img = new Image()
+    img.src = getFileUrl(src)
+    setCoverLoading(true)
+    img.onload = function() {
+      setCoverLoading(false)
+    }
+  }
+
+  const handleEndLoading = () => {
+    setChatLoading(false)
+    audioRef.current.pause()
+    clearTimeout(loadingTimer.current)
+  }
+
   const handleNextAnchor = async () => {
-    if (play) {
+    if (isPlaying) {
       setVisibleNext(true)
     } else {
       setNext(true)
-      setPlay(false)
       setIsPlaying(false)
+      setVideoIsLoad(false)
       if (timer.current) {
         clearTimeout(timer.current)
       }
@@ -216,6 +255,9 @@ function AnchorDetail() {
       if (inTimer.current) {
         clearInterval(inTimer.current)
       }
+      if (loadingTimer) {
+        clearTimeout(loadingTimer.current)
+      }
     }
   }, [])
   useEffect(() => {
@@ -225,6 +267,19 @@ function AnchorDetail() {
   }, [id])
 
   useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.addEventListener('progress', function () {
+        // 当前已加载的百分比
+        var loadedPercent = (videoRef.current.buffered.end(videoRef.current.buffered.length - 1) / videoRef.current.duration) * 100;
+        console.log('已加载百分比: ' + loadedPercent.toFixed(2) + '%');
+        if (loadedPercent == 100) {
+          // setVideoIsLoad(true)
+        } else {
+          setVideoIsLoad(false)
+        }
+      });
+    }
+
     // 获取元素
     const element = document.getElementById('touch')!;
 
@@ -233,14 +288,14 @@ function AnchorDetail() {
     let startY: any = 0;
 
     // 监听触摸开始事件
-    element.addEventListener('touchstart', function (e) {
+    element.addEventListener('touchstart', (e) => {
       // 获取第一个触点
       const touch = e.touches[0];
       // 记录开始位置
       startX = touch.pageX;
       startY = touch.pageY;
     });
-    const onTouchMove =  (e: any) => {
+    const onTouchMove = (e: any) => {
       // 阻止默认的处理方式（例如滚动页面）
       e.preventDefault();
 
@@ -272,18 +327,27 @@ function AnchorDetail() {
     }
   }, [])
 
-  return <div className='anchor-page' id='touch' style={{ backgroundImage: `url(${getFileUrl(detail.cover)})` }}>
+
+  useEffect(() => {
+    if (detail?.cover) {
+      judgeCoverLoadDone(detail.cover)
+    }
+  }, [detail])
+
+  return <div className='anchor-page' style={{ backgroundImage: `url(${getFileUrl(detail.cover)})`, backdropFilter: coverLoading ? 'blur(10px)' : 'blur(0)' }}>
     <div className={`cover ${next ? 'next' : ''}`} style={{ backgroundImage: `url(${getFileUrl(oldCover)})` }}></div>
     <div className={`video`}>
-      <video src={getFileUrl(detail?.video)} loop id='video' poster={getFileUrl(detail.cover)} preload='load'></video>
+      <video src={getFileUrl(detail?.video)} loop id='video' poster={getFileUrl(detail.cover)} preload='load' ref={videoRef}></video>
     </div>
     <div className='top-shadow' />
     <div className='bot-shadow' />
     <div className='top'>
-      <div className='status' />
-      <FormattedMessage id='online' />
+      {
+        isPlaying ? <div>{secondsToTime(count)}</div> : <><div className='status' />
+          <FormattedMessage id='online' /></>
+      }
     </div>
-    <div className='main-content' style={{ opacity: !isPlaying ? 1 : 0, zIndex: !isPlaying ? 1 : -1 }}>
+    <div className='main-content' id='touch' style={{ opacity: !isPlaying ? 1 : 0, zIndex: !isPlaying ? 1 : -1 }}>
       <div className='right-operation'>
         <div className='heart' onClick={() => handleLike()}>
           <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4724" width="38" height="38"><path d="M760.384 64c47.808 0 91.968 11.968 132.352 35.84a264.32 264.32 0 0 1 95.872 97.152A263.68 263.68 0 0 1 1024 330.88c0 34.752-6.592 68.544-19.712 101.312a262.4 262.4 0 0 1-57.536 87.424L512 960 77.248 519.68A268.8 268.8 0 0 1 0 330.88c0-48.384 11.776-93.056 35.392-133.952A264.32 264.32 0 0 1 131.2 99.84 255.296 255.296 0 0 1 263.68 64 260.736 260.736 0 0 1 449.92 142.208l62.08 62.912 62.144-62.912a258.944 258.944 0 0 1 86.336-58.24A259.584 259.584 0 0 1 760.512 64h-0.128z" fill={detail?.isLike ? 'red' : '#fff'} p-id="4725"></path></svg>
@@ -362,14 +426,36 @@ function AnchorDetail() {
         <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="13215" width="20" height="20"><path d="M493.504 558.144a31.904 31.904 0 0 0 45.28 0l308.352-308.352a31.968 31.968 0 1 0-45.248-45.248l-285.728 285.728-294.176-294.144a31.968 31.968 0 1 0-45.248 45.248l316.768 316.768z" p-id="13216" fill="#e6e6e6"></path><path d="M801.888 460.576l-285.728 285.728-294.144-294.144a31.968 31.968 0 1 0-45.248 45.248l316.768 316.768a31.904 31.904 0 0 0 45.28 0l308.352-308.352a32 32 0 1 0-45.28-45.248z" p-id="13217" fill="#e6e6e6"></path></svg>
       </div>
     </div>
-    <div className='main-content' style={{ opacity: isPlaying ? 1 : 0, zIndex: isPlaying ? 1 : -1, marginBottom: '1.5rem' }}>
+    <div className='playing-content chat-loading' style={{ opacity: chatLoading ? 1 : 0, zIndex: chatLoading ? 10 : -1 }}>
+      <audio id="audioPlayer" ref={audioRef} loop>
+        <source src="/assets/mp3/loading.mp3" type="audio/mpeg" />
+        Your browser does not support the audio element.
+      </audio>
+      <audio id="audioPlayer" ref={endAudioRef}>
+        <source src="/assets/mp3/end.mp3" type="audio/mpeg" />
+        Your browser does not support the audio element.
+      </audio>
+      <div className='anchor-avatar'>
+        <img src={getFileUrl(detail.avatar)} alt='avatar' />
+        <div className='anchor-name'>{detail.name}</div>
+        <div className='loading-text'>
+          <FormattedMessage id='ddjt' /><DotLoading color='#fff'/>
+        </div>
+      </div>
+      <div className='end-btn' onClick={() => handleEndLoading()}>
+        <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4698" width="42" height="42"><path d="M841.216 856.064c185.856-185.856 185.856-487.424 0-673.792C655.36-3.584 353.792-3.584 167.424 182.272c-185.856 185.856-185.856 487.424 0 673.792 186.368 185.856 487.936 185.856 673.792 0zM218.624 495.104c0-47.616 111.104-113.664 285.696-113.664 175.104 0 285.696 66.048 285.696 113.664 0 40.96 10.752 102.4-73.728 93.184-84.48-9.216-78.848-40.96-78.848-83.456 0-29.696-68.608-36.352-133.12-36.352-65.024 0-133.12 6.656-133.12 36.352 0 42.496 5.632 74.24-78.848 83.456-84.992 9.216-73.728-51.712-73.728-93.184z" fill="#ff4530" p-id="4699"></path></svg>
+      </div>
+    </div>
+
+    <div className='playing-content' style={{ opacity: isPlaying ? 1 : 0, zIndex: isPlaying ? 1 : -1 }}>
       <div className='coin'>
         {userinfo.score}
         <img src='/assets/coin.png' />
       </div>
-      <div className='chat-btn' style={{ justifyContent: 'center' }} onClick={() => handleOverChat()}>
-        <div className='time'>{secondsToTime(count)}</div>
-        <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4698" width="20" height="20"><path d="M841.216 856.064c185.856-185.856 185.856-487.424 0-673.792C655.36-3.584 353.792-3.584 167.424 182.272c-185.856 185.856-185.856 487.424 0 673.792 186.368 185.856 487.936 185.856 673.792 0zM218.624 495.104c0-47.616 111.104-113.664 285.696-113.664 175.104 0 285.696 66.048 285.696 113.664 0 40.96 10.752 102.4-73.728 93.184-84.48-9.216-78.848-40.96-78.848-83.456 0-29.696-68.608-36.352-133.12-36.352-65.024 0-133.12 6.656-133.12 36.352 0 42.496 5.632 74.24-78.848 83.456-84.992 9.216-73.728-51.712-73.728-93.184z" fill="#ffffff" p-id="4699"></path></svg>
+      <div className='anchor-avatar'>
+      </div>
+      <div className='end-btn' onClick={() => handleOverChat()}>
+        <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4698" width="42" height="42"><path d="M841.216 856.064c185.856-185.856 185.856-487.424 0-673.792C655.36-3.584 353.792-3.584 167.424 182.272c-185.856 185.856-185.856 487.424 0 673.792 186.368 185.856 487.936 185.856 673.792 0zM218.624 495.104c0-47.616 111.104-113.664 285.696-113.664 175.104 0 285.696 66.048 285.696 113.664 0 40.96 10.752 102.4-73.728 93.184-84.48-9.216-78.848-40.96-78.848-83.456 0-29.696-68.608-36.352-133.12-36.352-65.024 0-133.12 6.656-133.12 36.352 0 42.496 5.632 74.24-78.848 83.456-84.992 9.216-73.728-51.712-73.728-93.184z" fill="#ff4530" p-id="4699"></path></svg>
       </div>
     </div>
     <Modal visible={visible} content={<FormattedMessage id='hintAccount' />} title={<FormattedMessage id='hint' />} closeOnAction

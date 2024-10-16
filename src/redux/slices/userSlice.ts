@@ -15,17 +15,14 @@ function getUserInfo(){
 }
 
 
-function getEthInfo(){
-    let obj = {}
+function getLang(){
+    let lang = 'en'
     try {
-        const _ethInfo = localStorage.getItem('ethInfo')
-        if (_ethInfo) {
-            obj = JSON.parse(_ethInfo)
-        }
+        lang = localStorage.getItem('lang') || 'en'
     } catch{
 
     }
-    return obj
+    return lang
 }
 
 function getSystemCOnfig(){
@@ -45,7 +42,7 @@ const userSlice = createSlice({
     name: 'user',
     initialState: {
         info: getUserInfo(),
-        eth: getEthInfo(),
+        lang: getLang(),
         system: getSystemCOnfig()
     },
     reducers: {
@@ -53,19 +50,18 @@ const userSlice = createSlice({
             state.info = {...state.info, ...action.payload}
             localStorage.setItem('userInfo', JSON.stringify(state.info))
         },
-        setEthAction(state, action) {
-            state.eth = action.payload
-            localStorage.setItem('ethInfo', JSON.stringify(state.eth))
+        setLangAction(state, action) {
+            state.lang = action.payload
+            localStorage.setItem('lang', state.lang)
         },
         setSystemAction(state, action) {
             state.system = action.payload
             localStorage.setItem('systemInfo', JSON.stringify(state.system))
-            
         }
     }
 })
 
-export const { setUserInfoAction, setEthAction, setSystemAction } = userSlice.actions
+export const { setUserInfoAction, setLangAction, setSystemAction } = userSlice.actions
 
 export default userSlice.reducer
 
