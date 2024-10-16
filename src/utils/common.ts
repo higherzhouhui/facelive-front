@@ -63,7 +63,7 @@ export function formatNumber(num: any) {
 
 export function getFileUrl(file: string) {
   const dev = import.meta.env.DEV
-  const url = dev ? 'http://localhost:2002' : 'http://localhost:2002'
+  const url = dev ? 'http://localhost:2002' : 'https://apifacelive.jizaoji.top'
   return `${url}${file}`
 }
 
