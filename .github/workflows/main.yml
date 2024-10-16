@@ -30,7 +30,7 @@ jobs:
     - name: Deploy to Server   # 使用别人包装好的步骤，推送文件模块到远程服务器
       uses: easingthemes/ssh-deploy@v2.1.5
       env:
-          SSH_PRIVATE_KEY: ${{ secrets.ACCESS_TOKEN }} # ssh私钥
+          SSH_PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }} # ssh私钥
           ARGS: -avz --delete                          # rsync参数
           REMOTE_PORT: '22'                            # ssh端口
           SOURCE: ./facelive-front                     # 要推送的文件夹，路径相对于代码仓库的根目录
