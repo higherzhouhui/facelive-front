@@ -41,7 +41,7 @@ export default defineConfig({
     phaserMsg(),
   ],
   build: {
-    outDir: 'docs',
+    outDir: 'facelive-front',
     rollupOptions: {
       output: {
         manualChunks: {
