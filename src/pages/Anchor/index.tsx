@@ -111,19 +111,14 @@ function AnchorDetail() {
       })
       dispatch(setUserInfoAction(res.data))
       const execPlay = () => {
-        if (isPlaying) {
-          videoRef.current.pause()
-          setIsPlaying(false)
-        } else {
-          videoRef.current.play()
-          setIsPlaying(true)
-          if (!countTime.current) {
-            countTime.current = 0
-          }
-          inTimer.current = setInterval(() => {
-            countTime.current += 1
-          }, 1000);
+        videoRef.current.play()
+        setIsPlaying(true)
+        if (!countTime.current) {
+          countTime.current = 0
         }
+        inTimer.current = setInterval(() => {
+          countTime.current += 1
+        }, 1000);
         // 60秒后重新扣费
         timer.current = setTimeout(() => {
           handlePlayVideo(true)
@@ -145,6 +140,8 @@ function AnchorDetail() {
       videoRef.current.pause()
       setIsPlaying(false)
       setVisible(true)
+      clearTimeout(timer.current)
+      clearTimeout(inTimer.current)
     }
   }
 
@@ -217,7 +214,7 @@ function AnchorDetail() {
     const img = new Image()
     img.src = getFileUrl(src)
     setCoverLoading(true)
-    img.onload = function() {
+    img.onload = function () {
       setCoverLoading(false)
     }
   }
@@ -274,7 +271,7 @@ function AnchorDetail() {
       }
     }
   }, [])
-  
+
   useEffect(() => {
     if (id) {
       getAnchorDetail()
@@ -447,7 +444,7 @@ function AnchorDetail() {
         <img src={getFileUrl(detail.avatar)} alt='avatar' />
         <div className='anchor-name'>{detail.name}</div>
         <div className='loading-text'>
-          <FormattedMessage id='ddjt' /><DotLoading color='#fff'/>
+          <FormattedMessage id='ddjt' /><DotLoading color='#fff' />
         </div>
       </div>
       <div className='end-btn' onClick={() => handleEndLoading()}>
@@ -517,7 +514,7 @@ function AnchorDetail() {
       onAction={(action, index) => handelConfirmNext(index)}
       closeOnMaskClick
     />
-    <Modal visible={visibleCoin} content={<div style={{wordBreak: 'break-all'}}> <FormattedMessage id='ksytsplt' />
+    <Modal visible={visibleCoin} content={<div style={{ wordBreak: 'break-all' }}> <FormattedMessage id='ksytsplt' />
       ({detail.coin}
       <FormattedMessage id='coin' />/<FormattedMessage id='minute' />)<div><FormattedMessage id='yue' />: <b>{userinfo?.score} Coins</b></div></div>} title={<FormattedMessage id='qrks' />} closeOnAction
       onClose={() => {
