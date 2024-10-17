@@ -51,6 +51,7 @@ function AnchorDetail() {
     eventBus.emit('loading', false)
     if (res.code == 0) {
       setDetail(res.data)
+      judgeCoverLoadDone(detail.cover)
       setOldCover(res.data.cover)
       anchorId.current = res.data.id
       if (localStorage.getItem('chat') == '1') {
@@ -76,16 +77,23 @@ function AnchorDetail() {
       hapticFeedback.notificationOccurred('success')
       setChatLoading(true)
       audioRef.current.play()
+      const delay = 3000 + Math.random() * 8000
+      videoRef.current.play()
+      videoRef.current.muted = true
+
       loadingTimer.current = setTimeout(() => {
         handlePlayVideo()
         setChatLoading(false)
         audioRef.current.pause()
-      }, Math.random() * 10000);
+      }, delay);
     } else {
       setVisibleCoin(false)
     }
   }
   const handlePlayVideo = async () => {
+    videoRef.current.currentTime = 0
+    videoRef.current.muted = false
+
     if (timer.current) {
       clearTimeout(timer.current)
     }
@@ -116,7 +124,7 @@ function AnchorDetail() {
           }, 1000);
         }
         timer.current = setTimeout(() => {
-          handleConfirm(0)
+          handlePlayVideo()
           clearTimeout(timer.current)
           clearTimeout(inTimer.current)
         }, 60000);
@@ -129,7 +137,7 @@ function AnchorDetail() {
           execPlay()
         });
       }
-    } else if (res.code = 388) {
+    } else {
       videoRef.current.pause()
       setIsPlaying(false)
       setVisible(true)
@@ -188,15 +196,15 @@ function AnchorDetail() {
       setLoading(false)
       if (res.code == 0) {
         setDetail(res.data)
-        
         anchorId.current = res.data.id
+        judgeCoverLoadDone(detail.cover)
         setTimeout(() => {
           setOldCover(res.data.cover)
-        }, 500);
+        }, 400);
       }
       setTimeout(() => {
         setNext(false)
-      }, 500);
+      }, 400);
     } else {
       setVisibleNext(false)
     }
@@ -214,6 +222,7 @@ function AnchorDetail() {
   const handleEndLoading = () => {
     setChatLoading(false)
     audioRef.current.pause()
+    videoRef.current.pause()
     clearTimeout(loadingTimer.current)
   }
 
@@ -233,6 +242,7 @@ function AnchorDetail() {
       if (res.code == 0) {
         setDetail(res.data)
         anchorId.current = res.data.id
+        sessionStorage.setItem('anchorId', `${res.data.id}`)
         setTimeout(() => {
           setOldCover(res.data.cover)
         }, 500);
@@ -245,10 +255,11 @@ function AnchorDetail() {
 
 
   useEffect(() => {
-    const search = myLocation.search
-    const _id = search.replace(`?id=`, '')
+    const _id = sessionStorage.getItem('anchorId') || 1
     setId(_id)
     return () => {
+      audioRef?.current?.pause()
+      videoRef?.current?.pause()
       if (timer.current) {
         clearTimeout(timer.current)
       }
@@ -326,13 +337,6 @@ function AnchorDetail() {
       }
     }
   }, [])
-
-
-  useEffect(() => {
-    if (detail?.cover) {
-      judgeCoverLoadDone(detail.cover)
-    }
-  }, [detail])
 
   return <div className='anchor-page' style={{ backgroundImage: `url(${getFileUrl(detail.cover)})`, backdropFilter: coverLoading ? 'blur(10px)' : 'blur(0)' }}>
     <div className={`cover ${next ? 'next' : ''}`} style={{ backgroundImage: `url(${getFileUrl(oldCover)})` }}></div>
@@ -443,7 +447,7 @@ function AnchorDetail() {
         </div>
       </div>
       <div className='end-btn' onClick={() => handleEndLoading()}>
-        <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4698" width="42" height="42"><path d="M841.216 856.064c185.856-185.856 185.856-487.424 0-673.792C655.36-3.584 353.792-3.584 167.424 182.272c-185.856 185.856-185.856 487.424 0 673.792 186.368 185.856 487.936 185.856 673.792 0zM218.624 495.104c0-47.616 111.104-113.664 285.696-113.664 175.104 0 285.696 66.048 285.696 113.664 0 40.96 10.752 102.4-73.728 93.184-84.48-9.216-78.848-40.96-78.848-83.456 0-29.696-68.608-36.352-133.12-36.352-65.024 0-133.12 6.656-133.12 36.352 0 42.496 5.632 74.24-78.848 83.456-84.992 9.216-73.728-51.712-73.728-93.184z" fill="#ff4530" p-id="4699"></path></svg>
+        <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4698"><path d="M841.216 856.064c185.856-185.856 185.856-487.424 0-673.792C655.36-3.584 353.792-3.584 167.424 182.272c-185.856 185.856-185.856 487.424 0 673.792 186.368 185.856 487.936 185.856 673.792 0zM218.624 495.104c0-47.616 111.104-113.664 285.696-113.664 175.104 0 285.696 66.048 285.696 113.664 0 40.96 10.752 102.4-73.728 93.184-84.48-9.216-78.848-40.96-78.848-83.456 0-29.696-68.608-36.352-133.12-36.352-65.024 0-133.12 6.656-133.12 36.352 0 42.496 5.632 74.24-78.848 83.456-84.992 9.216-73.728-51.712-73.728-93.184z" fill="#ff4530" p-id="4699"></path></svg>
       </div>
     </div>
 
@@ -455,7 +459,7 @@ function AnchorDetail() {
       <div className='anchor-avatar'>
       </div>
       <div className='end-btn' onClick={() => handleOverChat()}>
-        <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4698" width="42" height="42"><path d="M841.216 856.064c185.856-185.856 185.856-487.424 0-673.792C655.36-3.584 353.792-3.584 167.424 182.272c-185.856 185.856-185.856 487.424 0 673.792 186.368 185.856 487.936 185.856 673.792 0zM218.624 495.104c0-47.616 111.104-113.664 285.696-113.664 175.104 0 285.696 66.048 285.696 113.664 0 40.96 10.752 102.4-73.728 93.184-84.48-9.216-78.848-40.96-78.848-83.456 0-29.696-68.608-36.352-133.12-36.352-65.024 0-133.12 6.656-133.12 36.352 0 42.496 5.632 74.24-78.848 83.456-84.992 9.216-73.728-51.712-73.728-93.184z" fill="#ff4530" p-id="4699"></path></svg>
+        <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4698"><path d="M841.216 856.064c185.856-185.856 185.856-487.424 0-673.792C655.36-3.584 353.792-3.584 167.424 182.272c-185.856 185.856-185.856 487.424 0 673.792 186.368 185.856 487.936 185.856 673.792 0zM218.624 495.104c0-47.616 111.104-113.664 285.696-113.664 175.104 0 285.696 66.048 285.696 113.664 0 40.96 10.752 102.4-73.728 93.184-84.48-9.216-78.848-40.96-78.848-83.456 0-29.696-68.608-36.352-133.12-36.352-65.024 0-133.12 6.656-133.12 36.352 0 42.496 5.632 74.24-78.848 83.456-84.992 9.216-73.728-51.712-73.728-93.184z" fill="#ff4530" p-id="4699"></path></svg>
       </div>
     </div>
     <Modal visible={visible} content={<FormattedMessage id='hintAccount' />} title={<FormattedMessage id='hint' />} closeOnAction

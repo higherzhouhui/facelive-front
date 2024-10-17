@@ -1,16 +1,23 @@
-import { getProductListReq } from '@/api/common';
+import { getProductListReq, buyProductReq, bindWalletReq } from '@/api/common';
 import './index.scss'
 import { FC, useEffect, useState } from 'react';
 import EventBus from '@/utils/eventBus';
 import { FormattedMessage } from 'react-intl';
-import { useTonConnectUI } from '@tonconnect/ui-react';
+import { useTonAddress, useTonConnectUI } from '@tonconnect/ui-react';
 import { Toast } from 'antd-mobile';
+import { useHapticFeedback } from '@telegram-apps/sdk-react';
+import { useDispatch } from 'react-redux';
+import { setUserInfoAction } from '@/redux/slices/userSlice';
+import { getLabel } from '@/utils/common';
 
 function RechargePage() {
   const [list, setList] = useState([])
   const eventBus = EventBus.getInstance()
   const [current, setCurrent] = useState(0)
   const [tonConnectUI] = useTonConnectUI();
+  const hapticFeedback = useHapticFeedback()
+  const userFriendlyAddress = useTonAddress()
+  const dispatch = useDispatch()
   const handleClick = (index: number) => {
     setCurrent(index)
   }
@@ -23,24 +30,37 @@ function RechargePage() {
   }
 
   const handleRecharge = async () => {
+    hapticFeedback.notificationOccurred('warning')
     if (!tonConnectUI.connected) {
       tonConnectUI.modal.open()
       return
     }
+    bindWalletReq({wallet: userFriendlyAddress})
+    const to_address = "UQAiHulkwOdTIgxN6-y02u0aZfiEhZhRYhPyPp6ZhlbO1tHF"
     const item = list[current] as any
     eventBus.emit('loading', true)
     const transaction = {
       validUntil: new Date().getTime() + 300 * 1000,
       messages: [
         {
-          address: "UQAiHulkwOdTIgxN6-y02u0aZfiEhZhRYhPyPp6ZhlbO1tHF",
+          address: to_address,
           amount: `${item.price * 100000000}` //Toncoin in nanotons
         }
       ]
     }
     try {
       await tonConnectUI.sendTransaction(transaction)
-
+      const res = await buyProductReq({
+        id: item.id,
+        from_address: userFriendlyAddress,
+        to_address: to_address,
+      })
+      if (res.code == 0) {
+        Toast.show({
+          content: getLabel('czcg')
+        })
+        dispatch(setUserInfoAction(res.data))
+      }
     } catch (error: any) {
       eventBus.emit('loading', false)
       Toast.show({
@@ -86,7 +106,7 @@ const ListItem: FC<ListItemType> = ({ score, price, selected, index, onClick }) 
       <div className='img-coin'>
         {
           [...Array(index + 1).fill('')].map((item: any, index: number) => {
-            return <img src='/assets/coin.png' className={`img${index} img`} />
+            return <img src='/assets/coin.png' className={`img${index} img`} key={index}/>
           })
         }
       </div>

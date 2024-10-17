@@ -19,8 +19,8 @@ import {
 } from 'react-router-dom';
 import { routes } from '@/navigation/routes';
 import { useDispatch, useSelector } from 'react-redux';
-import { getSystemReq, loginReq } from '@/api/common';
-import { setLangAction, setSystemAction, setUserInfoAction } from '@/redux/slices/userSlice';
+import { getSystemReq, loginReq, changeLangReq } from '@/api/common';
+import { setSystemAction, setUserInfoAction } from '@/redux/slices/userSlice';
 import EventBus from '@/utils/eventBus';
 import Loading from './Loading';
 import { Toast } from 'antd-mobile';
@@ -45,26 +45,16 @@ export const App: FC = () => {
   const [rotate, setRotate] = useState(0)
   const eventBus = EventBus.getInstance()
   const [loading, setLoading] = useState(true)
-  const storeLang = useSelector((state: any) => state.user.lang);
-  const [locale, setLocale] = useState<any>('en')
+  const userInfo = useSelector((state: any) => state.user.info);
   const timer = useRef<any>(null)
   const login = async () => {
     setLoading(true)
-    
     try {
       const initData = initInitData() as any;
       let resArray: any;
       if (initData && initData.user && initData.user.id) {
         const user = initData.initData.user
         const data = { ...initData.initData, ...user }
-        const storageLang = localStorage.getItem('lang')
-        if (!storageLang) {
-          const lang = data.languageCode == 'zh-hans' ? 'zh' : 'en'
-          dispatch(setLangAction(lang))
-          localStorage.setItem('lang', lang)
-        } else {
-          dispatch(setLangAction(storageLang))
-        }
         resArray = await Promise.all([loginReq(data), getSystemReq()])
       }
       const [res, sys] = resArray
@@ -73,7 +63,15 @@ export const App: FC = () => {
       }
       if (res.code == 0) {
         localStorage.setItem('authorization', res.data.token)
-        dispatch(setUserInfoAction(res.data))
+        const data = res.data
+        if (data.lang) {
+          dispatch(setUserInfoAction(res.data))
+        } else {
+          const lang = data.languageCode == 'zh-hans' ? 'zh' : 'en'
+          localStorage.setItem('lang', lang)
+          const userInfo = await changeLangReq({lang: lang})
+          dispatch(setUserInfoAction(res.data))
+        }
       } else {
         Toast.show({
           content: res.msg,
@@ -165,7 +163,7 @@ export const App: FC = () => {
       appearance={miniApp.isDark ? 'dark' : 'light'}
       platform={['macos', 'ios'].includes(launchParams.platform) ? 'ios' : 'base'}
     >
-      <IntlProvider locale={storeLang} messages={messages[storeLang]}>
+      <IntlProvider locale={userInfo.lang || 'en'} messages={messages[userInfo.lang || 'en']}>
         <div className='layout'>
           <div className='content' style={{ background: `linear-gradient(${rotate}deg, rgba(111, 66, 44, 0.05) 0%, rgba(111, 66, 44, 0.1) 30%, rgba(111, 66, 44, 0.93) 100%)` }}>
             <Routes>

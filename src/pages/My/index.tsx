@@ -13,7 +13,6 @@ function MyselfPage() {
   const userinfo = useSelector((state: any) => state.user.info);
   const navigate = useNavigate()
   const config = useSelector((state: any) => state.user.system);
-  const storageLang = useSelector((state: any) => state.user.lang);
   const utils = initUtils()
   const dispatch = useDispatch()
   const handleJoinTg = () => {
@@ -67,7 +66,7 @@ function MyselfPage() {
     {
       icon: language,
       label: <FormattedMessage id='language' />,
-      value: <FormattedMessage id={storageLang} />,
+      value: <FormattedMessage id={userinfo?.lang || 'en'} />,
       rightIcon: right,
       link: '/language',
     },

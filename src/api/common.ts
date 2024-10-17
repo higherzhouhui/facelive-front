@@ -67,6 +67,14 @@ export const bindWalletReq = (data: any) => {
   });
 };
 
+export const changeLangReq = (data: any) => {
+  return service<any>({
+    url: '/user/changeLang',
+    method: 'POST',
+    data,
+  });
+};
+
 export const getCheckInRewardListReq = () => {
   return service<any>({
     url: '/checkInReward/list',
@@ -209,5 +217,13 @@ export const getProductListReq = (params?: any) => {
     url: '/product/list',
     method: 'GET',
     params
+  });
+};
+
+export const buyProductReq = (data?: any) => {
+  return service<any>({
+    url: '/product/buy',
+    method: 'POST',
+    data
   });
 };

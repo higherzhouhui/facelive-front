@@ -47,12 +47,14 @@ export default function Home() {
       }
     }
     const append: any = await getAnchorList(where)
-    setLoading(false)
     if (where.page == 1) {
       setList(append.data)
     } else {
       setList((val: any) => [...val, ...append.data])
     }
+    setTimeout(() => {
+      setLoading(false)
+    }, 1000);
     setTimeout(() => {
       eventBus.emit('loading', false)
     }, 500);
@@ -190,7 +192,8 @@ export default function Home() {
   }
 
   const handleToDetail = (id: number) => {
-    navigate(`/anchor?id=${id}`)
+    sessionStorage.setItem('anchorId', `${id}`)
+    navigate(`/anchor`)
     hapticFeedback.notificationOccurred('success')
   }
 
@@ -435,7 +438,7 @@ export default function Home() {
       </div>
       <InfiniteScroll loadMore={() => loadMore()} hasMore={hasMore}>
         {
-          list.length ? <div>-------- End --------</div> : <Empty description={<FormattedMessage id='nodata' />} />
+          list.length ? <div>-------- <FormattedMessage id='endDesc'/> --------</div> : <Empty description={<FormattedMessage id='nodata' />} />
         }
       </InfiniteScroll>
       <BackTop />
@@ -447,7 +450,7 @@ export default function Home() {
         onClose={() => {
           setVisible(false)
         }}
-        bodyStyle={{ height: '50vh', background: '#18140E', borderRadius: '12px 12px 0 0', overflow: 'hidden' }}
+        bodyStyle={{ height: '60vh', background: '#18140E', borderRadius: '12px 12px 0 0', overflow: 'hidden' }}
       >
         <div className='filter-popup'>
           <div className='title'>
