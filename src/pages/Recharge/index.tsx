@@ -43,7 +43,7 @@ function RechargePage() {
       messages: [
         {
           address: to_address,
-          amount: `${item.price * 100000000}` //Toncoin in nanotons
+          amount: `${item.price * 1000000000}` //Toncoin in nanotons
         }
       ]
     }
