@@ -33,6 +33,11 @@
     margin-top: 12px;
     .balance {
       font-size: 1.2rem;
+      .bc {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
       .count {
         color: var(--highColor);
         font-size: 2rem;

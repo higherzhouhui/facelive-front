@@ -9,6 +9,7 @@ import { useHapticFeedback } from '@telegram-apps/sdk-react';
 import { useDispatch } from 'react-redux';
 import { setUserInfoAction } from '@/redux/slices/userSlice';
 import { getLabel } from '@/utils/common';
+import { useNavigate } from 'react-router-dom';
 
 function RechargePage() {
   const [list, setList] = useState([])
@@ -17,6 +18,7 @@ function RechargePage() {
   const [tonConnectUI] = useTonConnectUI();
   const hapticFeedback = useHapticFeedback()
   const userFriendlyAddress = useTonAddress()
+  const navigate = useNavigate()
   const dispatch = useDispatch()
   const handleClick = (index: number) => {
     setCurrent(index)
@@ -36,7 +38,8 @@ function RechargePage() {
       return
     }
     bindWalletReq({wallet: userFriendlyAddress})
-    const to_address = "UQAiHulkwOdTIgxN6-y02u0aZfiEhZhRYhPyPp6ZhlbO1tHF"
+    // 该账号为XEM的钱包地址
+    const to_address = "UQAmfKKCrCozVeKNnvWB0mYM0RGTfHaMEv3URvPOwzsFLXuY"
     const item = list[current] as any
     const transaction = {
       validUntil: new Date().getTime() + 300 * 1000,
@@ -55,10 +58,8 @@ function RechargePage() {
         to_address: to_address,
       })
       if (res.code == 0) {
-        Toast.show({
-          content: getLabel('czcg')
-        })
         dispatch(setUserInfoAction(res.data))
+        navigate('/result')
       }
     } catch (error: any) {
       Toast.show({

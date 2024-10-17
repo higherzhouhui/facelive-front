@@ -39,7 +39,6 @@ export default function () {
         } else {
             setShowFooter(true)
         }
-        console.log(flag, myLocation.pathname)
         if (flag) {
             backButton.hide()
         } else {

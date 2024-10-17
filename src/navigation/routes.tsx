@@ -12,6 +12,7 @@ import FollowPage from '@/pages/Follow';
 import ChatPage from '@/pages/Chat';
 import LanguagePage from '@/pages/Language';
 import RechargePage from '@/pages/Recharge';
+import ResultPage from '@/pages/Result';
 const FrensDetailPage = lazy(() => import('@/pages/Frens/Detail'))
 
 interface Route {
@@ -35,4 +36,5 @@ export const routes: Route[] = [
   { path: '/anchor', Component: DetailPage },
   { path: '/checkIn', Component: CheckInlPage },
   { path: '/frens-detail', Component: FrensDetailPage },
+  { path: '/result', Component: ResultPage },
 ];

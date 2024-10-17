@@ -391,19 +391,19 @@ function AnchorDetail() {
         </div>
         <div className='detail-item'>
           <div className='count'>{detail?.time}+s</div>
-          <div>
+          <div className='count-desc'>
             <FormattedMessage id='chatTime' />
           </div>
         </div>
         <div className='detail-item'>
           <div className='count'>{detail?.fens}</div>
-          <div>
+          <div className='count-desc'>
             <FormattedMessage id='fens' />
           </div>
         </div>
         <div className='detail-item'>
           <div className='count'>{detail?.return}</div>
-          <div>
+          <div className='count-desc'>
             <FormattedMessage id='huitouke' />
           </div>
         </div>
@@ -421,8 +421,8 @@ function AnchorDetail() {
         <div className='left'>
           <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="11230" data-spm-anchor-id="a313x.search_index.0.i20.766b3a81FJsSKH" width="22" height="22"><path d="M512 65C264.88 65 64.53 265.35 64.53 512.5S264.88 960 512 960s447.5-200.35 447.5-447.5S759.17 65 512 65z m75.71 530.56a20.34 20.34 0 0 1-20.31 20.34H336.87a20.34 20.34 0 0 1-20.34-20.34V429.44a20.34 20.34 0 0 1 20.34-20.34H567.4a20.34 20.34 0 0 1 20.34 20.34z m119.79 12.77a6.78 6.78 0 0 1-10.66 5.56l-83.63-63.77a6.8 6.8 0 0 1-2.9-5.56v-64.12a6.8 6.8 0 0 1 2.9-5.56l83.63-63.77a6.78 6.78 0 0 1 10.66 5.56z" fill="#ffffff" p-id="11231" data-spm-anchor-id="a313x.search_index.0.i18.766b3a81FJsSKH"></path></svg>
           <FormattedMessage id='ksytsplt' />
-          （{detail.coin}
-          <FormattedMessage id='coin' />/<FormattedMessage id='minute' />）
+          ({detail.coin}
+          <FormattedMessage id='coin' />/<FormattedMessage id='minute' />)
         </div>
         <div className='right' />
       </div>
@@ -513,9 +513,9 @@ function AnchorDetail() {
       onAction={(action, index) => handelConfirmNext(index)}
       closeOnMaskClick
     />
-    <Modal visible={visibleCoin} content={<div> <FormattedMessage id='ksytsplt' />
-      （{detail.coin}
-      <FormattedMessage id='coin' />/<FormattedMessage id='minute' />）<div><FormattedMessage id='yue' />: <b>{userinfo?.score} Coins</b></div></div>} title={<FormattedMessage id='qrks' />} closeOnAction
+    <Modal visible={visibleCoin} content={<div style={{wordBreak: 'break-all'}}> <FormattedMessage id='ksytsplt' />
+      ({detail.coin}
+      <FormattedMessage id='coin' />/<FormattedMessage id='minute' />)<div><FormattedMessage id='yue' />: <b>{userinfo?.score} Coins</b></div></div>} title={<FormattedMessage id='qrks' />} closeOnAction
       onClose={() => {
         setVisibleCoin(false)
       }}
