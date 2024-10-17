@@ -21,7 +21,7 @@ export default function () {
             to: '/'
         },
         {
-            title: 'Leaderboard',
+            title: 'My',
             icon: MyIcon,
             to: '/my',
         },
@@ -39,13 +39,14 @@ export default function () {
         } else {
             setShowFooter(true)
         }
+        console.log(flag, myLocation.pathname)
         if (flag) {
             backButton.hide()
         } else {
             backButton.show();
         }
     }, [myLocation.pathname])
-    return <footer className="footer" style={{ display: isShowFooter ? 'block' : 'none', paddingBottom: isIos ? '1.5rem' : '1rem' }}>
+    return <footer className="footer" style={{ display: isShowFooter ? 'block' : 'none', paddingBottom: isIos ? '1.8rem' : '1.2rem' }}>
         <div className='list'>
             {
                 menu.map((item => {
