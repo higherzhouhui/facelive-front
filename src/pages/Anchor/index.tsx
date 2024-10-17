@@ -89,8 +89,10 @@ function AnchorDetail() {
       setVisibleCoin(false)
     }
   }
-  const handlePlayVideo = async () => {
-    videoRef.current.currentTime = detail?.currentTime || 0
+  const handlePlayVideo = async (Continue?: boolean) => {
+    if (!Continue) {
+      videoRef.current.currentTime = detail?.currentTime || 0
+    }
     videoRef.current.muted = false
 
     if (timer.current) {
@@ -122,8 +124,9 @@ function AnchorDetail() {
             countTime.current += 1
           }, 1000);
         }
+        // 60秒后重新扣费
         timer.current = setTimeout(() => {
-          handlePlayVideo()
+          handlePlayVideo(true)
           clearTimeout(timer.current)
           clearTimeout(inTimer.current)
         }, 60000);
@@ -133,7 +136,9 @@ function AnchorDetail() {
       } else {
         // 否则，等待视频加载完成
         videoRef.current.addEventListener('canplaythrough', function () {
-          execPlay()
+          if (isPlaying) {
+            execPlay()
+          }
         });
       }
     } else {
@@ -149,7 +154,6 @@ function AnchorDetail() {
       clearInterval(inTimer.current)
       setIsPlaying(false)
       endAudioRef.current.play()
-      countTime.current = 0
       videoRef.current.pause()
     } else {
       setVisibleQuit(false)
@@ -270,6 +274,7 @@ function AnchorDetail() {
       }
     }
   }, [])
+  
   useEffect(() => {
     if (id) {
       getAnchorDetail()

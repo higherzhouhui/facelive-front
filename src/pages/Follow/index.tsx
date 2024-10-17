@@ -39,7 +39,8 @@ function FollowPage() {
       setVisible(true)
     } else {
       localStorage.setItem('chat', '1')
-      navigate(`/anchor?id=${item.id}`)
+      sessionStorage.setItem('anchorId', item.id)
+      navigate(`/anchor`)
     }
   }
   useEffect(() => {
