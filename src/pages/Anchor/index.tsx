@@ -1,6 +1,6 @@
 import './index.scss'
 import { useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { getAnchorInfo, followAnchorReq, getNextAnchorInfo, beginChatReq } from '@/api/common';
 import EventBus from '@/utils/eventBus';
 import { getFileUrl, secondsToTime } from '@/utils/common';
@@ -16,7 +16,6 @@ function AnchorDetail() {
   const hapticFeedback = useHapticFeedback()
   const userinfo = useSelector((state: any) => state.user.info);
   const dispatch = useDispatch()
-  const myLocation = useLocation()
   const [id, setId] = useState<any>()
   const [detail, setDetail] = useState<any>({})
   const eventBus = EventBus.getInstance()
@@ -120,7 +119,6 @@ function AnchorDetail() {
           }
           inTimer.current = setInterval(() => {
             countTime.current += 1
-            setCount(countTime.current)
           }, 1000);
         }
         timer.current = setTimeout(() => {
@@ -347,7 +345,7 @@ function AnchorDetail() {
     <div className='bot-shadow' />
     <div className='top'>
       {
-        isPlaying ? <div>{secondsToTime(count)}</div> : <><div className='status' />
+        isPlaying ? <div>{secondsToTime(countTime.current)}</div> : <><div className='status' />
           <FormattedMessage id='online' /></>
       }
     </div>
