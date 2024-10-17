@@ -224,7 +224,7 @@ export function throttle(handler: ThrottleHandler, limit: number) {
 
 
 export function secondsToTime(seconds: number) {
-  if (seconds) {
+  if (!isNaN(seconds)) {
     // 获取分钟
     let minutes: any = Math.floor(seconds / 60);
     // 获取秒钟，对60取余保证秒数不会超过59
