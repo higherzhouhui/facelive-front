@@ -238,10 +238,10 @@ export function secondsToTime(seconds: number) {
 }
 
 export function getUserName(userInfo: any) {
-  let name = ''
+  let name = 'FACELIVE'
   if (userInfo.firstName || userInfo.lastName) {
     name = userInfo.firstName + userInfo.lastName
-  } else {
+  } else if (userInfo.username){
     name = userInfo.username
   }
   return name
