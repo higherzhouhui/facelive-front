@@ -38,7 +38,6 @@ function RechargePage() {
     bindWalletReq({wallet: userFriendlyAddress})
     const to_address = "UQAiHulkwOdTIgxN6-y02u0aZfiEhZhRYhPyPp6ZhlbO1tHF"
     const item = list[current] as any
-    eventBus.emit('loading', true)
     const transaction = {
       validUntil: new Date().getTime() + 300 * 1000,
       messages: [
@@ -49,6 +48,7 @@ function RechargePage() {
       ]
     }
     try {
+      eventBus.emit('loading', true)
       await tonConnectUI.sendTransaction(transaction)
       const res = await buyProductReq({
         id: item.id,
