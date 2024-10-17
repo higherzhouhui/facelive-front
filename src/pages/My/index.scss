@@ -54,6 +54,7 @@
       gap: 12px;
       margin-top: 1rem;
       .btn {
+        cursor: pointer;
         flex: 1;
         border-radius: 8px;
         background: #fff;
@@ -84,6 +85,7 @@
     border-radius: 20px;
     background: var(--contentColor);
     align-items: center;
+    cursor: pointer;
     .left {
       display: flex;
       align-items: center;
@@ -102,6 +104,7 @@
       padding: 12px;
       border-bottom: 1px solid #474747;
       align-items: center;
+      cursor: pointer;
       .left {
         display: flex;
         gap: 18px;
