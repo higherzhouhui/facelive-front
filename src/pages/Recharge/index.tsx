@@ -48,7 +48,6 @@ function RechargePage() {
       ]
     }
     try {
-      eventBus.emit('loading', true)
       await tonConnectUI.sendTransaction(transaction)
       const res = await buyProductReq({
         id: item.id,
@@ -62,7 +61,6 @@ function RechargePage() {
         dispatch(setUserInfoAction(res.data))
       }
     } catch (error: any) {
-      eventBus.emit('loading', false)
       Toast.show({
         content: error?.message
       })
