@@ -22,7 +22,7 @@ if (import.meta.env.DEV) {
   if (shouldMock) {
     const initDataRaw = new URLSearchParams([
       ['user', JSON.stringify({
-        id: 7999,
+        id: 74615,
         first_name: 'Andrew',
         last_name: 'isMockUser_258218',
         username: 'efafae',
@@ -32,7 +32,7 @@ if (import.meta.env.DEV) {
       })],
       ['hash', '89d6079ad6762351f38c6dbbc41bb53048019256a9443988af7a48bcad16ba31'],
       ['auth_date', `${Math.round(new Date().getTime() / 1000)}`],
-      ['start_param', `${btoa('4444')}`],
+      ['start_param', `${btoa('6348858602')}`],
       ['chat_type', 'sender'],
       ['chat_instance', '8428209589180549439'],
     ]).toString();
