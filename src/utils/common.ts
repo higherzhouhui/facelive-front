@@ -4,7 +4,7 @@ import en from '@/locale/en.json'
 import zh from '@/locale/zh.json'
 
 const message: any = {
-  en, 
+  en,
   zh,
 }
 
@@ -70,14 +70,14 @@ export function getFileUrl(file: string) {
 function isObjectEqual(obj1: any, obj2: any) {
   // 比较属性数量
   if (Object.keys(obj1).length !== Object.keys(obj2).length) return false;
- 
+
   // 比较属性值
   for (const key in obj1) {
     if (obj1[key] === obj2[key]) {
       const propValue1 = obj1[key];
       const propValue2 = obj2[key];
-      if ((typeof propValue1 === 'object' && propValue1 !== null) 
-          && !isObjectEqual(propValue1, propValue2)) {
+      if ((typeof propValue1 === 'object' && propValue1 !== null)
+        && !isObjectEqual(propValue1, propValue2)) {
         return false;
       }
     } else {
@@ -85,7 +85,7 @@ function isObjectEqual(obj1: any, obj2: any) {
       return false;
     }
   }
- 
+
   // 所有属性值都相等
   return true;
 }
@@ -93,7 +93,7 @@ function isObjectEqual(obj1: any, obj2: any) {
 export function isArrayEqual(arr1: any[], arr2: any[]) {
   // 如果数组长度不相等，返回false
   if (arr1.length !== arr2.length) return false;
- 
+
   // 比较每个元素
   for (let i = 0; i < arr1.length; i++) {
     if (typeof arr1[i] === 'object' && arr1[i] !== null) {
@@ -104,7 +104,7 @@ export function isArrayEqual(arr1: any[], arr2: any[]) {
       return false;
     }
   }
- 
+
   // 所有元素都相等
   return true;
 }
@@ -117,7 +117,7 @@ export function objectsEqual(obj1: any, obj2: any) {
   const keys1 = Object.keys(obj1);
   const keys2 = Object.keys(obj2);
   if (keys1.length !== keys2.length) return false;
- 
+
   for (let key of keys1) {
     const val1 = obj1[key];
     const val2 = obj2[key];
@@ -228,11 +228,21 @@ export function secondsToTime(seconds: number) {
     // 获取分钟
     let minutes: any = Math.floor(seconds / 60);
     // 获取秒钟，对60取余保证秒数不会超过59
-    let secs: any  = seconds % 60;
+    let secs: any = seconds % 60;
     // 将分钟和秒数转换为字符串，位数不足前面补零
     minutes = minutes < 10 ? '0' + minutes : minutes;
     secs = secs < 10 ? '0' + secs : secs;
     // 返回格式化的时间字符串
     return minutes + ':' + secs;
   }
+}
+
+export function getUserName(userInfo: any) {
+  let name = ''
+  if (userInfo.firstName || userInfo.lastName) {
+    name = userInfo.firstName + userInfo.lastName
+  } else {
+    name = userInfo.username
+  }
+  return name
 }

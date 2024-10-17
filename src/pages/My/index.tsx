@@ -1,4 +1,4 @@
-import { stringToColor } from '@/utils/common';
+import { getUserName, stringToColor } from '@/utils/common';
 import './index.scss'
 import { useDispatch, useSelector } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
@@ -27,15 +27,6 @@ function MyselfPage() {
     }
   }
 
-  const handleName = () => {
-    let name = ''
-    if (userinfo?.firstName || userinfo?.lastName) {
-      name = userinfo?.firstName + " " + userinfo?.lastName
-    } else {
-      name = userinfo?.username || userinfo.id
-    }
-    return name
-  }
 
   const handleCount = (str?: string) => {
     if (!str) {
@@ -85,9 +76,9 @@ function MyselfPage() {
   }, [])
   return <div className='my-page'>
     <div className='title'>
-      <div className='icon' style={{ background: stringToColor(userinfo?.username) }}>{userinfo?.username?.substring(0, 2)}</div>
+      <div className='icon' style={{ background: stringToColor(userinfo?.username) }}>{getUserName(userinfo).substring(0, 2)}</div>
       <div className='name'>
-        <div className='username'>{handleName()}</div>
+        <div className='username'>{getUserName(userinfo)}</div>
         <div>ID: {userinfo?.user_id}</div>
         <div><FormattedMessage id='join' />: {moment(userinfo?.createdAt).format('YYYY-MM-DD HH:mm')}</div>
       </div>

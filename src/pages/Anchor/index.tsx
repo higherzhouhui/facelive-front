@@ -76,7 +76,7 @@ function AnchorDetail() {
       hapticFeedback.notificationOccurred('success')
       setChatLoading(true)
       audioRef.current.play()
-      const delay = 3000 + Math.random() * 8000
+      const delay = 4000 + Math.random() * 6000
       videoRef.current.play()
       videoRef.current.muted = true
 
@@ -90,7 +90,7 @@ function AnchorDetail() {
     }
   }
   const handlePlayVideo = async () => {
-    videoRef.current.currentTime = 0
+    videoRef.current.currentTime = detail?.currentTime || 0
     videoRef.current.muted = false
 
     if (timer.current) {
@@ -104,7 +104,8 @@ function AnchorDetail() {
     if (res.code == 0) {
       setDetail({
         ...detail,
-        time: res.data.time
+        time: res.data.time,
+        currentTime: detail.currentTime + 60
       })
       dispatch(setUserInfoAction(res.data))
       const execPlay = () => {

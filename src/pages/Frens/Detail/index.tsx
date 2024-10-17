@@ -109,7 +109,7 @@ function FriendPage() {
                   by<div className="user-icon" style={{ background: stringToColor(item?.from_username) }}>
                     {item?.from_username?.slice(0, 2)}
                   </div>
-                  <div className='frens-detail-name'>{item?.from_user == userInfo.id ? <span style={{ color: 'var(--highColor)' }}>me</span> : item.from_username}</div>
+                  <div className='frens-detail-name'>{item.from_username}</div>
                 </div>
                 <div className='type'><FormattedMessage id={getType(item.type)} /></div>
               </div>
