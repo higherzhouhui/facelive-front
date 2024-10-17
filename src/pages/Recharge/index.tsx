@@ -8,7 +8,6 @@ import { Toast } from 'antd-mobile';
 import { useHapticFeedback } from '@telegram-apps/sdk-react';
 import { useDispatch } from 'react-redux';
 import { setUserInfoAction } from '@/redux/slices/userSlice';
-import { getLabel } from '@/utils/common';
 import { useNavigate } from 'react-router-dom';
 
 function RechargePage() {
@@ -25,6 +24,7 @@ function RechargePage() {
   }
 
   const initData = async () => {
+    
     eventBus.emit('loading', true)
     const res = await getProductListReq()
     eventBus.emit('loading', false)
