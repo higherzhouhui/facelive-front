@@ -15,9 +15,10 @@ import { useHapticFeedback } from '@telegram-apps/sdk-react';
 
 type AnchorDetailType = {
   anchorDetail: any,
+  currentId: any,
 }
 
-function AnchorDetail({ anchorDetail }: AnchorDetailType) {
+function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
   const hapticFeedback = useHapticFeedback()
   const userinfo = useSelector((state: any) => state.user.info);
   const dispatch = useDispatch()
@@ -48,6 +49,8 @@ function AnchorDetail({ anchorDetail }: AnchorDetailType) {
   const [coverLoading, setCoverLoading] = useState(false)
 
   const getAnchorDetail = async () => {
+    
+    judgeCoverLoadDone(anchorDetail.cover)
     setIsPlaying(false)
     setVideoIsLoad(false)
     if (timer.current) {
@@ -357,7 +360,7 @@ function AnchorDetail({ anchorDetail }: AnchorDetailType) {
   return <div className='anchor-page' style={{ backgroundImage: `url(${getFileUrl(detail.cover)})`, backdropFilter: coverLoading ? 'blur(10px)' : 'blur(0)' }}>
     {/* <div className={`cover ${next ? 'next' : ''}`} style={{ backgroundImage: `url(${getFileUrl(oldCover)})` }}></div> */}
     <div className={`video`}>
-      <video src={getFileUrl(detail?.video)} loop id='video' poster={getFileUrl(detail.cover)} preload='load' ref={videoRef}></video>
+      <video src={getFileUrl(detail?.video)} loop id='video' poster={getFileUrl(detail.cover)} preload={currentId == detail?.id ? 'load' : ''} ref={videoRef}></video>
     </div>
     <div className='top-shadow' />
     <div className='bot-shadow' />
@@ -596,7 +599,7 @@ function AnchorPage() {
       {
         details.map((item: any, index: number) => {
           return <Swiper.Item key={index}>
-            <AnchorDetail anchorDetail={item} />
+            <AnchorDetail anchorDetail={item} currentId={details[currentKey].id}/>
           </Swiper.Item>
         })
       }
