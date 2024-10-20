@@ -35,7 +35,6 @@ export default function Home() {
   const [loading, setLoading] = useState(true)
   //触底后立即触发该方法
   async function loadMore(cPage?: number, cFilter?: any) {
-    eventBus.emit('loading', true)
     let where = {
       page: cPage || page
     }
@@ -46,19 +45,14 @@ export default function Home() {
         ..._filter
       }
     }
+    eventBus.emit('loading', true)
     const append: any = await getAnchorList(where)
     if (where.page == 1) {
       setList(append.data)
     } else {
       setList((val: any) => [...val, ...append.data])
     }
-    setTimeout(() => {
-      setLoading(false)
-    }, 1000);
-    setTimeout(() => {
-      eventBus.emit('loading', false)
-    }, 500);
-
+    eventBus.emit('loading', false)
     setHasMore(append.data.length > 0)
     setPage(where.page + 1)
   }
@@ -200,7 +194,8 @@ export default function Home() {
   const getMacy = () => {
     if (masonry) {
       //当数据更新时，会重新计算并排版
-      masonry?.reInit()
+      masonry?.recalculate()
+    
     } else {
       //@ts-ignore
       let masonry = new Macy({
@@ -214,7 +209,13 @@ export default function Home() {
         columns: 2,    // 设置列数
       })
       setMasonry(masonry)
+      masonry.runOnImageLoad(function () {
+        masonry.recalculate(true);
+        console.log('over')
+        setLoading(false)
+      }, true);
     }
+
   }
 
   const handleSelectCountry = (index: number) => {
