@@ -209,10 +209,13 @@ export default function Home() {
         columns: 2,    // 设置列数
       })
       setMasonry(masonry)
+      let count = 0
       masonry.runOnImageLoad(function () {
-        masonry.recalculate(true);
-        console.log('over')
-        setLoading(false)
+        count ++;
+        if (count >= 15) {
+          masonry.recalculate(true);
+          setLoading(false)
+        }
       }, true);
     }
 
