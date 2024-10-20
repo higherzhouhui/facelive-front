@@ -212,7 +212,7 @@ export default function Home() {
       let count = 0
       masonry.runOnImageLoad(function () {
         count ++;
-        if (count >= 15) {
+        if (count >= 14) {
           masonry.recalculate(true);
           setLoading(false)
         }
