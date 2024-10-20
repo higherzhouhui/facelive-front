@@ -60,9 +60,9 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
     if (loadingTimer.current) {
       clearInterval(loadingTimer.current)
     }
-    videoRef.current.pause()
+    videoRef?.current?.pause()
     audioRef.current.pause()
-    
+
     setChatLoading(false)
     setVisible(false)
     setVisibleCoin(false)
@@ -94,7 +94,7 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
       audioRef.current.play()
       // const delay = 4000 + Math.random() * 6000
       loadingTimer.current = setInterval(() => {
-        if (videoRef.current.readyState >= 3) {
+        if (videoRef?.current?.readyState >= 3) {
           handlePlayVideo()
           setChatLoading(false)
           audioRef.current.pause()
@@ -160,7 +160,7 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
       //   });
       // }
     } else {
-      videoRef.current.pause()
+      videoRef?.current?.pause()
       setIsPlaying(false)
       setVisible(true)
       clearTimeout(timer.current)
@@ -174,7 +174,7 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
       clearInterval(inTimer.current)
       setIsPlaying(false)
       endAudioRef.current.play()
-      videoRef.current.pause()
+      videoRef?.current?.pause()
     } else {
       setVisibleQuit(false)
     }
@@ -245,7 +245,7 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
   const handleEndLoading = () => {
     setChatLoading(false)
     audioRef.current.pause()
-    videoRef.current.pause()
+    videoRef?.current?.pause()
     clearInterval(loadingTimer.current)
   }
 
@@ -369,9 +369,11 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
 
   return <div className='anchor-page' style={{ backgroundImage: `url(${getFileUrl(detail?.cover)})` }}>
     {/* <div className={`cover ${next ? 'next' : ''}`} style={{ backgroundImage: `url(${getFileUrl(oldCover)})` }}></div> */}
-    <div className={`video`}>
-      <video src={getFileUrl(detail?.video)} loop id='video' poster={getFileUrl(detail?.over)} preload={currentId == detail?.id ? 'load' : ''} ref={videoRef}></video>
-    </div>
+    {
+      currentId == detail?.id ? <div className={`video`}>
+        <video src={getFileUrl(detail?.video)} loop id='video' poster={getFileUrl(detail?.cover)} ref={videoRef}></video>
+      </div> : null
+    }
     <div className='top-shadow' />
     <div className='bot-shadow' />
     <div className='top'>
@@ -614,7 +616,7 @@ function AnchorPage() {
       {
         details.map((item: any, index: number) => {
           return <Swiper.Item key={index}>
-            <AnchorDetail anchorDetail={item} currentId={details[currentKey].id}/>
+            <AnchorDetail anchorDetail={item} currentId={details[currentKey].id} />
           </Swiper.Item>
         })
       }
