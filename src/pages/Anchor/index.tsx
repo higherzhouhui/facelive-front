@@ -1,22 +1,26 @@
 import './index.scss'
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAnchorInfo, followAnchorReq, getNextAnchorInfo, beginChatReq } from '@/api/common';
+import { getAnchorInfo, followAnchorReq, getNextAnchorInfo, beginChatReq, getSwiperListReq } from '@/api/common';
 import EventBus from '@/utils/eventBus';
 import { getFileUrl, secondsToTime } from '@/utils/common';
 import { FormattedMessage } from 'react-intl';
 import CountryFlag from '@/components/Flag';
 import { initUtils } from '@telegram-apps/sdk';
 import { useDispatch, useSelector } from 'react-redux';
-import { DotLoading, Modal } from 'antd-mobile';
+import { DotLoading, Modal, Swiper } from 'antd-mobile';
 import { setUserInfoAction } from '@/redux/slices/userSlice';
 import { useHapticFeedback } from '@telegram-apps/sdk-react';
 
-function AnchorDetail() {
+
+type AnchorDetailType = {
+  anchorDetail: any,
+}
+
+function AnchorDetail({ anchorDetail }: AnchorDetailType) {
   const hapticFeedback = useHapticFeedback()
   const userinfo = useSelector((state: any) => state.user.info);
   const dispatch = useDispatch()
-  const [id, setId] = useState<any>()
   const [detail, setDetail] = useState<any>({})
   const eventBus = EventBus.getInstance()
   const utils = initUtils()
@@ -28,7 +32,6 @@ function AnchorDetail() {
   const [visibleCoin, setVisibleCoin] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const navigate = useNavigate()
-  const [count, setCount] = useState(0)
   const inTimer = useRef<any>(null)
   const timer = useRef<any>(null)
   const countTime = useRef<any>(null)
@@ -45,18 +48,30 @@ function AnchorDetail() {
   const [coverLoading, setCoverLoading] = useState(false)
 
   const getAnchorDetail = async () => {
-    eventBus.emit('loading', true)
-    const res = await getAnchorInfo({ id })
-    eventBus.emit('loading', false)
-    if (res.code == 0) {
-      setDetail(res.data)
-      judgeCoverLoadDone(detail.cover)
-      setOldCover(res.data.cover)
-      anchorId.current = res.data.id
-      if (localStorage.getItem('chat') == '1') {
-        handleBeginVideo()
-        localStorage.removeItem('chat')
-      }
+    setIsPlaying(false)
+    setVideoIsLoad(false)
+    if (timer.current) {
+      clearTimeout(timer.current)
+    }
+    if (inTimer) {
+      clearTimeout(inTimer.current)
+    }
+    if (loadingTimer.current) {
+      clearTimeout(loadingTimer.current)
+    }
+    videoRef.current.pause()
+    audioRef.current.pause()
+    
+    setChatLoading(false)
+    setVisible(false)
+    setVisibleCoin(false)
+    setVisibleQuit(false)
+    setDetail(anchorDetail)
+    judgeCoverLoadDone(anchorDetail.cover)
+    setOldCover(anchorDetail.cover)
+    if (localStorage.getItem('chat') == '1' && sessionStorage.getItem('anchorId') == anchorDetail.id) {
+      handleBeginVideo()
+      localStorage.removeItem('chat')
     }
   }
   const handleRoute = (index: number) => {
@@ -255,8 +270,8 @@ function AnchorDetail() {
 
 
   useEffect(() => {
-    const _id = sessionStorage.getItem('anchorId') || 1
-    setId(_id)
+    // const _id = sessionStorage.getItem('anchorId') || 1
+    // setId(_id)
     return () => {
       audioRef?.current?.pause()
       videoRef?.current?.pause()
@@ -273,10 +288,10 @@ function AnchorDetail() {
   }, [])
 
   useEffect(() => {
-    if (id) {
+    if (anchorDetail) {
       getAnchorDetail()
     }
-  }, [id])
+  }, [anchorDetail])
 
   useEffect(() => {
     if (videoRef.current) {
@@ -322,7 +337,7 @@ function AnchorDetail() {
       if (distanceY < -50) {
         if (new Date().getTime() > _last + 1000) {
           lastTouch.current = new Date().getTime()
-          handleNextAnchor()
+          // handleNextAnchor()
         }
         touchTimer.current = setTimeout(() => {
           lastTouch.current = 0
@@ -340,7 +355,7 @@ function AnchorDetail() {
   }, [])
 
   return <div className='anchor-page' style={{ backgroundImage: `url(${getFileUrl(detail.cover)})`, backdropFilter: coverLoading ? 'blur(10px)' : 'blur(0)' }}>
-    <div className={`cover ${next ? 'next' : ''}`} style={{ backgroundImage: `url(${getFileUrl(oldCover)})` }}></div>
+    {/* <div className={`cover ${next ? 'next' : ''}`} style={{ backgroundImage: `url(${getFileUrl(oldCover)})` }}></div> */}
     <div className={`video`}>
       <video src={getFileUrl(detail?.video)} loop id='video' poster={getFileUrl(detail.cover)} preload='load' ref={videoRef}></video>
     </div>
@@ -427,9 +442,9 @@ function AnchorDetail() {
         </div>
         <div className='right' />
       </div>
-      <div className='next-btn' onClick={() => handleNextAnchor()}>
+      {/* <div className='next-btn' onClick={() => handleNextAnchor()}>
         <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="13215" width="20" height="20"><path d="M493.504 558.144a31.904 31.904 0 0 0 45.28 0l308.352-308.352a31.968 31.968 0 1 0-45.248-45.248l-285.728 285.728-294.176-294.144a31.968 31.968 0 1 0-45.248 45.248l316.768 316.768z" p-id="13216" fill="#e6e6e6"></path><path d="M801.888 460.576l-285.728 285.728-294.144-294.144a31.968 31.968 0 1 0-45.248 45.248l316.768 316.768a31.904 31.904 0 0 0 45.28 0l308.352-308.352a32 32 0 1 0-45.28-45.248z" p-id="13217" fill="#e6e6e6"></path></svg>
-      </div>
+      </div> */}
     </div>
     <div className='playing-content chat-loading' style={{ opacity: chatLoading ? 1 : 0, zIndex: chatLoading ? 10 : -1 }}>
       <audio id="audioPlayer" ref={audioRef} loop>
@@ -536,4 +551,57 @@ function AnchorDetail() {
   </div>
 }
 
-export default AnchorDetail;
+function AnchorPage(index: number) {
+  const [ids, setIds] = useState([])
+  const [details, setDetails] = useState([])
+  const [id, setId] = useState('')
+  const [currentKey, setCurrentKey] = useState(1)
+  const onIndexChange = (next: number) => {
+    if (next == 2 && currentKey == 1 || next == 0 && currentKey == 2 || next == 1 && currentKey == 0) {
+      setId(ids[2])
+    } else {
+      setId(ids[0])
+    }
+    setCurrentKey(next)
+  }
+
+  const initData = async () => {
+    const res = await getSwiperListReq({ id: id })
+    if (res.code == 0) {
+      setIds(res.data.list)
+      setDetails(res.data.details)
+    }
+  }
+
+  useEffect(() => {
+    if (id) {
+      initData()
+    }
+  }, [id])
+
+  useEffect(() => {
+    const id = sessionStorage.getItem('anchorId') || '0'
+    setId(id)
+  }, [])
+  return <div className='anchor-container'>
+    <Swiper
+      direction='vertical'
+      stuckAtBoundary={false}
+      loop
+      defaultIndex={currentKey}
+      onIndexChange={onIndexChange}
+      indicator={false}
+      style={{ '--height': 'var(--tg-viewport-height)' }}
+    >
+      {
+        details.map((item: any, index: number) => {
+          return <Swiper.Item key={index}>
+            <AnchorDetail anchorDetail={item} />
+          </Swiper.Item>
+        })
+      }
+    </Swiper>
+  </div>
+}
+
+export default AnchorPage;

@@ -187,6 +187,14 @@ export const beginChatReq = (params: any) => {
   });
 };
 
+export const getSwiperListReq = (params: any) => {
+  return service<any>({
+    url: '/anchor/three',
+    method: 'GET',
+    params
+  });
+};
+
 export const followAnchorReq = (data: any) => {
   return service<any>({
     url: '/anchor/follow',

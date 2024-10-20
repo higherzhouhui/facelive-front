@@ -83,7 +83,7 @@ function FrensPage() {
           <div className='frens'>
             <FormattedMessage id='friends' />
           </div>
-          <div className='view-frens'>
+          <div className='view-frens touch-btn'>
             <FormattedMessage id='friends-detail' />
             &nbsp;&nbsp;&gt;</div>
         </div> : <div></div>
@@ -120,7 +120,7 @@ function FrensPage() {
       </div>
     </div>
     <div className='page-bottom'>
-      <Button color="default" style={{ fontWeight: 'bold', height: '45px', borderRadius: '100px', flex: 1, background: 'var(--highColor)', color: '#fff', border: 'none' }} onClick={() => handleShare()}>
+      <Button className='touch-btn' color="default" style={{ fontWeight: 'bold', height: '45px', borderRadius: '100px', flex: 1, background: 'var(--highColor)', color: '#fff', border: 'none' }} onClick={() => handleShare()}>
         👆🏻 <FormattedMessage id='yqpy' />
       </Button>
       <Button color="default" className="copy" onClick={() => copy()} style={{ borderRadius: '100px', height: '45px', padding: '0 12px' }}>

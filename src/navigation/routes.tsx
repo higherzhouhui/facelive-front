@@ -3,7 +3,7 @@ import { lazy, type ComponentType, type JSX } from 'react';
 import HomePage from '@/pages/Home';
 import LeaderBoardPage from '@/pages/LeaderBoard';
 import FrensPage from '@/pages/Frens';
-import DetailPage from '@/pages/Anchor';
+import AnchorPage from '@/pages/Anchor';
 import CheckInlPage from '@/pages/CheckIn';
 import GameLeaderBoardPage from '@/pages/GameLeaderBoard';
 import TaskPage from '@/pages/Task';
@@ -33,7 +33,7 @@ export const routes: Route[] = [
   { path: '/gameleaderboard', Component: GameLeaderBoardPage },
   { path: '/frens', Component: FrensPage },
   { path: '/recharge', Component: RechargePage },
-  { path: '/anchor', Component: DetailPage },
+  { path: '/anchor', Component: AnchorPage },
   { path: '/checkIn', Component: CheckInlPage },
   { path: '/frens-detail', Component: FrensDetailPage },
   { path: '/result', Component: ResultPage },

@@ -85,7 +85,7 @@ function RechargePage() {
         }
       </div>
     </div>
-    <div className='recharge-btn' onClick={() => handleRecharge()}>
+    <div className='recharge-btn touch-btn' onClick={() => handleRecharge()}>
       <FormattedMessage id='recharge' />
     </div>
   </div>

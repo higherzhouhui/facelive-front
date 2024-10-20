@@ -247,3 +247,10 @@ html {
     }
   }
 }
+
+.touch-btn {
+  transition: transform 0.1s;
+}
+.touch-btn:active {
+  transform: scale(0.95);
+}
