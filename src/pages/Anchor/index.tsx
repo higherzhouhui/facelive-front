@@ -58,7 +58,7 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
       clearTimeout(inTimer.current)
     }
     if (loadingTimer.current) {
-      clearTimeout(loadingTimer.current)
+      clearInterval(loadingTimer.current)
     }
     videoRef.current.pause()
     audioRef.current.pause()
@@ -92,15 +92,20 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
       hapticFeedback.notificationOccurred('success')
       setChatLoading(true)
       audioRef.current.play()
-      const delay = 4000 + Math.random() * 6000
-      videoRef.current.play()
-      videoRef.current.muted = true
-
-      loadingTimer.current = setTimeout(() => {
-        handlePlayVideo()
-        setChatLoading(false)
-        audioRef.current.pause()
-      }, delay);
+      // const delay = 4000 + Math.random() * 6000
+      loadingTimer.current = setInterval(() => {
+        if (videoRef.current.readyState >= 3) {
+          handlePlayVideo()
+          setChatLoading(false)
+          audioRef.current.pause()
+          clearInterval(loadingTimer.current)
+        }
+      }, 2000);
+      // loadingTimer.current = setTimeout(() => {
+      //   handlePlayVideo()
+      //   setChatLoading(false)
+      //   audioRef.current.pause()
+      // }, delay);
     } else {
       setVisibleCoin(false)
     }
@@ -142,16 +147,18 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
           clearTimeout(inTimer.current)
         }, 60000);
       }
-      if (videoRef.current.readyState >= 3) {
-        execPlay()
-      } else {
-        // 否则，等待视频加载完成
-        videoRef.current.addEventListener('canplaythrough', function () {
-          if (isPlaying) {
-            execPlay()
-          }
-        });
-      }
+      execPlay()
+
+      // if (videoRef.current.readyState >= 3) {
+      //   execPlay()
+      // } else {
+      //   // 否则，等待视频加载完成
+      //   videoRef.current.addEventListener('canplaythrough', function () {
+      //     if (isPlaying) {
+      //       execPlay()
+      //     }
+      //   });
+      // }
     } else {
       videoRef.current.pause()
       setIsPlaying(false)
@@ -239,7 +246,7 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
     setChatLoading(false)
     audioRef.current.pause()
     videoRef.current.pause()
-    clearTimeout(loadingTimer.current)
+    clearInterval(loadingTimer.current)
   }
 
   const handleNextAnchor = async () => {
@@ -283,7 +290,7 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
         clearInterval(inTimer.current)
       }
       if (loadingTimer) {
-        clearTimeout(loadingTimer.current)
+        clearInterval(loadingTimer.current)
       }
     }
   }, [])
@@ -291,6 +298,9 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
   useEffect(() => {
     if (anchorDetail) {
       getAnchorDetail(anchorDetail)
+      if (currentId == anchorDetail.id) {
+        sessionStorage.setItem('anchorId', `${currentId}`)
+      }
     } else {
       getAnchorDetail({})
     }
@@ -360,10 +370,10 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
   return <div className='anchor-page' style={{ backgroundImage: `url(${getFileUrl(detail?.cover)})` }}>
     {/* <div className={`cover ${next ? 'next' : ''}`} style={{ backgroundImage: `url(${getFileUrl(oldCover)})` }}></div> */}
     <div className={`video`}>
-      <video src={getFileUrl(detail?.video)} loop id='video' preload={currentId == detail?.id ? 'load' : ''} ref={videoRef}></video>
+      <video src={getFileUrl(detail?.video)} loop id='video' poster={getFileUrl(detail?.over)} preload={currentId == detail?.id ? 'load' : ''} ref={videoRef}></video>
     </div>
-    {/* <div className='top-shadow' />
-    <div className='bot-shadow' /> */}
+    <div className='top-shadow' />
+    <div className='bot-shadow' />
     <div className='top'>
       {
         isPlaying ? <div>{secondsToTime(countTime.current)}</div> : <><div className='status' />
@@ -592,7 +602,6 @@ function AnchorPage() {
     initData(id)
   }, [])
   return <div className='anchor-container'>
-    <div className='top-shadow' />
     <Swiper
       direction='vertical'
       stuckAtBoundary={false}
