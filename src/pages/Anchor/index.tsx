@@ -1,7 +1,7 @@
 import './index.scss'
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAnchorInfo, followAnchorReq, getNextAnchorInfo, beginChatReq, getSwiperListReq } from '@/api/common';
+import { followAnchorReq, getNextAnchorInfo, beginChatReq, getSwiperListReq, getMoreAnchorReq } from '@/api/common';
 import EventBus from '@/utils/eventBus';
 import { getFileUrl, secondsToTime } from '@/utils/common';
 import { FormattedMessage } from 'react-intl';
@@ -48,9 +48,7 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
   const [chatLoading, setChatLoading] = useState(false)
   const [coverLoading, setCoverLoading] = useState(false)
 
-  const getAnchorDetail = async () => {
-    
-    judgeCoverLoadDone(anchorDetail.cover)
+  const getAnchorDetail = async (info: any) => {
     setIsPlaying(false)
     setVideoIsLoad(false)
     if (timer.current) {
@@ -69,10 +67,10 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
     setVisible(false)
     setVisibleCoin(false)
     setVisibleQuit(false)
-    setDetail(anchorDetail)
-    judgeCoverLoadDone(anchorDetail.cover)
-    setOldCover(anchorDetail.cover)
-    if (localStorage.getItem('chat') == '1' && sessionStorage.getItem('anchorId') == anchorDetail.id) {
+    setDetail(info)
+    judgeCoverLoadDone(info?.cover)
+    setOldCover(info?.cover)
+    if (localStorage.getItem('chat') == '1' && sessionStorage.getItem('anchorId') == info?.id) {
       handleBeginVideo()
       localStorage.removeItem('chat')
     }
@@ -292,9 +290,11 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
 
   useEffect(() => {
     if (anchorDetail) {
-      getAnchorDetail()
+      getAnchorDetail(anchorDetail)
+    } else {
+      getAnchorDetail({})
     }
-  }, [anchorDetail])
+  }, [anchorDetail, currentId])
 
   useEffect(() => {
     if (videoRef.current) {
@@ -357,13 +357,13 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
     }
   }, [])
 
-  return <div className='anchor-page' style={{ backgroundImage: `url(${getFileUrl(detail.cover)})`, backdropFilter: coverLoading ? 'blur(10px)' : 'blur(0)' }}>
+  return <div className='anchor-page' style={{ backgroundImage: `url(${getFileUrl(detail?.cover)})` }}>
     {/* <div className={`cover ${next ? 'next' : ''}`} style={{ backgroundImage: `url(${getFileUrl(oldCover)})` }}></div> */}
     <div className={`video`}>
-      <video src={getFileUrl(detail?.video)} loop id='video' poster={getFileUrl(detail.cover)} preload={currentId == detail?.id ? 'load' : ''} ref={videoRef}></video>
+      <video src={getFileUrl(detail?.video)} loop id='video' preload={currentId == detail?.id ? 'load' : ''} ref={videoRef}></video>
     </div>
-    <div className='top-shadow' />
-    <div className='bot-shadow' />
+    {/* <div className='top-shadow' />
+    <div className='bot-shadow' /> */}
     <div className='top'>
       {
         isPlaying ? <div>{secondsToTime(countTime.current)}</div> : <><div className='status' />
@@ -402,7 +402,7 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
           <div className='count'>{detail?.star}</div>
           <div>
             {
-              [...Array(detail.star).fill('')].map((item: string, index: number) => {
+              [...Array(detail?.star || 0).fill('')].map((item: string, index: number) => {
                 return <svg key={index} viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5757" width="12" height="12"><path d="M512.009505 25.054894l158.199417 320.580987 353.791078 51.421464L767.995248 646.579761l60.432101 352.365345-316.417844-166.354615-316.436854 166.354615 60.432101-352.365345L0 397.057345l353.791078-51.421464z" fill="#EFCE4A" p-id="5758"></path></svg>
               })
             }
@@ -440,7 +440,7 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
         <div className='left'>
           <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="11230" data-spm-anchor-id="a313x.search_index.0.i20.766b3a81FJsSKH" width="22" height="22"><path d="M512 65C264.88 65 64.53 265.35 64.53 512.5S264.88 960 512 960s447.5-200.35 447.5-447.5S759.17 65 512 65z m75.71 530.56a20.34 20.34 0 0 1-20.31 20.34H336.87a20.34 20.34 0 0 1-20.34-20.34V429.44a20.34 20.34 0 0 1 20.34-20.34H567.4a20.34 20.34 0 0 1 20.34 20.34z m119.79 12.77a6.78 6.78 0 0 1-10.66 5.56l-83.63-63.77a6.8 6.8 0 0 1-2.9-5.56v-64.12a6.8 6.8 0 0 1 2.9-5.56l83.63-63.77a6.78 6.78 0 0 1 10.66 5.56z" fill="#ffffff" p-id="11231" data-spm-anchor-id="a313x.search_index.0.i18.766b3a81FJsSKH"></path></svg>
           <FormattedMessage id='ksytsplt' />
-          ({detail.coin}
+          ({detail?.coin}
           <FormattedMessage id='coin' />/<FormattedMessage id='minute' />)
         </div>
         <div className='right' />
@@ -459,8 +459,8 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
         Your browser does not support the audio element.
       </audio>
       <div className='anchor-avatar'>
-        <img src={getFileUrl(detail.avatar)} alt='avatar' />
-        <div className='anchor-name'>{detail.name}</div>
+        <img src={getFileUrl(detail?.avatar)} alt='avatar' />
+        <div className='anchor-name'>{detail?.name}</div>
         <div className='loading-text'>
           <FormattedMessage id='ddjt' /><DotLoading color='#fff' />
         </div>
@@ -533,7 +533,7 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
       closeOnMaskClick
     />
     <Modal visible={visibleCoin} content={<div style={{ wordBreak: 'break-all' }}> <FormattedMessage id='ksytsplt' />
-      ({detail.coin}
+      ({detail?.coin}
       <FormattedMessage id='coin' />/<FormattedMessage id='minute' />)<div><FormattedMessage id='yue' />: <b>{userinfo?.score} Coins</b></div></div>} title={<FormattedMessage id='qrks' />} closeOnAction
       onClose={() => {
         setVisibleCoin(false)
@@ -555,45 +555,51 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
 }
 
 function AnchorPage() {
-  const [ids, setIds] = useState([])
-  const [details, setDetails] = useState([])
+  const [details, setDetails] = useState<any>([])
   const [id, setId] = useState('')
   const [currentKey, setCurrentKey] = useState(1)
   const onIndexChange = (next: number) => {
-    if (next == 2 && currentKey == 1 || next == 0 && currentKey == 2 || next == 1 && currentKey == 0) {
-      setId(ids[2])
-    } else {
-      setId(ids[0])
+    if (next == details.length - 1) {
+      setId(details[details.length - 1].id)
     }
     setCurrentKey(next)
   }
 
-  const initData = async () => {
+  const getMoreAnchor = async () => {
+    const res = await getMoreAnchorReq({ id: id })
+    if (res.code == 0) {
+      const details = res.data.details
+      setDetails((val: any) => [...val, ...details])
+    }
+  }
+
+  const initData = async (id: any) => {
     const res = await getSwiperListReq({ id: id })
     if (res.code == 0) {
-      setIds(res.data.list)
-      setDetails(res.data.details)
+      const details = res.data.details
+      setDetails((val: any) => [...val, ...details])
     }
   }
 
   useEffect(() => {
     if (id) {
-      initData()
+      getMoreAnchor()
     }
   }, [id])
 
   useEffect(() => {
     const id = sessionStorage.getItem('anchorId') || '0'
-    setId(id)
+    initData(id)
   }, [])
   return <div className='anchor-container'>
+    <div className='top-shadow' />
     <Swiper
       direction='vertical'
       stuckAtBoundary={false}
-      loop
       defaultIndex={currentKey}
       onIndexChange={onIndexChange}
       indicator={false}
+      loop
       style={{ '--height': 'var(--tg-viewport-height)' }}
     >
       {

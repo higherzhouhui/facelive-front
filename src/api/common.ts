@@ -195,6 +195,14 @@ export const getSwiperListReq = (params: any) => {
   });
 };
 
+export const getMoreAnchorReq = (params: any) => {
+  return service<any>({
+    url: '/anchor/more',
+    method: 'GET',
+    params
+  });
+};
+
 export const followAnchorReq = (data: any) => {
   return service<any>({
     url: '/anchor/follow',

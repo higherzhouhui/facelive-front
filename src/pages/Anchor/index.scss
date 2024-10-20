@@ -1,3 +1,22 @@
+.top-shadow {
+  background: linear-gradient(to bottom,rgba(0,0,0, 0.8),rgba(0,0,0,0));
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+  height: 80px;
+}
+.bot-shadow {
+  background: linear-gradient(to top,rgba(0,0,0, 0.8),rgba(0,0,0,0));
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+  height: 40px;
+}
+
 .anchor-page {
   height: var(--tg-viewport-height);
   background-position: center;
@@ -33,24 +52,6 @@
     opacity: 1;
     bottom: var(--tg-viewport-height);
     z-index: 10;
-  }
-  .top-shadow {
-    background: linear-gradient(to bottom,rgb(0,0,0),rgba(0,0,0,0));
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1;
-    height: 120px;
-  }
-  .bot-shadow {
-    background: linear-gradient(to top,rgb(0,0,0),rgba(0,0,0,0));
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1;
-    height: 150px;
   }
   .top {
     display: flex;
