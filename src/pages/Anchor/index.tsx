@@ -551,7 +551,7 @@ function AnchorDetail({ anchorDetail }: AnchorDetailType) {
   </div>
 }
 
-function AnchorPage(index: number) {
+function AnchorPage() {
   const [ids, setIds] = useState([])
   const [details, setDetails] = useState([])
   const [id, setId] = useState('')
