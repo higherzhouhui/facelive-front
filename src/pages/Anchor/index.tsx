@@ -42,6 +42,7 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
   const anchorId = useRef<any>(null)
   const [loading, setLoading] = useState(true)
   const videoRef = useRef<any>(null)
+  const [videoUrl, setVideoUrl] = useState('')
   // const audioRef = useRef<any>(null)
   // const endAudioRef = useRef<any>(null)
   const loadingTimer = useRef<any>(null)
@@ -88,6 +89,7 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
     if (index == 0) {
       hapticFeedback.notificationOccurred('success')
       setChatLoading(true)
+      setVideoUrl(detail?.video)
       audioRef?.current?.play()
       // const delay = 4000 + Math.random() * 6000
       loadingTimer.current = setInterval(() => {
@@ -348,13 +350,9 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
 
   return <div className='anchor-page'>
     {/* <div className={`cover ${next ? 'next' : ''}`} style={{ backgroundImage: `url(${getFileUrl(oldCover)})` }}></div> */}
-    {
-      currentId == detail?.id ? <>
-        <div className={`video`}>
-          <video src={getFileUrl(detail?.video)} loop id='video' poster={getFileUrl(detail?.cover)} ref={videoRef}></video>
-        </div>
-      </> : null
-    }
+    <div className={`video`}>
+      <video src={getFileUrl(videoUrl)} loop id='video' poster={getFileUrl(detail?.cover)} ref={videoRef} preload={videoUrl ? 'load' : ''}></video>
+    </div>
     <div className='top-shadow' />
     <div className='bot-shadow' />
     <div className='top'>
@@ -594,7 +592,7 @@ function AnchorPage() {
       {
         details.map((item: any, index: number) => {
           return <Swiper.Item key={index}>
-            <AnchorDetail anchorDetail={item} currentId={details[currentKey].id} audioRef={audioRef} endAudioRef={endAudioRef}/>
+            <AnchorDetail anchorDetail={item} currentId={details[currentKey].id} audioRef={audioRef} endAudioRef={endAudioRef} />
           </Swiper.Item>
         })
       }
