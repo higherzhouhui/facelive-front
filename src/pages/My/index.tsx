@@ -1,4 +1,4 @@
-import { getUserName, stringToColor } from '@/utils/common';
+import { getFileUrl, getUserName, stringToColor } from '@/utils/common';
 import './index.scss'
 import { useDispatch, useSelector } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
@@ -76,7 +76,9 @@ function MyselfPage() {
   }, [])
   return <div className='my-page'>
     <div className='title'>
-      <div className='icon' style={{ background: stringToColor(userinfo?.username) }}>{getUserName(userinfo).substring(0, 2)}</div>
+      {
+        userinfo?.photoUrl ? <img src={getFileUrl(userinfo?.photoUrl)} className='g-avatar'/> : <div className='icon' style={{ background: stringToColor(userinfo?.username) }}>{getUserName(userinfo).substring(0, 2)}</div>
+      }
       <div className='name'>
         <div className='username'>{getUserName(userinfo)}</div>
         <div>ID: {userinfo?.user_id}</div>
