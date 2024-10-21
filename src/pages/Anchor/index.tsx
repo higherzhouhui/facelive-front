@@ -16,9 +16,11 @@ import { useHapticFeedback } from '@telegram-apps/sdk-react';
 type AnchorDetailType = {
   anchorDetail: any,
   currentId: any,
+  audioRef: any,
+  endAudioRef: any,
 }
 
-function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
+function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: AnchorDetailType) {
   const hapticFeedback = useHapticFeedback()
   const userinfo = useSelector((state: any) => state.user.info);
   const dispatch = useDispatch()
@@ -40,8 +42,8 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
   const anchorId = useRef<any>(null)
   const [loading, setLoading] = useState(true)
   const videoRef = useRef<any>(null)
-  const audioRef = useRef<any>(null)
-  const endAudioRef = useRef<any>(null)
+  // const audioRef = useRef<any>(null)
+  // const endAudioRef = useRef<any>(null)
   const loadingTimer = useRef<any>(null)
   const [chatLoading, setChatLoading] = useState(false)
 
@@ -291,7 +293,7 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
         var loadedPercent = (videoRef.current.buffered.end(videoRef.current.buffered.length - 1) / videoRef.current.duration) * 100;
         console.log('已加载百分比: ' + loadedPercent.toFixed(2) + '%');
         if (loadedPercent == 100) {
-          
+
         } else {
         }
       });
@@ -344,21 +346,13 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
     }
   }, [])
 
-  return <div className='anchor-page' style={{ backgroundImage: `url(${getFileUrl(detail?.cover)})` }}>
+  return <div className='anchor-page'>
     {/* <div className={`cover ${next ? 'next' : ''}`} style={{ backgroundImage: `url(${getFileUrl(oldCover)})` }}></div> */}
     {
       currentId == detail?.id ? <>
         <div className={`video`}>
           <video src={getFileUrl(detail?.video)} loop id='video' poster={getFileUrl(detail?.cover)} ref={videoRef}></video>
         </div>
-        <audio id="audioPlayer" ref={audioRef} loop>
-          <source src="/assets/mp3/loading.mp3" type="audio/mpeg" />
-          Your browser does not support the audio element.
-        </audio>
-        <audio id="audioPlayer" ref={endAudioRef}>
-          <source src="/assets/mp3/end.mp3" type="audio/mpeg" />
-          Your browser does not support the audio element.
-        </audio>
       </> : null
     }
     <div className='top-shadow' />
@@ -450,7 +444,9 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
     </div>
     <div className='playing-content chat-loading' style={{ opacity: chatLoading ? 1 : 0, zIndex: chatLoading ? 10 : -1 }}>
       <div className='anchor-avatar'>
-        <img src={getFileUrl(detail?.avatar)} alt='avatar' />
+        {
+          currentId == detail?.id ? <img src={getFileUrl(detail?.avatar)} alt='avatar' /> : null
+        }
         <div className='anchor-name'>{detail?.name}</div>
         <div className='loading-text'>
           <FormattedMessage id='ddjt' /><DotLoading color='#fff' />
@@ -549,6 +545,9 @@ function AnchorPage() {
   const [details, setDetails] = useState<any>([])
   const [id, setId] = useState('')
   const [currentKey, setCurrentKey] = useState(1)
+  const endAudioRef = useRef<any>(null)
+  const audioRef = useRef<any>(null)
+
   const onIndexChange = (next: number) => {
     if (next == details.length - 1) {
       setId(details[details.length - 1].id)
@@ -595,11 +594,19 @@ function AnchorPage() {
       {
         details.map((item: any, index: number) => {
           return <Swiper.Item key={index}>
-            <AnchorDetail anchorDetail={item} currentId={details[currentKey].id} />
+            <AnchorDetail anchorDetail={item} currentId={details[currentKey].id} audioRef={audioRef} endAudioRef={endAudioRef}/>
           </Swiper.Item>
         })
       }
     </Swiper>
+    <audio id="audioPlayer" ref={audioRef} loop>
+      <source src="/assets/mp3/loading.mp3" type="audio/mpeg" />
+      Your browser does not support the audio element.
+    </audio>
+    <audio id="audioPlayer" ref={endAudioRef}>
+      <source src="/assets/mp3/end.mp3" type="audio/mpeg" />
+      Your browser does not support the audio element.
+    </audio>
   </div>
 }
 
