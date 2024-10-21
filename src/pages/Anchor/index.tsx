@@ -96,7 +96,6 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
       loadingTimer.current = setInterval(() => {
         if (videoRef?.current?.readyState >= 3) {
           handlePlayVideo()
-          setChatLoading(false)
           audioRef.current.pause()
           clearInterval(loadingTimer.current)
         }
@@ -111,6 +110,8 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
     }
   }
   const handlePlayVideo = async (Continue?: boolean) => {
+    setChatLoading(false)
+
     if (!Continue) {
       videoRef.current.currentTime = detail?.currentTime || 0
     }
