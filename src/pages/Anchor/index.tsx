@@ -23,7 +23,6 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
   const userinfo = useSelector((state: any) => state.user.info);
   const dispatch = useDispatch()
   const [detail, setDetail] = useState<any>({})
-  const eventBus = EventBus.getInstance()
   const utils = initUtils()
   const [next, setNext] = useState(false)
   const [oldCover, setOldCover] = useState('')
@@ -44,13 +43,10 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
   const audioRef = useRef<any>(null)
   const endAudioRef = useRef<any>(null)
   const loadingTimer = useRef<any>(null)
-  const [videoIsLoad, setVideoIsLoad] = useState(false)
   const [chatLoading, setChatLoading] = useState(false)
-  const [coverLoading, setCoverLoading] = useState(false)
 
   const getAnchorDetail = async (info: any) => {
     setIsPlaying(false)
-    setVideoIsLoad(false)
     if (timer.current) {
       clearTimeout(timer.current)
     }
@@ -61,14 +57,13 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
       clearInterval(loadingTimer.current)
     }
     videoRef?.current?.pause()
-    audioRef.current.pause()
+    audioRef?.current?.pause()
 
     setChatLoading(false)
     setVisible(false)
     setVisibleCoin(false)
     setVisibleQuit(false)
     setDetail(info)
-    judgeCoverLoadDone(info?.cover)
     setOldCover(info?.cover)
     if (localStorage.getItem('chat') == '1' && sessionStorage.getItem('anchorId') == info?.id) {
       handleBeginVideo()
@@ -91,27 +86,20 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
     if (index == 0) {
       hapticFeedback.notificationOccurred('success')
       setChatLoading(true)
-      audioRef.current.play()
+      audioRef?.current?.play()
       // const delay = 4000 + Math.random() * 6000
       loadingTimer.current = setInterval(() => {
         if (videoRef?.current?.readyState >= 3) {
           handlePlayVideo()
-          audioRef.current.pause()
+          audioRef?.current?.pause()
           clearInterval(loadingTimer.current)
         }
       }, 2000);
-      // loadingTimer.current = setTimeout(() => {
-      //   handlePlayVideo()
-      //   setChatLoading(false)
-      //   audioRef.current.pause()
-      // }, delay);
     } else {
       setVisibleCoin(false)
     }
   }
   const handlePlayVideo = async (Continue?: boolean) => {
-    setChatLoading(false)
-
     if (!Continue) {
       videoRef.current.currentTime = detail?.currentTime || 0
     }
@@ -124,6 +112,7 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
       clearInterval(inTimer.current)
     }
     const res = await beginChatReq({ id: detail.id })
+    setChatLoading(false)
     setVisibleCoin(false)
     if (res.code == 0) {
       setDetail({
@@ -174,7 +163,7 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
       clearTimeout(timer.current)
       clearInterval(inTimer.current)
       setIsPlaying(false)
-      endAudioRef.current.play()
+      endAudioRef?.current?.play()
       videoRef?.current?.pause()
     } else {
       setVisibleQuit(false)
@@ -211,7 +200,6 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
       setNext(true)
       setIsPlaying(false)
       countTime.current = 0
-      setVideoIsLoad(false)
       if (timer.current) {
         clearTimeout(timer.current)
       }
@@ -221,7 +209,6 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
       if (res.code == 0) {
         setDetail(res.data)
         anchorId.current = res.data.id
-        judgeCoverLoadDone(detail.cover)
         setTimeout(() => {
           setOldCover(res.data.cover)
         }, 400);
@@ -234,18 +221,9 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
     }
   }
 
-  const judgeCoverLoadDone = (src: string) => {
-    const img = new Image()
-    img.src = getFileUrl(src)
-    setCoverLoading(true)
-    img.onload = function () {
-      setCoverLoading(false)
-    }
-  }
-
   const handleEndLoading = () => {
     setChatLoading(false)
-    audioRef.current.pause()
+    audioRef?.current?.pause()
     videoRef?.current?.pause()
     clearInterval(loadingTimer.current)
   }
@@ -256,7 +234,6 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
     } else {
       setNext(true)
       setIsPlaying(false)
-      setVideoIsLoad(false)
       if (timer.current) {
         clearTimeout(timer.current)
       }
@@ -314,9 +291,8 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
         var loadedPercent = (videoRef.current.buffered.end(videoRef.current.buffered.length - 1) / videoRef.current.duration) * 100;
         console.log('已加载百分比: ' + loadedPercent.toFixed(2) + '%');
         if (loadedPercent == 100) {
-          // setVideoIsLoad(true)
+          
         } else {
-          setVideoIsLoad(false)
         }
       });
     }
@@ -371,9 +347,19 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
   return <div className='anchor-page' style={{ backgroundImage: `url(${getFileUrl(detail?.cover)})` }}>
     {/* <div className={`cover ${next ? 'next' : ''}`} style={{ backgroundImage: `url(${getFileUrl(oldCover)})` }}></div> */}
     {
-      currentId == detail?.id ? <div className={`video`}>
-        <video src={getFileUrl(detail?.video)} loop id='video' poster={getFileUrl(detail?.cover)} ref={videoRef}></video>
-      </div> : null
+      currentId == detail?.id ? <>
+        <div className={`video`}>
+          <video src={getFileUrl(detail?.video)} loop id='video' poster={getFileUrl(detail?.cover)} ref={videoRef}></video>
+        </div>
+        <audio id="audioPlayer" ref={audioRef} loop>
+          <source src="/assets/mp3/loading.mp3" type="audio/mpeg" />
+          Your browser does not support the audio element.
+        </audio>
+        <audio id="audioPlayer" ref={endAudioRef}>
+          <source src="/assets/mp3/end.mp3" type="audio/mpeg" />
+          Your browser does not support the audio element.
+        </audio>
+      </> : null
     }
     <div className='top-shadow' />
     <div className='bot-shadow' />
@@ -463,14 +449,6 @@ function AnchorDetail({ anchorDetail, currentId }: AnchorDetailType) {
       </div> */}
     </div>
     <div className='playing-content chat-loading' style={{ opacity: chatLoading ? 1 : 0, zIndex: chatLoading ? 10 : -1 }}>
-      <audio id="audioPlayer" ref={audioRef} loop>
-        <source src="/assets/mp3/loading.mp3" type="audio/mpeg" />
-        Your browser does not support the audio element.
-      </audio>
-      <audio id="audioPlayer" ref={endAudioRef}>
-        <source src="/assets/mp3/end.mp3" type="audio/mpeg" />
-        Your browser does not support the audio element.
-      </audio>
       <div className='anchor-avatar'>
         <img src={getFileUrl(detail?.avatar)} alt='avatar' />
         <div className='anchor-name'>{detail?.name}</div>
