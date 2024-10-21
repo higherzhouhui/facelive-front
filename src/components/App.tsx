@@ -152,7 +152,7 @@ export const App: FC = () => {
       index += 1
       index = index % 5
       setRotate(rotate[index])
-    }, 800);
+    }, 1200);
     return () => {
       clearInterval(timer.current)
     }
