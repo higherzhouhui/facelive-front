@@ -195,13 +195,13 @@ export default function Home() {
     if (masonry) {
       //当数据更新时，会重新计算并排版
       masonry?.recalculate()
-      let count = 0
-      masonry.runOnImageLoad(function () {
-        count ++;
-        if (count >= 15) {
-          masonry.recalculate(true);
-        }
-      }, true);
+      // let count = 0
+      // masonry.runOnImageLoad(function () {
+      //   count ++;
+      //   if (count >= 15) {
+      //     masonry.recalculate(true);
+      //   }
+      // }, true);
     } else {
       //@ts-ignore
       let masonry = new Macy({
@@ -224,7 +224,6 @@ export default function Home() {
         }
       }, true);
     }
-
   }
 
   const handleSelectCountry = (index: number) => {
