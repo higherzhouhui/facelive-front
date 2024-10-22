@@ -2,7 +2,6 @@ import './index.scss'
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { followAnchorReq, getNextAnchorInfo, beginChatReq, getSwiperListReq, getMoreAnchorReq } from '@/api/common';
-import EventBus from '@/utils/eventBus';
 import { getFileUrl, secondsToTime } from '@/utils/common';
 import { FormattedMessage } from 'react-intl';
 import CountryFlag from '@/components/Flag';
@@ -11,7 +10,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { DotLoading, Modal, Swiper } from 'antd-mobile';
 import { setUserInfoAction } from '@/redux/slices/userSlice';
 import { useHapticFeedback } from '@telegram-apps/sdk-react';
-
 
 type AnchorDetailType = {
   anchorDetail: any,
@@ -90,9 +88,12 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
       hapticFeedback.notificationOccurred('success')
       setChatLoading(true)
       setVideoUrl(detail?.video)
+      audioRef.current.currentTime = 0
       audioRef?.current?.play()
       // const delay = 4000 + Math.random() * 6000
       loadingTimer.current = setInterval(() => {
+        videoRef?.current?.play()
+        videoRef.current.muted = true
         if (videoRef?.current?.readyState >= 3) {
           handlePlayVideo()
           audioRef?.current?.pause()
@@ -283,8 +284,6 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
       if (currentId == anchorDetail.id) {
         sessionStorage.setItem('anchorId', `${currentId}`)
       }
-    } else {
-      getAnchorDetail({})
     }
   }, [anchorDetail, currentId])
 
@@ -351,7 +350,10 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
   return <div className='anchor-page'>
     {/* <div className={`cover ${next ? 'next' : ''}`} style={{ backgroundImage: `url(${getFileUrl(oldCover)})` }}></div> */}
     <div className={`video`}>
-      <video src={getFileUrl(videoUrl)} loop id='video' poster={getFileUrl(detail?.cover)} ref={videoRef} preload={videoUrl ? 'load' : ''}></video>
+      <video loop id='video' poster={getFileUrl(detail?.cover)} ref={videoRef} src={getFileUrl(videoUrl)} preload='load'>
+        <source src={getFileUrl(videoUrl)} type='video/mp4'/>
+      </video>
+      
     </div>
     <div className='top-shadow' />
     <div className='bot-shadow' />

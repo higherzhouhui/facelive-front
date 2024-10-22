@@ -65,7 +65,7 @@ export function getFileUrl(file: string) {
   if (!file) {
     return ''
   }
-  const dev = import.meta.env.DEV
+  const dev = !import.meta.env.DEV
   let url = dev ? 'http://localhost:2002' : 'https://apifacelive.jizaoji.top'
   if (file && file.includes('http')) {
     url = ''

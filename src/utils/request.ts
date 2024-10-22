@@ -42,8 +42,10 @@ instance.interceptors.request.use(
         };
       }
     }
-    removePending(config);
-    addPending(config);
+    if (!config?.url?.includes('.mp4')) {
+      removePending(config);
+      addPending(config);
+    }
     // 发送请求之前做些什么
     return config;
   },
