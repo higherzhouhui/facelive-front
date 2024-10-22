@@ -75,6 +75,7 @@ function MyselfPage() {
     })
   }, [])
   return <div className='my-page'>
+    
     <div className='title'>
       {
         userinfo?.photoUrl ? <img src={getFileUrl(userinfo?.photoUrl)} className='g-avatar'/> : <div className='icon' style={{ background: stringToColor(userinfo?.username) }}>{getUserName(userinfo).substring(0, 2)}</div>

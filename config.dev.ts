@@ -29,8 +29,8 @@ export default defineConfig({
     port: 2001,
     proxy: {
       '/api/': {
-        // target: 'http://localhost:2002', // 本地开发
-        target: 'https://apifacelive.jizaoji.top', // 服务器
+        target: 'http://localhost:2002', // 本地开发
+        // target: 'https://apifacelive.jizaoji.top', // 服务器
         changeOrigin: true, // 是否改变源地址
         rewrite: (path) => path.replace(/^\/api/, '/api/'), // 重写路径
       },

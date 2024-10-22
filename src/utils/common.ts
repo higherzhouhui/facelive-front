@@ -10,13 +10,17 @@ const message: any = {
 
 
 export function getLabel(id: string) {
-  const lang = localStorage.getItem('lang') || 'en'
   let label = ''
   try {
-    label = message[lang][id]
-  } catch {
-    label = id
+    const userInfo = localStorage.getItem('userInfo')
+    if (userInfo) {
+      const _user = JSON.parse(userInfo)
+      label = message[_user.lang][id]
+    }
+  } catch(error) {
+
   }
+
   return label || id
 }
 
@@ -65,7 +69,7 @@ export function getFileUrl(file: string) {
   if (!file) {
     return ''
   }
-  const dev = !import.meta.env.DEV
+  const dev = import.meta.env.DEV
   let url = dev ? 'http://localhost:2002' : 'https://apifacelive.jizaoji.top'
   if (file && file.includes('http')) {
     url = ''

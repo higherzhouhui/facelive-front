@@ -288,15 +288,18 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
   }, [anchorDetail, currentId])
 
   useEffect(() => {
+    const onProgress = () => {
+      // 当前已加载的百分比
+      var loadedPercent = (videoRef.current.buffered.end(videoRef.current.buffered.length - 1) / videoRef.current.duration) * 100;
+      console.log('已加载百分比: ' + loadedPercent.toFixed(2) + '%');
+      if (loadedPercent == 100) {
+
+      } else {
+      }
+    }
     if (videoRef.current) {
       videoRef.current.addEventListener('progress', function () {
-        // 当前已加载的百分比
-        var loadedPercent = (videoRef.current.buffered.end(videoRef.current.buffered.length - 1) / videoRef.current.duration) * 100;
-        console.log('已加载百分比: ' + loadedPercent.toFixed(2) + '%');
-        if (loadedPercent == 100) {
-
-        } else {
-        }
+        onProgress()
       });
     }
 
@@ -350,10 +353,9 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
   return <div className='anchor-page'>
     {/* <div className={`cover ${next ? 'next' : ''}`} style={{ backgroundImage: `url(${getFileUrl(oldCover)})` }}></div> */}
     <div className={`video`}>
-      <video loop id='video' poster={getFileUrl(detail?.cover)} ref={videoRef} src={getFileUrl(videoUrl)} preload='load'>
-        <source src={getFileUrl(videoUrl)} type='video/mp4'/>
+      <video loop id='video' poster={getFileUrl(detail?.cover)} ref={videoRef} src={getFileUrl(videoUrl)} preload='auto'>
+        <source src={getFileUrl(videoUrl)} type='video/mp4' />
       </video>
-      
     </div>
     <div className='top-shadow' />
     <div className='bot-shadow' />
@@ -593,7 +595,7 @@ function AnchorPage() {
     >
       {
         details.map((item: any, index: number) => {
-          return <Swiper.Item key={index}>
+          return <Swiper.Item key={item.id}>
             <AnchorDetail anchorDetail={item} currentId={details[currentKey].id} audioRef={audioRef} endAudioRef={endAudioRef} />
           </Swiper.Item>
         })

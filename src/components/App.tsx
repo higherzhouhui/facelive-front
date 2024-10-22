@@ -68,8 +68,7 @@ export const App: FC = () => {
           dispatch(setUserInfoAction(res.data))
         } else {
           const lang = data.languageCode == 'zh-hans' ? 'zh' : 'en'
-          localStorage.setItem('lang', lang)
-          const userInfo = await changeLangReq({lang: lang})
+          await changeLangReq({lang: lang})
           dispatch(setUserInfoAction(res.data))
         }
       } else {
