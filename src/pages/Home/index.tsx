@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { getFileUrl, objectsEqual } from '@/utils/common';
 import CountryFlag from '@/components/Flag';
 import { FormattedMessage } from 'react-intl';
-import { Empty, InfiniteScroll, Popup, Skeleton } from 'antd-mobile';
+import { Empty, InfiniteScroll, Popup, PullToRefresh, Skeleton } from 'antd-mobile';
 import EventBus from '@/utils/eventBus';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -377,13 +377,14 @@ export default function Home() {
   }, [config])
   return (
     <div className='home-page'>
+      <PullToRefresh onRefresh={() => loadMore(1)}>
       <div className='top-content'>
         <div className='recommend-list'>
           {
             recommendList.map((item: any) => {
               return <div className='item' key={item.id} onClick={() => handleToDetail(item.id)}>
                 <div className='image-wrapper'>
-                  <img src={getFileUrl(item.cover)} alt='anchor' />
+                  <img src={getFileUrl(item.avatar)} alt='anchor' />
                 </div>
                 <div className='name'>
                   <div className='name-text'>{item.name}</div>
@@ -544,6 +545,7 @@ export default function Home() {
           </div>
         </div>
       </Popup>
+      </PullToRefresh>
     </div>
   )
 

@@ -1,5 +1,5 @@
-import { FormattedMessage } from 'react-intl'
 import './index.scss'
+import { FormattedMessage } from 'react-intl'
 import { chatAnchorListReq } from '@/api/common'
 import { useEffect, useState } from 'react'
 import { getFileUrl } from '@/utils/common'
@@ -46,7 +46,7 @@ function FollowPage() {
   useEffect(() => {
     initData()
   }, [])
-  return <div className='follow-page'>
+  return <div className='chat-page'>
     <div className='title'>
       <FormattedMessage id='yzblt' /><span className='count'>({list.length})</span>
       {
