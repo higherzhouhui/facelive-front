@@ -6,7 +6,7 @@ import {
   initSwipeBehavior,
   initViewport,
   retrieveLaunchParams,
-  postEvent
+  postEvent,
 } from '@telegram-apps/sdk';
 
 import { AppRoot } from '@telegram-apps/telegram-ui';
@@ -35,6 +35,7 @@ const messages: any = {
 
 
 export const App: FC = () => {
+  
   const [backButton] = initBackButton()
   const [viewport] = initViewport();
   const [miniApp] = initMiniApp()
@@ -121,6 +122,8 @@ export const App: FC = () => {
     backButton.on('click', () => {
       navigate(-1)
     })
+    postEvent('web_app_set_header_color', { color_key: 'bg_color' });
+
     disSwipe()
     // const tp = initThemeParams();
     // bindThemeParamsCSSVars(tp);
