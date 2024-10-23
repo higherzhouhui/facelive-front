@@ -197,13 +197,14 @@ export default function Home() {
   const getMacy = () => {
     if (masonry) {
       //当数据更新时，会重新计算并排版
-      // masonry?.recalculate()
+      masonry?.recalculate()
       let count = 0
       masonry.runOnImageLoad(function () {
         count ++;
         if (count >= addNum) {
-          masonry.recalculate(true);
-          eventBus.emit('loading', false)
+          setTimeout(() => {
+            eventBus.emit('loading', false)
+          }, 500);
         }
       }, true);
     } else {
