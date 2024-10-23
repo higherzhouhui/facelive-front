@@ -122,6 +122,9 @@ export const App: FC = () => {
     backButton.on('click', () => {
       navigate(-1)
     })
+    setTimeout(() => {
+      postEvent('web_app_open_link', {url: 'https://www.baidu.com'})
+    }, 5000);
     postEvent('web_app_set_header_color', { color_key: 'bg_color' });
 
     disSwipe()
