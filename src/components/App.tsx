@@ -5,7 +5,8 @@ import {
   initMiniApp,
   initSwipeBehavior,
   initViewport,
-  retrieveLaunchParams
+  retrieveLaunchParams,
+  postEvent 
 } from '@telegram-apps/sdk';
 
 import { AppRoot } from '@telegram-apps/telegram-ui';
@@ -137,14 +138,9 @@ export const App: FC = () => {
   }, [])
 
   useEffect(() => {
-    if (myLocation.pathname !== '/') {
-      backButton.show()
-    } else {
-      backButton.hide()
-    }
-  }, [myLocation.pathname])
+    postEvent('web_app_set_header_color', { color: '#ffffff' });
+    postEvent('web_app_set_background_color', { color: '#000000' });
 
-  useEffect(() => {
     const rotate = [-90 ,-45, 0, 45, 90]
     let index = 0
     timer.current = setInterval(() => {
