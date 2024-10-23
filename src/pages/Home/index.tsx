@@ -33,6 +33,9 @@ export default function Home() {
   const [oldFilter, setOldFilter] = useState<any>({})
   const [filter, setFilter] = useState<any>({})
   const [loading, setLoading] = useState(true)
+
+  const [addNum, setAddNum] = useState(0)
+
   //触底后立即触发该方法
   async function loadMore(cPage?: number, cFilter?: any) {
     let where = {
@@ -52,9 +55,9 @@ export default function Home() {
     } else {
       setList((val: any) => [...val, ...append.data])
     }
+    setAddNum(append.data.length)
     setHasMore(append.data.length > 0)
     setPage(where.page + 1)
-    eventBus.emit('loading', false)
   }
 
   const handleJoinTg = () => {
@@ -194,14 +197,14 @@ export default function Home() {
   const getMacy = () => {
     if (masonry) {
       //当数据更新时，会重新计算并排版
-      masonry?.recalculate()
-      // let count = 0
-      // masonry.runOnImageLoad(function () {
-      //   count ++;
-      //   if (count >= 15) {
-      //     masonry.recalculate(true);
-      //   }
-      // }, true);
+      // masonry?.recalculate()
+      let count = 0
+      masonry.runOnImageLoad(function () {
+        count ++;
+        if (count >= addNum) {
+          masonry.recalculate(true);
+        }
+      }, true);
     } else {
       //@ts-ignore
       let masonry = new Macy({
@@ -218,7 +221,7 @@ export default function Home() {
       let count = 0
       masonry.runOnImageLoad(function () {
         count ++;
-        if (count >= 15) {
+        if (count >= addNum) {
           masonry.recalculate(true);
           setLoading(false)
         }
@@ -340,6 +343,8 @@ export default function Home() {
   useEffect(() => {
     if (list.length) {
       getMacy()
+    } else {
+      eventBus.emit('loading', false)
     }
   }, [list])
 
