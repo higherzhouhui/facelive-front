@@ -124,9 +124,8 @@ export const App: FC = () => {
       navigate(-1)
     })
     // postEvent('web_app_open_link', {url: 'https://www.baidu.com'})
-    setTimeout(() => {
-      postEvent('web_app_set_header_color', { color: '#000000' });
-    }, 1000);
+    postEvent('web_app_set_header_color', { color: '#000000' });
+
     disSwipe()
     // const tp = initThemeParams();
     // bindThemeParamsCSSVars(tp);
