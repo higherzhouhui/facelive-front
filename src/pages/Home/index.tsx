@@ -203,6 +203,7 @@ export default function Home() {
         count ++;
         if (count >= addNum) {
           masonry.recalculate(true);
+          eventBus.emit('loading', false)
         }
       }, true);
     } else {
