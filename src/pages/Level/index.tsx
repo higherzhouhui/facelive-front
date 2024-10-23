@@ -1,4 +1,3 @@
-import Header from '@/components/Header'
 import './index.scss'
 import { SwiperRef, Swiper, Toast } from 'antd-mobile'
 import { useEffect, useRef, useState } from 'react'
@@ -87,7 +86,6 @@ export default function () {
 
 
   return <div className='level-page fadeIn'>
-    <Header title='Level' />
     <div className='level-wrapper'>
       <div className='level-content'>
         <Swiper allowTouchMove={false} ref={ref} loop indicator={false}>
