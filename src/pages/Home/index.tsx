@@ -33,7 +33,6 @@ export default function Home() {
   const [oldFilter, setOldFilter] = useState<any>({})
   const [filter, setFilter] = useState<any>({})
   const [loading, setLoading] = useState(true)
-
   const [addNum, setAddNum] = useState(0)
 
   //触底后立即触发该方法
@@ -348,7 +347,7 @@ export default function Home() {
     if (list.length) {
       getMacy()
     } else {
-      eventBus.emit('loading', false)
+      setLoading(false)
     }
   }, [list])
 
