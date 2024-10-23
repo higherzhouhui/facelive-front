@@ -6,7 +6,7 @@ import {
   initSwipeBehavior,
   initViewport,
   retrieveLaunchParams,
-  postEvent 
+  postEvent
 } from '@telegram-apps/sdk';
 
 import { AppRoot } from '@telegram-apps/telegram-ui';
@@ -40,7 +40,6 @@ export const App: FC = () => {
   const [viewport] = initViewport();
   const [miniApp] = initMiniApp()
   const launchParams = retrieveLaunchParams()
-  const myLocation = useLocation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [rotate, setRotate] = useState(0)
@@ -69,7 +68,7 @@ export const App: FC = () => {
           dispatch(setUserInfoAction(res.data))
         } else {
           const lang = data.languageCode == 'zh-hans' ? 'zh' : 'en'
-          await changeLangReq({lang: lang})
+          await changeLangReq({ lang: lang })
           dispatch(setUserInfoAction(res.data))
         }
       } else {
@@ -108,7 +107,6 @@ export const App: FC = () => {
 
   useEffect(() => {
     login()
-   
     const onLoading = (flag: boolean) => {
       setLoading(flag)
     }
@@ -138,16 +136,30 @@ export const App: FC = () => {
   }, [])
 
   useEffect(() => {
-    postEvent('web_app_set_header_color', { color: '#ffffff' });
-    postEvent('web_app_set_background_color', { color: '#000000' });
+    const minus = () => {
+      let index = 220
+      timer.current = setInterval(() => {
+        index -= Math.random() * 5
+        setRotate(index)
+        if (index < 130) {
+          clearInterval(timer.current)
+          add()
+        }
+      }, 100);
+    }
 
-    const rotate = [-90 ,-45, 0, 45, 90]
-    let index = 0
-    timer.current = setInterval(() => {
-      index += 1
-      index = index % 5
-      setRotate(rotate[index])
-    }, 1200);
+    const add = () => {
+      let index = 130
+      timer.current = setInterval(() => {
+        index += Math.random() * 5
+        setRotate(index)
+        if (index > 220) {
+          clearInterval(timer.current)
+          minus()
+        }
+      }, 50);
+    }
+    add()
     return () => {
       clearInterval(timer.current)
     }
@@ -160,7 +172,7 @@ export const App: FC = () => {
     >
       <IntlProvider locale={userInfo.lang || 'en'} messages={messages[userInfo.lang || 'en']}>
         <div className='layout'>
-          <div className='content' style={{ background: `linear-gradient(${rotate}deg, rgba(111, 66, 44, 0.05) 0%, rgba(111, 66, 44, 0.1) 30%, rgba(111, 66, 44, 0.93) 100%)` }}>
+          <div className='content' style={{ background: `linear-gradient(${rotate}deg, rgba(111, 66, 44, 0.93) 0%, rgb(0, 0, 0) 30%, rgb(0, 0, 0) 100%)` }}>
             <Routes>
               {routes.map((route) => <Route key={route.path} {...route} />)}
               <Route path='*' element={<Navigate to='/' />} />

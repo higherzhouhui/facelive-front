@@ -120,7 +120,7 @@ function FrensPage() {
       </div>
     </div>
     <div className='page-bottom'>
-      <Button className='touch-btn' color="default" style={{ fontWeight: 'bold', height: '45px', borderRadius: '100px', flex: 1, background: 'var(--highColor)', color: '#fff', border: 'none' }} onClick={() => handleShare()}>
+      <Button className='touch-btn' color="default" style={{ fontWeight: 'bold', height: '45px', borderRadius: '100px', flex: 1, background: 'var(--btnBg)', color: '#fff', border: 'none' }} onClick={() => handleShare()}>
         👆🏻 <FormattedMessage id='yqpy' />
       </Button>
       <Button color="default" className="copy" onClick={() => copy()} style={{ borderRadius: '100px', height: '45px', padding: '0 12px' }}>

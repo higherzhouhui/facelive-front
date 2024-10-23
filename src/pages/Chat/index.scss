@@ -1,5 +1,5 @@
 .chat-page {
-  padding: 2rem 1rem;
+  padding: 1.5rem 12px;
   .title {
     font-size: 1.7rem;
     font-family: 'Bold';
@@ -8,20 +8,23 @@
     }
   }
   .list {
-    margin-top: 1rem;
+    margin-top: 12px;
     border-radius: 12px;
-    padding: 12px;
-    background: var(--bgColor);
+    padding: 0 12px;
+    background: var(--contentColor);
     .list-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-top: 2rem;
+      margin-top: 1.5rem;
       border-bottom: 1px solid var(--dividerColor);
       padding-bottom: 12px;
     }
     .list-item:last-child {
       border: none;
+    }
+    .list-item:first-child {
+      padding-top: 12px;
     }
     .left {
       display: flex;
@@ -49,8 +52,8 @@
       gap: 12px;
       .online {
         background-color: var(--onLine);
-        width: 9px;
-        height: 9px;
+        width: 12px;
+        height: 12px;
         border-radius: 50%;
       }
       .divider {
@@ -61,7 +64,7 @@
       svg {
         width: 14px;
         height: 14px;
-        fill: var(--highColor);
+        fill: var(--btnBg);
       }
     }
   }

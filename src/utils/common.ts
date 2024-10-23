@@ -186,7 +186,6 @@ export function handleCopyLink(link: string, str?: string) {
   document.execCommand("copy");
   document.body.removeChild(textArea);
   Toast.show({ content: str || getLabel('copied'), position: 'top', duration: 3000 })
-
 }
 
 export function formatNumTen(money: number, length = 2) {

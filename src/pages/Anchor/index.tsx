@@ -25,7 +25,6 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
   const [detail, setDetail] = useState<any>({})
   const utils = initUtils()
   const [next, setNext] = useState(false)
-  const [oldCover, setOldCover] = useState('')
   const [visible, setVisible] = useState(false)
   const [visibleNext, setVisibleNext] = useState(false)
   const [visibleQuit, setVisibleQuit] = useState(false)
@@ -35,14 +34,10 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
   const inTimer = useRef<any>(null)
   const timer = useRef<any>(null)
   const countTime = useRef<any>(null)
-  const touchTimer = useRef<any>(null)
-  const lastTouch = useRef<any>(null)
   const anchorId = useRef<any>(null)
   const [loading, setLoading] = useState(true)
   const videoRef = useRef<any>(null)
   const [videoUrl, setVideoUrl] = useState('')
-  // const audioRef = useRef<any>(null)
-  // const endAudioRef = useRef<any>(null)
   const loadingTimer = useRef<any>(null)
   const [chatLoading, setChatLoading] = useState(false)
 
@@ -65,11 +60,6 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
     setVisibleCoin(false)
     setVisibleQuit(false)
     setDetail(info)
-    setOldCover(info?.cover)
-    if (localStorage.getItem('chat') == '1' && sessionStorage.getItem('anchorId') == info?.id) {
-      handleBeginVideo()
-      localStorage.removeItem('chat')
-    }
   }
   const handleRoute = (index: number) => {
     if (index == 0) {
@@ -88,9 +78,8 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
       hapticFeedback.notificationOccurred('success')
       setChatLoading(true)
       setVideoUrl(detail?.video)
-      audioRef.current.currentTime = 0
       audioRef?.current?.play()
-      // const delay = 4000 + Math.random() * 6000
+      audioRef.current.currentTime = 0
       loadingTimer.current = setInterval(() => {
         videoRef?.current?.play()
         videoRef.current.muted = true
@@ -143,17 +132,6 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
         }, 60000);
       }
       execPlay()
-
-      // if (videoRef.current.readyState >= 3) {
-      //   execPlay()
-      // } else {
-      //   // 否则，等待视频加载完成
-      //   videoRef.current.addEventListener('canplaythrough', function () {
-      //     if (isPlaying) {
-      //       execPlay()
-      //     }
-      //   });
-      // }
     } else {
       videoRef?.current?.pause()
       setIsPlaying(false)
@@ -188,7 +166,9 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
     if (userinfo.score < detail.coin) {
       setVisible(true)
     } else {
-      setVisibleCoin(true)
+      // 改为直接开始
+      handleConfirm(0)
+      // setVisibleCoin(true)
     }
   }
 
@@ -214,9 +194,6 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
       if (res.code == 0) {
         setDetail(res.data)
         anchorId.current = res.data.id
-        setTimeout(() => {
-          setOldCover(res.data.cover)
-        }, 400);
       }
       setTimeout(() => {
         setNext(false)
@@ -232,51 +209,6 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
     videoRef?.current?.pause()
     clearInterval(loadingTimer.current)
   }
-
-  const handleNextAnchor = async () => {
-    if (isPlaying) {
-      setVisibleNext(true)
-    } else {
-      setNext(true)
-      setIsPlaying(false)
-      if (timer.current) {
-        clearTimeout(timer.current)
-      }
-      // eventBus.emit('loading', true)
-      const res = await getNextAnchorInfo({ id: anchorId.current })
-      // eventBus.emit('loading', false)
-      if (res.code == 0) {
-        setDetail(res.data)
-        anchorId.current = res.data.id
-        sessionStorage.setItem('anchorId', `${res.data.id}`)
-        setTimeout(() => {
-          setOldCover(res.data.cover)
-        }, 500);
-      }
-      setTimeout(() => {
-        setNext(false)
-      }, 500);
-    }
-  }
-
-
-  useEffect(() => {
-    // const _id = sessionStorage.getItem('anchorId') || 1
-    // setId(_id)
-    return () => {
-      audioRef?.current?.pause()
-      videoRef?.current?.pause()
-      if (timer.current) {
-        clearTimeout(timer.current)
-      }
-      if (inTimer.current) {
-        clearInterval(inTimer.current)
-      }
-      if (loadingTimer) {
-        clearInterval(loadingTimer.current)
-      }
-    }
-  }, [])
 
   useEffect(() => {
     if (anchorDetail) {
@@ -298,57 +230,32 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
       }
     }
     if (videoRef.current) {
-      videoRef.current.addEventListener('progress', function () {
-        onProgress()
-      });
+      videoRef.current.addEventListener('progress', onProgress);
     }
-
-    // 获取元素
-    const element = document.getElementById('touch')!;
-
-    // 记录开始触摸的位置
-    let startX: any = 0;
-    let startY: any = 0;
-
-    // 监听触摸开始事件
-    element.addEventListener('touchstart', (e) => {
-      // 获取第一个触点
-      const touch = e.touches[0];
-      // 记录开始位置
-      startX = touch.pageX;
-      startY = touch.pageY;
-    });
-    const onTouchMove = (e: any) => {
-      // 阻止默认的处理方式（例如滚动页面）
-      e.preventDefault();
-
-      // 获取移动过程中的第一个触点
-      const touch = e.touches[0];
-      // 计算滑动的距离
-      const endX = touch.pageX;
-      const endY = touch.pageY;
-      const distanceX = endX - startX;
-      const distanceY = endY - startY;
-      const _last = lastTouch.current || 0
-      if (distanceY < -50) {
-        if (new Date().getTime() > _last + 1000) {
-          lastTouch.current = new Date().getTime()
-          // handleNextAnchor()
-        }
-        touchTimer.current = setTimeout(() => {
-          lastTouch.current = 0
-        }, 1000);
-      }
-    }
-    // 监听触摸移动事件
-    element.addEventListener('touchmove', onTouchMove)
     return () => {
-      element.removeEventListener('touchmove', onTouchMove)
-      if (touchTimer.current) {
-        clearTimeout(touchTimer.current)
+      audioRef?.current?.pause()
+      videoRef?.current?.pause()
+      if (timer.current) {
+        clearTimeout(timer.current)
+      }
+      if (inTimer.current) {
+        clearInterval(inTimer.current)
+      }
+      if (loadingTimer) {
+        clearInterval(loadingTimer.current)
       }
     }
   }, [])
+
+  useEffect(() => {
+    if (detail) {
+      if (localStorage.getItem('chat') == '1' && sessionStorage.getItem('anchorId') == detail?.id) {
+        handleConfirm(0)
+        localStorage.removeItem('chat')
+      }
+    }
+  }, [detail])
+
 
   return <div className='anchor-page'>
     {/* <div className={`cover ${next ? 'next' : ''}`} style={{ backgroundImage: `url(${getFileUrl(oldCover)})` }}></div> */}
@@ -362,13 +269,13 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
     <div className='top'>
       {
         isPlaying ? <div>{secondsToTime(countTime.current)}</div> : <><div className='status' />
-          <FormattedMessage id='online' /></>
+          <FormattedMessage id='available' /></>
       }
     </div>
     <div className='main-content' id='touch' style={{ opacity: !isPlaying ? 1 : 0, zIndex: !isPlaying ? 1 : -1 }}>
       <div className='right-operation'>
         <div className='heart touch-btn' onClick={() => handleLike()}>
-          <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4724" width="38" height="38"><path d="M760.384 64c47.808 0 91.968 11.968 132.352 35.84a264.32 264.32 0 0 1 95.872 97.152A263.68 263.68 0 0 1 1024 330.88c0 34.752-6.592 68.544-19.712 101.312a262.4 262.4 0 0 1-57.536 87.424L512 960 77.248 519.68A268.8 268.8 0 0 1 0 330.88c0-48.384 11.776-93.056 35.392-133.952A264.32 264.32 0 0 1 131.2 99.84 255.296 255.296 0 0 1 263.68 64 260.736 260.736 0 0 1 449.92 142.208l62.08 62.912 62.144-62.912a258.944 258.944 0 0 1 86.336-58.24A259.584 259.584 0 0 1 760.512 64h-0.128z" fill={detail?.isLike ? 'red' : '#fff'} p-id="4725"></path></svg>
+          <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4724" width="38" height="38"><path d="M760.384 64c47.808 0 91.968 11.968 132.352 35.84a264.32 264.32 0 0 1 95.872 97.152A263.68 263.68 0 0 1 1024 330.88c0 34.752-6.592 68.544-19.712 101.312a262.4 262.4 0 0 1-57.536 87.424L512 960 77.248 519.68A268.8 268.8 0 0 1 0 330.88c0-48.384 11.776-93.056 35.392-133.952A264.32 264.32 0 0 1 131.2 99.84 255.296 255.296 0 0 1 263.68 64 260.736 260.736 0 0 1 449.92 142.208l62.08 62.912 62.144-62.912a258.944 258.944 0 0 1 86.336-58.24A259.584 259.584 0 0 1 760.512 64h-0.128z" fill={detail?.isLike ? '#FF4A64' : '#fff'} p-id="4725"></path></svg>
           <div className='count'>{detail?.heart}</div>
         </div>
         <div className='heart touch-btn' onClick={() => handleToChannel()}>
@@ -460,10 +367,10 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
     </div>
 
     <div className='playing-content' style={{ opacity: isPlaying ? 1 : 0, zIndex: isPlaying ? 1 : -1 }}>
-      <div className='coin'>
+      {/* <div className='coin'>
         {userinfo.score}
         <img src='/assets/coin.png' />
-      </div>
+      </div> */}
       <div className='anchor-avatar'>
       </div>
       <div className='end-btn' onClick={() => handleOverChat()}>

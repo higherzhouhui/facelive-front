@@ -1,18 +1,18 @@
-// @font-face {
-//   font-family: 'Regular';
-//   src: url('./assets/font/DM-Sans-regular.woff2') format('woff2');
-//   font-weight: normal;
-//   font-style: normal;
-// }
-
-// @font-face {
-//   font-family: 'Bold';
-//   src: url('./assets/font/DM-Sans-600.woff2') format('woff2');
-//   font-weight: normal;
-//   font-style: normal;
-// }
 @font-face {
-  font-family: 'Flag';
+  font-family: Regular;
+  src: url('./assets/font/DM-Sans-regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Bold;
+  src: url('./assets/font/Noto-Sans-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: Flag;
   src: url('./assets/font/TwemojiCountryFlags.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
@@ -23,6 +23,7 @@ body,
 #root {
   height: 100%;
   background: #000;
+  font-family: Regular;
 }
 
 body::-webkit-scrollbar {
@@ -33,8 +34,13 @@ html::-webkit-scrollbar {
   display: none;
 }
 
+div::-webkit-scrollbar {
+  display: none;
+}
+
 * {
   box-sizing: border-box;
+  font-family: 'PingFangSC-Medium,PingFang SC,Flag';
 }
 
 body {
@@ -54,10 +60,10 @@ code {
 }
 
 html {
-  font-size: 12px;
+  font-size: 14px;
 
-  @media (min-width: 400px) {
-    font-size: 14px;
+  @media (min-width: 600px) {
+    font-size: 15px;
   }
 }
 
@@ -102,9 +108,9 @@ html {
   --elevation-light-1: 0px 10px 60px rgba(0, 0, 0, .1);
   --elevation-dark-1: 0px 10px 60px rgba(0, 0, 0, .7);
   --tg-theme-button-color: red;
-  --highColor: #F22B79;
-  --btnBg: #24ee7b;
-  --bgColor: #222;
+  --highColor: #ffcb55;
+  --btnBg: #F22B79;
+  --bgColor: #000;
   --contentColor: #111;
   --adm-color-primary: #30d158 !important;
   --dividerColor: #665f5f;
@@ -133,6 +139,8 @@ html {
   }
 }
 
+
+
 .layout {
   width: 100%;
   height: var(--tg-viewport-height);
@@ -140,8 +148,6 @@ html {
   color: var(--textColor);
   display: flex;
   flex-direction: column;
-  background: var(--bgColor);
-
   .content {
     flex: 1;
     overflow: auto;
@@ -157,6 +163,11 @@ html {
 
 .adm-toast-mask .adm-toast-main {
   max-width: 350px;
+  .adm-auto-center-content {
+    background: var(--btnBg);
+    border-radius: 6px;
+    padding: 0 4px;
+  }
 }
 
 .popup-invite {
@@ -235,13 +246,12 @@ html {
   .adm-space-item {
     button {
       color: #fff;
-      background: var(--highColor);
+      background: var(--btnBg);
     }
     &:last-child  {
       button {
         color: #fff!important;
         background: var(--darkColor);
-
       }
     }
   }
