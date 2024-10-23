@@ -250,6 +250,7 @@ html {
 
 .touch-btn {
   transition: transform 0.1s;
+  cursor: pointer;
 }
 .touch-btn:active {
   transform: scale(0.95);

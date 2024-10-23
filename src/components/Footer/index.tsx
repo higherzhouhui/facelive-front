@@ -49,7 +49,7 @@ export default function () {
         <div className='list'>
             {
                 menu.map((item => {
-                    return <div className={`menu ${myLocation.pathname == item.to ? 'active' : ''}`} key={item.title} onClick={() => handleClickTab(item)}>
+                    return <div className={`menu touch-btn ${myLocation.pathname == item.to ? 'active' : ''}`} key={item.title} onClick={() => handleClickTab(item)}>
                         <div>{item.icon}</div>
                     </div>
                 }))

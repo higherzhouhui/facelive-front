@@ -479,7 +479,7 @@ export default function Home() {
             <div className='select-container'>
               {
                 countryList.map((item: any, index: number) => {
-                  return <div key={index} className={`select-item ${item.selected ? 'select-item-active' : ''}`} onClick={() => handleSelectCountry(index)}>
+                  return <div key={index} className={`select-item touch-btn ${item.selected ? 'select-item-active' : ''}`} onClick={() => handleSelectCountry(index)}>
                     <div className='select-item-name'>
                       <CountryFlag country={item.label} />
                       <FormattedMessage id={item.label || 'label'} />

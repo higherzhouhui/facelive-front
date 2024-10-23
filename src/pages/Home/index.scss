@@ -177,6 +177,9 @@
     top: 0;
     background: #18140E;
     padding: 8px 0;
+    svg {
+      cursor: pointer;
+    }
   }
   .filter-item {
     color: #fff;
@@ -200,6 +203,7 @@
       background: #282820;
       padding: 12px 8px;
       border-radius: 12px;
+      cursor: pointer;
       .close-icon {
         display: none;
       }
