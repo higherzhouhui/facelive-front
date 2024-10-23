@@ -456,7 +456,7 @@ export default function Home() {
         </div>
         <InfiniteScroll loadMore={() => loadMore()} hasMore={hasMore}>
           {
-            loading ? <DotLoading style={{fontSize: 38}}/> : addNum ? <div>-------- <FormattedMessage id='endDesc' /> --------</div> : <Empty description={<FormattedMessage id='nodata' />} />
+            loading ? <DotLoading style={{fontSize: 38}}/> : null
           }
         </InfiniteScroll>
         <BackTop />
