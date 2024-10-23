@@ -392,7 +392,7 @@ export default function Home() {
               recommendList.map((item: any) => {
                 return <div className='item' key={item.id} onClick={() => handleToDetail(item.id)}>
                   <div className='image-wrapper'>
-                    <img src={getFileUrl(item.avatar)} alt='anchor' />
+                    <img src={getFileUrl(item.home_cover)} alt='anchor' />
                   </div>
                   <div className='name'>
                     <div className='name-text'>{item.name}</div>
@@ -432,17 +432,17 @@ export default function Home() {
           </div>
           <div className='image-content'>
             <div className='skeleton-wrapper'>
-              {/* {
+              {
                 loading ? [...Array(6).fill('')].map((item: any, index: number) => {
                   return <Skeleton className='skeleton' animated key={index} />
                 }) : null
-              } */}
+              }
             </div>
             <div className='image-list'>
               {
                 list.map((item: any, index: number) => {
                   return <div className='anchor-wrapper' key={index} onClick={() => handleToDetail(item.id)}>
-                    <img src={getFileUrl(item.cover)} alt='anchor' className='anchor-cover' />
+                    <img src={getFileUrl(item.home_cover)} alt='anchor' className='anchor-cover' />
                     <div className='status'>
                     </div>
                     <div className='name'>

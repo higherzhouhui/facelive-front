@@ -15,7 +15,6 @@ import {
   Navigate,
   Route,
   Routes,
-  useLocation,
   useNavigate,
 } from 'react-router-dom';
 import { routes } from '@/navigation/routes';
@@ -172,7 +171,7 @@ export const App: FC = () => {
     >
       <IntlProvider locale={userInfo.lang || 'en'} messages={messages[userInfo.lang || 'en']}>
         <div className='layout'>
-          <div className='content' style={{ background: `linear-gradient(${rotate}deg, rgba(111, 66, 44, 0.93) 0%, rgb(0, 0, 0) 30%, rgb(0, 0, 0) 100%)` }}>
+          <div className='content' style={{ background: `linear-gradient(${rotate}deg, rgba(111, 66, 44, 0.93) 5%, rgb(0, 0, 0) 30%, rgb(0, 0, 0) 100%)` }}>
             <Routes>
               {routes.map((route) => <Route key={route.path} {...route} />)}
               <Route path='*' element={<Navigate to='/' />} />

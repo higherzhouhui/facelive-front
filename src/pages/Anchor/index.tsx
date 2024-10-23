@@ -52,14 +52,13 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
     if (loadingTimer.current) {
       clearInterval(loadingTimer.current)
     }
-    videoRef?.current?.pause()
     audioRef?.current?.pause()
-
     setChatLoading(false)
     setVisible(false)
     setVisibleCoin(false)
     setVisibleQuit(false)
     setDetail(info)
+    videoRef.current.muted = true
   }
   const handleRoute = (index: number) => {
     if (index == 0) {
@@ -147,7 +146,9 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
       clearInterval(inTimer.current)
       setIsPlaying(false)
       endAudioRef?.current?.play()
-      videoRef?.current?.pause()
+      setVideoUrl(detail?.cover)
+      videoRef.current.currentTime = 0
+      videoRef.current.muted = true
     } else {
       setVisibleQuit(false)
     }
@@ -206,7 +207,9 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
   const handleEndLoading = () => {
     setChatLoading(false)
     audioRef?.current?.pause()
-    videoRef?.current?.pause()
+    setVideoUrl(detail?.cover)
+    videoRef.current.currentTime = 0
+    videoRef.current.muted = true
     clearInterval(loadingTimer.current)
   }
 
@@ -258,11 +261,12 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
 
 
   return <div className='anchor-page'>
-    {/* <div className={`cover ${next ? 'next' : ''}`} style={{ backgroundImage: `url(${getFileUrl(oldCover)})` }}></div> */}
     <div className={`video`}>
-      <video loop id='video' poster={getFileUrl(detail?.cover)} ref={videoRef} src={getFileUrl(videoUrl)} preload='auto'>
-        <source src={getFileUrl(videoUrl)} type='video/mp4' />
-      </video>
+      {
+        currentId == detail?.id ? <video loop id='video' poster={getFileUrl(detail?.home_cover)} ref={videoRef} src={getFileUrl(videoUrl || detail?.cover)} autoPlay preload='load'>
+          <source src={getFileUrl(videoUrl || detail?.cover)} type='video/mp4' />
+        </video> : <video loop id='video' poster={getFileUrl(detail?.home_cover)} ref={videoRef} />
+      }
     </div>
     <div className='top-shadow' />
     <div className='bot-shadow' />
