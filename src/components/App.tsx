@@ -7,6 +7,7 @@ import {
   initViewport,
   retrieveLaunchParams,
   postEvent,
+  on,
 } from '@telegram-apps/sdk';
 
 import { AppRoot } from '@telegram-apps/telegram-ui';
@@ -124,10 +125,8 @@ export const App: FC = () => {
     })
     // postEvent('web_app_open_link', {url: 'https://www.baidu.com'})
     setTimeout(() => {
-      postEvent('web_app_set_background_color', {color: '#000000'})
-      postEvent('web_app_set_header_color', { color: '#f9cf9c' });
-    }, 5000);
-
+      postEvent('web_app_set_header_color', { color: '#000000' });
+    }, 1000);
     disSwipe()
     // const tp = initThemeParams();
     // bindThemeParamsCSSVars(tp);
