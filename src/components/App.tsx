@@ -123,6 +123,9 @@ export const App: FC = () => {
     backButton.on('click', () => {
       navigate(-1)
     })
+    on('back_button_pressed', () => {
+      navigate(-1)
+    })
     // postEvent('web_app_open_link', {url: 'https://www.baidu.com'})
     postEvent('web_app_set_header_color', { color: '#000000' });
 
