@@ -30,7 +30,7 @@ export default defineConfig({
     proxy: {
       '/api/': {
         target: 'http://localhost:2002', // 本地开发
-        // target: 'https://apifacelive.jizaoji.top', // 服务器
+        // target: 'https://mini.facelive.top', // 服务器
         changeOrigin: true, // 是否改变源地址
         rewrite: (path) => path.replace(/^\/api/, '/api/'), // 重写路径
       },
