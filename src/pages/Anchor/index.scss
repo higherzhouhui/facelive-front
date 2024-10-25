@@ -60,7 +60,6 @@
     font-size: 1.3rem;
     font-family: 'Bold';
     gap: 4px;
-    text-shadow: -1px -1px 0 #000;
     z-index: 9;
     position: absolute;
     left: 0;
@@ -112,13 +111,11 @@
       .anchor-name {
         margin-top: 1rem;
         font-size: 1.3rem;
-        text-shadow: -1px -1px 0 #000;
         font-weight: bold;
       }
       .loading-text {
         margin-top: 10rem;
         color: #f5f5f5;
-        text-shadow: -1px -1px 0 #000;
       }
     }
     .end-btn {
@@ -151,9 +148,6 @@
         cursor: pointer;
         margin-right: 12px;
         text-align: center;
-        .count {
-          text-shadow: -1px -1px 0 #000;
-        }
       }
     }
     .intro {
@@ -162,7 +156,6 @@
       gap: 12px;
       font-size: 1.7rem;
       font-weight: bold;
-      text-shadow: -2px -2px 0 #000;
       margin-bottom: 0.5rem;
     }
     .label {
@@ -186,12 +179,10 @@
       }
       .count {
         font-size: 1.6rem;
-        text-shadow: -1px -1px 0 #333;
       }
       .count-desc {
         font-size: 0.7rem;
         text-align: center;
-        text-shadow: -1px -1px 0 #333;
       }
     }
     .join-btn {

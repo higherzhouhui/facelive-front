@@ -8,6 +8,15 @@ function BackTop({ scrollName }: { scrollName?: string }) {
   // 判断是否显示回到顶部按钮
   const toggleVisibility = () => {
     const layoutElement = document.getElementsByClassName(scrollName || 'content')[0]
+    const filterElement = document.getElementById('home-filter')
+    if (filterElement) {
+      const domRect = filterElement.getBoundingClientRect()
+      if (domRect.top == 0) {
+        filterElement.style.background = 'linear-gradient(135deg, rgba(111, 66, 44, 0.93) 0%, rgb(0, 0, 0) 50%, rgb(0, 0, 0) 100%)'
+      } else if (domRect.top > 0) {
+        filterElement.style.background = 'transparent'
+      }
+    }
     if (layoutElement) {
       if (layoutElement.scrollTop > 300) {
         setIsVisible(true);

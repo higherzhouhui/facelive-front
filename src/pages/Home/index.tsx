@@ -2,7 +2,7 @@ import './index.scss'
 import Macy from 'macy'
 import { initUtils, useHapticFeedback } from '@telegram-apps/sdk-react';
 import { getAnchorList } from '@/api/common';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getFileUrl, objectsEqual } from '@/utils/common';
 import CountryFlag from '@/components/Flag';
 import { FormattedMessage } from 'react-intl';
@@ -414,7 +414,7 @@ export default function Home() {
           </div>
         </div>
         <div className='main-content'>
-          <div className='filter'>
+          <div className='filter' id='home-filter'>
             <svg onClick={() => setVisible(true)} viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4613" width="22" height="22"><path d="M522.184 1024a39.123 39.123 0 0 1-19.4-5.173l-215.34-149.38a40.093 40.093 0 0 1-17.137-32.334V366.986L10.023 41.712l8.407-21.664A35.567 35.567 0 0 1 50.763 0.002h751.105l20.37 38.476-13.257 19.077-249.29 309.43v617.892A39.123 39.123 0 0 1 520.568 1024zM333.357 823.856L495.024 937.67V344.352L721.358 64.668H111.227l222.13 279.684zM74.69 16.815z" fill="#fff" p-id="4614"></path><path d="M722.975 452.669h258.667q32.333 0 32.333 32.333 0 32.334-32.333 32.334H722.975q-32.334 0-32.334-32.334 0-32.333 32.334-32.333zM722.975 630.503h258.667q32.333 0 32.333 32.333t-32.333 32.333H722.975q-32.334 0-32.334-32.333t32.334-32.333zM722.975 808.336h258.667q32.333 0 32.333 32.334 0 32.333-32.333 32.333H722.975q-32.334 0-32.334-32.333 0-32.334 32.334-32.334z" fill="#fff" p-id="4615"></path></svg>
             <div className={`${handleFilter().length ? '' : 'all-hover'} filter-title-item`}><FormattedMessage id='all' /></div>
             {
