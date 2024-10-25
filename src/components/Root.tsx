@@ -1,6 +1,6 @@
 import { SDKProvider, useLaunchParams } from '@telegram-apps/sdk-react';
 import { TonConnectUIProvider } from '@tonconnect/ui-react';
-import { type FC, Suspense, useEffect, useMemo } from 'react';
+import { type FC, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { App } from '@/components/App';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { Provider } from 'react-redux';
@@ -11,7 +11,7 @@ import { HashRouter } from 'react-router-dom';
 import Loading from './Loading';
 
 const ErrorBoundaryError: FC<{ error: unknown }> = ({ error }) => (
-  <div style={{ color: '#fff' }}>
+  import.meta.env.DEV ?<div style={{ color: '#fff' }}>
     <p>An unhandled error occurred:</p>
     <blockquote>
       <code>
@@ -22,8 +22,20 @@ const ErrorBoundaryError: FC<{ error: unknown }> = ({ error }) => (
             : JSON.stringify(error)}
       </code>
     </blockquote>
-  </div>
+  </div> : <ErrorBoundaryProd /> 
 );
+
+function ErrorBoundaryProd() {
+  useEffect(() => {
+    setTimeout(() => {
+      localStorage.clear()
+      window.location.reload()
+    }, 5000);
+  }, [])
+  return <div className='error-page'>
+    <Loading />
+  </div>
+}
 
 const Inner: FC = () => {
   const manifestUrl = useMemo(() => {
