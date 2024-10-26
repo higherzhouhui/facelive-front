@@ -20,6 +20,7 @@ function RechargePage() {
   const config = useSelector((state: any) => state.user.system);
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const [showQuestion, setShowQuestion] = useState(false)
   const handleClick = (index: number) => {
     setCurrent(index)
   }
@@ -97,9 +98,9 @@ function RechargePage() {
           trigger='click'
           placement='topLeft'
           mode='dark'
-          defaultVisible
+          visible={showQuestion}
         >
-        <span style={{fontSize: '12px'}}>
+        <span style={{fontSize: '12px'}} onClick={() => setShowQuestion(!showQuestion)}>
         <FormattedMessage id='trouble' />?
         </span>
         </Popover>
