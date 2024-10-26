@@ -4,9 +4,9 @@ import { FC, useEffect, useState } from 'react';
 import EventBus from '@/utils/eventBus';
 import { FormattedMessage } from 'react-intl';
 import { useTonAddress, useTonConnectUI } from '@tonconnect/ui-react';
-import { Toast } from 'antd-mobile';
-import { useHapticFeedback } from '@telegram-apps/sdk-react';
-import { useDispatch } from 'react-redux';
+import { Popover, Toast } from 'antd-mobile';
+import { initUtils, useHapticFeedback } from '@telegram-apps/sdk-react';
+import { useDispatch, useSelector } from 'react-redux';
 import { setUserInfoAction } from '@/redux/slices/userSlice';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,14 +17,19 @@ function RechargePage() {
   const [tonConnectUI] = useTonConnectUI();
   const hapticFeedback = useHapticFeedback()
   const userFriendlyAddress = useTonAddress()
+  const config = useSelector((state: any) => state.user.system);
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const handleClick = (index: number) => {
     setCurrent(index)
   }
 
+  const utils = initUtils()
+  const handleHelp = () => {
+    utils.openTelegramLink(config.base.help_link)
+  }
+
   const initData = async () => {
-    
     eventBus.emit('loading', true)
     const res = await getProductListReq()
     eventBus.emit('loading', false)
@@ -37,9 +42,9 @@ function RechargePage() {
       tonConnectUI.modal.open()
       return
     }
-    bindWalletReq({wallet: userFriendlyAddress})
-    // 该账号为XEM的钱包地址
-    const to_address = "UQAmfKKCrCozVeKNnvWB0mYM0RGTfHaMEv3URvPOwzsFLXuY"
+    bindWalletReq({ wallet: userFriendlyAddress })
+    // 收款钱包地址
+    const to_address = "UQByu66_s8WTd9tAmaUmv48tOKfsLPPQHJYvoX1ypPA76ta9"
     const item = list[current] as any
     const transaction = {
       validUntil: new Date().getTime() + 300 * 1000,
@@ -85,8 +90,23 @@ function RechargePage() {
         }
       </div>
     </div>
-    <div className='recharge-btn touch-btn' onClick={() => handleRecharge()}>
-      <FormattedMessage id='recharge' />
+    <div className='bot-content'>
+      <div className='question'>
+      <Popover
+          content={<div style={{color: '#a9a9e9', fontSize: '12px'}} onClick={() => handleHelp()}><FormattedMessage id='czHint' /></div>}
+          trigger='click'
+          placement='topLeft'
+          mode='dark'
+          defaultVisible
+        >
+        <span style={{fontSize: '12px'}}>
+        <FormattedMessage id='trouble' />?
+        </span>
+        </Popover>
+      </div>
+      <div className='recharge-btn touch-btn' onClick={() => handleRecharge()}>
+        <FormattedMessage id='recharge' />
+      </div>
     </div>
   </div>
 }
@@ -105,7 +125,7 @@ const ListItem: FC<ListItemType> = ({ score, price, selected, index, onClick }) 
       <div className='img-coin'>
         {
           [...Array(index + 1).fill('')].map((item: any, index: number) => {
-            return <img src='/assets/coin.png' className={`img${index} img`} key={index}/>
+            return <img src='/assets/coin.png' className={`img${index} img`} key={index} />
           })
         }
       </div>

@@ -69,4 +69,9 @@
     font-size: 1.3rem;
     cursor: pointer;
   }
+  .question {
+    display: flex;
+    justify-content: flex-end;
+    padding-bottom: 12px;
+  }
 }

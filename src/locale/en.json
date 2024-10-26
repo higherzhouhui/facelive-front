@@ -85,5 +85,7 @@
   "rechargeParent": "Friend recharge reward",
   "system_change": "System correction",
   "community": "Community",
-  "available": "Available"
+  "available": "Available",
+  "trouble": "Trouble",
+  "czHint": "For more payment methods, please contact customer service"
 }

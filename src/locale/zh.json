@@ -85,5 +85,7 @@
   "rechargeParent": "好友充值奖励",
   "system_change": "系统修正",
   "community": "社区",
-  "available": "在线"
+  "available": "在线",
+  "trouble": "支付有疑问",
+  "czHint": "更多支付方式，请联系客服"
 }
