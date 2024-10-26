@@ -27,6 +27,7 @@ function RechargePage() {
 
   const utils = initUtils()
   const handleHelp = () => {
+    setShowQuestion(false)
     utils.openTelegramLink(config.base.help_link)
   }
 
