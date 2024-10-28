@@ -1,6 +1,5 @@
 import {
   bindViewportCSSVars,
-  initBackButton,
   initInitData,
   initMiniApp,
   initSwipeBehavior,
@@ -8,6 +7,8 @@ import {
   retrieveLaunchParams,
   postEvent,
   on,
+  initMainButton,
+  initSettingsButton,
 } from '@telegram-apps/sdk';
 
 import { AppRoot } from '@telegram-apps/telegram-ui';
@@ -36,8 +37,7 @@ const messages: any = {
 
 
 export const App: FC = () => {
-  
-  const [backButton] = initBackButton()
+  const [mainButton] = initMainButton();
   const [viewport] = initViewport();
   const [miniApp] = initMiniApp()
   const launchParams = retrieveLaunchParams()
@@ -123,6 +123,7 @@ export const App: FC = () => {
     // backButton.on('click', () => {
     //   navigate(-1)
     // })
+    postEvent('iframe_ready')
     on('back_button_pressed', () => {
       navigate(-1)
     })
@@ -137,7 +138,8 @@ export const App: FC = () => {
       position: 'top',
       duration: 3000
     })
-
+    const [settingsButton] = initSettingsButton();
+    settingsButton.hide();
     // const locale = localStorage.getItem('locale') || 'zh'
     // setLocale(locale)
   }, [])

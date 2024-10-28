@@ -11,8 +11,8 @@ function ResultPage() {
       status='success'
       title={<FormattedMessage id='czcg' />}
       description={<div className='desc'>
-        <div className='btn' onClick={() => navigate('/my')}><FormattedMessage id='back' /></div>
-        <div className='btn btn-detail' onClick={() => navigate('/frens-detail?myself=1')}><FormattedMessage id='ckxq' /></div>
+        <div className='btn touch-btn' onClick={() => navigate('/my')}><FormattedMessage id='back' /></div>
+        <div className='btn btn-detail touch-btn' onClick={() => navigate('/frens-detail?myself=1')}><FormattedMessage id='ckxq' /></div>
       </div>}
     />
   </div>

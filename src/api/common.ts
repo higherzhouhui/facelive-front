@@ -243,3 +243,11 @@ export const buyProductReq = (data?: any) => {
     data
   });
 };
+
+export const sendOrderProductReq = (data?: any) => {
+  return service<any>({
+    url: '/product/sendOrder',
+    method: 'POST',
+    data
+  });
+};
