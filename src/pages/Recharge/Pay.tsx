@@ -35,11 +35,11 @@ function PayPage() {
   }
 
   const initData = async () => {
-    // eventBus.emit('loading', true)
-    // const res: any = await getPriceReq(import.meta.env.DEV, 'TONUSDT')
-    // const tonPrice = res.lastPrice
-    // eventBus.emit('loading', false)
-    const tonPrice = 5.6
+    eventBus.emit('loading', true)
+    const res: any = await getPriceReq(import.meta.env.DEV, 'TONUSDT')
+    const tonPrice = res.lastPrice
+    eventBus.emit('loading', false)
+    // const tonPrice = 5.6
     try {
       const info = JSON.parse(localStorage.getItem('payObj')!)
       const _list = [
