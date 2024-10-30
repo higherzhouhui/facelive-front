@@ -104,7 +104,7 @@ function PayPage() {
     try {
       await tonConnectUI.sendTransaction(transaction)
       const res = await buyProductReq({
-        id: item.id,
+        id: detail.id,
         from_address: userFriendlyAddress,
         to_address: to_address,
         type: 'ton',
