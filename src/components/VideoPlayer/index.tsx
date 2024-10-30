@@ -1,10 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import 'video.js/dist/video-js.css';
 import Hls from 'hls.js';
- 
-const VideoPlayer = ({ src, poster, videoNode, id, autoPlay, preload }: {src: string, poster: string, videoNode: any, id: string, autoPlay: boolean, preload: string }) => {
+
+const VideoPlayer = ({ src, poster, videoNode, id, autoPlay, preload }: { src: string, poster: string, videoNode: any, id: string, autoPlay: boolean, preload: string }) => {
   // const videoNode = useRef<any>(null);
-  let hls: any;
+  let hls: Hls;
   const setupVideoPlayer = () => {
     if (Hls.isSupported() && src.includes('m3u8')) {
       hls = new Hls();
@@ -20,29 +20,32 @@ const VideoPlayer = ({ src, poster, videoNode, id, autoPlay, preload }: {src: st
       videoNode.current.src = src;
     }
   };
- 
+
   useEffect(() => {
-    setupVideoPlayer();
+    if (videoNode && src) {
+      setupVideoPlayer();
+    }
     return () => {
       if (hls) {
         hls.destroy();
       }
     };
-  }, [videoNode]);
- 
+  }, [videoNode, src]);
+
   return (
     <video
+      loop
       src={src.includes('m3u8') ? '' : src}
       ref={videoNode}
       className="video"
       preload={preload}
       width="100%"
-      style={{objectFit: 'cover'}}
+      style={{ objectFit: 'cover' }}
       poster={poster}
       id={id}
       autoPlay={autoPlay}
     />
   );
 };
- 
+
 export default VideoPlayer;

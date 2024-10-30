@@ -218,7 +218,7 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
     if (anchorDetail) {
       getAnchorDetail(anchorDetail)
       if (currentId == anchorDetail.id) {
-        sessionStorage.setItem('anchorId', `${currentId}`)
+        localStorage.setItem('anchorId', `${currentId}`)
       }
     }
   }, [anchorDetail, currentId])
@@ -253,7 +253,7 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
 
   useEffect(() => {
     if (detail) {
-      if (localStorage.getItem('chat') == '1' && sessionStorage.getItem('anchorId') == detail?.id) {
+      if (localStorage.getItem('chat') == '1' && localStorage.getItem('anchorId') == detail?.id) {
         handleConfirm(0)
         localStorage.removeItem('chat')
       }
@@ -492,7 +492,7 @@ function AnchorPage() {
   }, [id])
 
   useEffect(() => {
-    const id = sessionStorage.getItem('anchorId') || '0'
+    const id = localStorage.getItem('anchorId') || '0'
     initData(id)
   }, [])
   return <div className='anchor-container'>
