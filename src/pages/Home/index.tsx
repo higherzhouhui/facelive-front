@@ -189,7 +189,7 @@ export default function Home() {
   }
 
   const handleToDetail = (id: number) => {
-    sessionStorage.setItem('anchorId', `${id}`)
+    localStorage.setItem('anchorId', `${id}`)
     navigate(`/anchor`)
     hapticFeedback.notificationOccurred('success')
   }
