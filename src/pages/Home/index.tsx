@@ -391,7 +391,7 @@ export default function Home() {
               recommendList.map((item: any) => {
                 return <div className='item' key={item.id} onClick={() => handleToDetail(item.id)}>
                   <div className='image-wrapper'>
-                    <img src={getFileUrl(item.home_cover)} alt='anchor' />
+                    <img src={getFileUrl(item.avatar)} alt='anchor' />
                   </div>
                   <div className='name'>
                     <div className='name-text'>{item.name}</div>
