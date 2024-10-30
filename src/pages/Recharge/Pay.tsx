@@ -36,8 +36,8 @@ function PayPage() {
 
   const initData = async () => {
     eventBus.emit('loading', true)
-    const res: any = await getPriceReq(import.meta.env.DEV, 'TONUSDT')
-    const tonPrice = res.lastPrice
+    const res: any = await getPriceReq(import.meta.env.DEV, 'TON-USD-SWAP')
+    const tonPrice = res.data.last
     eventBus.emit('loading', false)
     // const tonPrice = 5.6
     try {

@@ -91,7 +91,7 @@ export const getSystemReq = () => {
 
 
 export const getPriceReq = (dev: boolean, type: string) => {
-  const url = dev ? 'https://www.binance.com/api/v3/ticker' : '/binancePrice';
+  const url = dev ? 'https://api.binance.com/api/v3/ticker' : '/binancePrice';
   return service<any>({
     url: url,
     method: 'GET',
