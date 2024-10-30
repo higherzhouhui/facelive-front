@@ -87,5 +87,7 @@
   "community": "社区",
   "available": "在线",
   "trouble": "支付有疑问",
-  "czHint": "更多支付方式，请联系客服"
+  "czHint": "更多支付方式，请联系客服",
+  "pay": "支付",
+  "paynow": "立即支付"
 }

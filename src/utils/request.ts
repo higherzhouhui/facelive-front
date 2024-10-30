@@ -1,6 +1,5 @@
 import axios, {AxiosRequestConfig, AxiosResponse} from 'axios';
 import { addPending, removePending } from './pending';
-import WebApp from '@twa-dev/sdk'
 import { Toast } from 'antd-mobile';
 
 // 处理响应
@@ -18,7 +17,6 @@ const handleError = (res: any) => {
   if (!res) {
     return;
   }
- 
 };
 
 // 创建请求实例
@@ -63,10 +61,12 @@ instance.interceptors.response.use(
     removePending(response);
     handleResponse(data);
     if (data.code != 0) {
-      Toast.show({
-        content: data.msg,
-        position: 'top'
-      })
+      if (data.msg) {
+        Toast.show({
+          content: data.msg,
+          position: 'top'
+        })
+      }
     }
     return response;
   },

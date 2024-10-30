@@ -4,6 +4,7 @@ import HomePage from '@/pages/Home';
 
 const ResultPage = lazy(() => import('@/pages/Result'))
 const RechargePage = lazy(() => import('@/pages/Recharge'))
+const PayPage = lazy(() => import('@/pages/Recharge/Pay'))
 const LanguagePage = lazy(() => import('@/pages/Language'))
 const ChatPage = lazy(() => import('@/pages/Chat'))
 const FollowPage = lazy(() => import('@/pages/Follow'))
@@ -27,6 +28,7 @@ export const routes: Route[] = [
   { path: '/language', Component: LanguagePage },
   { path: '/frens', Component: FrensPage },
   { path: '/recharge', Component: RechargePage },
+  { path: '/pay', Component: PayPage },
   { path: '/anchor', Component: AnchorPage },
   { path: '/frens-detail', Component: FrensDetailPage },
   { path: '/result', Component: ResultPage },

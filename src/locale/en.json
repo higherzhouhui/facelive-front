@@ -87,5 +87,7 @@
   "community": "Community",
   "available": "Available",
   "trouble": "Trouble",
-  "czHint": "For more payment methods, please contact customer service"
+  "czHint": "For more payment methods, please contact customer service",
+  "pay": "Pay",
+  "paynow": "Pay now"
 }

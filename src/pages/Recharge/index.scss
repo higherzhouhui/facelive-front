@@ -9,6 +9,53 @@
     font-weight: bold;
     margin-bottom: 2rem;
   }
+  .price {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 1.5rem 0 3rem 0;
+  }
+  .coins {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 1.3rem;
+    img {
+      width: 20px;
+    }
+  }
+  .pay-top {
+    font-size: 1.2rem;
+    text-align: center;
+  }
+  .pay-bot {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    img {
+      width: 22px;
+    }
+    svg {
+      width: 22px;
+    }
+  }
+  .logos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    img {
+      height: 25px;
+      object-fit: contain;
+      border-right: 1px solid #333;
+      padding-right: 6px;
+      &:last-child {
+        border: none;
+      }
+    }
+  }
   .list {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -20,6 +67,13 @@
       padding: 12px;
       border: 2px solid transparent;
       cursor: pointer;
+      position: relative;
+      .recommend {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        width: 18px;
+      }
       .top {
         background: rgba($color: #383737, $alpha: 0.3);
         border-radius: 8px;

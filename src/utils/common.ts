@@ -196,7 +196,7 @@ export function formatNumTen(money: number, length = 2) {
         curZero *= 10
       }
     }
-    return Math.round(money * curZero) / curZero
+    return Math.floor(money * curZero) / curZero
   } else {
     return 0
   }

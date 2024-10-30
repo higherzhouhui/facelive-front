@@ -308,7 +308,7 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
           <div className='count'>{detail?.star}</div>
           <div>
             {
-              [...Array(detail?.star || 0).fill('')].map((item: string, index: number) => {
+              [...Array(Math.round(detail?.star || 0)).fill('')].map((item: string, index: number) => {
                 return <svg key={index} viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5757" width="12" height="12"><path d="M512.009505 25.054894l158.199417 320.580987 353.791078 51.421464L767.995248 646.579761l60.432101 352.365345-316.417844-166.354615-316.436854 166.354615 60.432101-352.365345L0 397.057345l353.791078-51.421464z" fill="#EFCE4A" p-id="5758"></path></svg>
               })
             }

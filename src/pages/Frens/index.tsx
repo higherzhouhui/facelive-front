@@ -37,7 +37,10 @@ function FrensPage() {
         location.href = link
       }
     } else {
-      utils.shareURL(link, ``)
+      utils.shareURL(link, `Hey, come join me!
+Thousands of girls are ready for one-on-one video chats with you, and new faces are joining every day! 💃🏻
+Explore hidden groups to discover more free 18+ content waiting for you! 🔞
+Click the link to sign up and start your amazing journey!`)
     }
   }
 
