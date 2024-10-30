@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import { getUserInfoReq } from '@/api/common';
 import { setUserInfoAction } from '@/redux/slices/userSlice';
 import moment from 'moment';
+import VideoPlayer from '@/components/VideoPlayer';
 
 function MyselfPage() {
   const userinfo = useSelector((state: any) => state.user.info);
@@ -75,7 +76,6 @@ function MyselfPage() {
     })
   }, [])
   return <div className='my-page'>
-
     <div className='title'>
       {
         userinfo?.photoUrl ? <img src={getFileUrl(userinfo?.photoUrl)} className='g-avatar' /> : <div className='icon' style={{ background: stringToColor(userinfo?.username) }}>{getUserName(userinfo).substring(0, 2)}</div>

@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { DotLoading, Modal, Swiper } from 'antd-mobile';
 import { setUserInfoAction } from '@/redux/slices/userSlice';
 import { useHapticFeedback } from '@telegram-apps/sdk-react';
+import VideoPlayer from '@/components/VideoPlayer';
 
 type AnchorDetailType = {
   anchorDetail: any,
@@ -263,10 +264,10 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
   return <div className='anchor-page'>
     <div className={`video`}>
       {
-        currentId == detail?.id ? <video loop id='video' poster={getFileUrl(detail?.home_cover)} ref={videoRef} src={getFileUrl(videoUrl || detail?.cover)} autoPlay preload='load'>
-          <source src={getFileUrl(videoUrl || detail?.cover)} type='video/mp4' />
-        </video> : <video loop id='video' poster={getFileUrl(detail?.home_cover)} ref={videoRef} />
+        currentId == detail?.id ? <VideoPlayer id='video' poster={getFileUrl(detail?.home_cover)} videoNode={videoRef} src={getFileUrl(videoUrl || detail?.cover)} autoPlay={true} preload='load' />
+        : <VideoPlayer id='video' src='' poster={getFileUrl(detail?.home_cover)} videoNode={videoRef} autoPlay={false} preload='auto'/>
       }
+
     </div>
     <div className='top-shadow' />
     <div className='bot-shadow' />
