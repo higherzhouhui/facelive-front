@@ -35,11 +35,7 @@ function PayPage() {
   }
 
   const initData = async () => {
-    eventBus.emit('loading', true)
-    const res: any = await getPriceReq(import.meta.env.DEV, 'TON-USD-SWAP')
-    const tonPrice = res.data.last
-    eventBus.emit('loading', false)
-    // const tonPrice = 5.6
+    const tonPrice = config?.base?.ton_price || 5
     try {
       const info = JSON.parse(localStorage.getItem('payObj')!)
       const _list = [
