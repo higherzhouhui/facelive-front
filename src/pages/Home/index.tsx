@@ -345,10 +345,10 @@ export default function Home() {
     try {
       const list = config[type]
       const oneList = list.filter((item: any) => {
-        return item.code == key
+        return item.code == key 
       })
       if (oneList.length) {
-        str = userInfo?.lang == 'zh' ? oneList[0].zh : oneList[1].en
+        str = userInfo?.lang == 'zh' ? oneList[0].zh : oneList[0].en
       }
     } catch (error) {
 
