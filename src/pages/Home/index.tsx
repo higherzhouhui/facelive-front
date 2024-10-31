@@ -23,6 +23,7 @@ export default function Home() {
   const [page, setPage] = useState(1)
   const eventBus = EventBus.getInstance()
   const config = useSelector((state: any) => state.user.system);
+  const userInfo = useSelector((state: any) => state.user.info);
   const utils = initUtils()
   const navigate = useNavigate()
   const [visible, setVisible] = useState(false)
@@ -253,6 +254,8 @@ export default function Home() {
       })
       if (country) {
         _filter.country = country
+      } else {
+        list = _originList
       }
     }
     setFilter(_filter)
@@ -337,6 +340,22 @@ export default function Home() {
     setGroupList(list)
   }
 
+  const getTitle = (type: string, key: string) => {
+    let str = key
+    try {
+      const list = config[type]
+      const oneList = list.filter((item: any) => {
+        return item.code == key
+      })
+      if (oneList.length) {
+        str = userInfo?.lang == 'zh' ? oneList[0].zh : oneList[1].en
+      }
+    } catch (error) {
+
+    }
+    return str
+  }
+
   useEffect(() => {
     loadMore(1)
     initData()
@@ -361,18 +380,6 @@ export default function Home() {
       }
     }
   }, [visible])
-
-  // useEffect(() => {
-  //   initData()
-  //   const rotate = [45, 135, 225, 320]
-  //   let index = 0
-  //   timer.current = setInterval(() => {
-  //     index += 1
-  //     index = index % 4
-  //     setRotate(rotate[index])
-  //   }, 800);
-  //   return () => clearInterval(timer.current)
-  // }, [])
 
   useEffect(() => {
     if (config) {
@@ -423,7 +430,8 @@ export default function Home() {
                   {
                     item.type == 'country' ? <CountryFlag country={item.label} /> : null
                   }
-                  <FormattedMessage id={item.label || 'label'} />
+                  {getTitle(item.type, item.label)}
+                  {/* <FormattedMessage id={item.label || 'label'} /> */}
                   <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1467" width="14" height="14"><path d="M806.4 172.8l-633.6 633.6c-12.8 12.8-12.8 32 0 44.8 12.8 12.8 32 12.8 44.8 0l633.6-633.6c12.8-12.8 12.8-32 0-44.8-12.8-12.8-32-12.8-44.8 0z" fill="#e6e6e6" p-id="1468"></path><path d="M172.8 172.8c-12.8 12.8-12.8 32 0 44.8l633.6 633.6c12.8 12.8 32 12.8 44.8 0 12.8-12.8 12.8-32 0-44.8L217.6 172.8c-12.8-12.8-32-12.8-44.8 0z" fill="#e6e6e6" p-id="1469"></path></svg>
                 </div>
               })
@@ -482,8 +490,10 @@ export default function Home() {
                   countryList.map((item: any, index: number) => {
                     return <div key={index} className={`select-item touch-btn ${item.selected ? 'select-item-active' : ''}`} onClick={() => handleSelectCountry(index)}>
                       <div className='select-item-name'>
-                        <CountryFlag country={item.label} />
-                        <FormattedMessage id={item.label || 'label'} />
+                        <CountryFlag country={item.flag} />
+                        {
+                          userInfo?.lang == 'zh' ? item?.zh : item?.en
+                        }
                       </div>
                       <div className='close-icon'>
                         <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1467" width="14" height="14"><path d="M806.4 172.8l-633.6 633.6c-12.8 12.8-12.8 32 0 44.8 12.8 12.8 32 12.8 44.8 0l633.6-633.6c12.8-12.8 12.8-32 0-44.8-12.8-12.8-32-12.8-44.8 0z" fill="#e6e6e6" p-id="1468"></path><path d="M172.8 172.8c-12.8 12.8-12.8 32 0 44.8l633.6 633.6c12.8 12.8 32 12.8 44.8 0 12.8-12.8 12.8-32 0-44.8L217.6 172.8c-12.8-12.8-32-12.8-44.8 0z" fill="#e6e6e6" p-id="1469"></path></svg>
@@ -502,7 +512,9 @@ export default function Home() {
                   languageList.map((item: any, index: number) => {
                     return <div key={index} className={`select-item touch-btn ${item.selected ? 'select-item-active' : ''}`} onClick={() => handleSelectLanguage(index)}>
                       <div className='select-item-name'>
-                        <FormattedMessage id={item.label || 'label'} />
+                        {
+                          userInfo?.lang == 'zh' ? item?.zh : item?.en
+                        }
                       </div>
                       <div className='close-icon'>
                         <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1467" width="14" height="14"><path d="M806.4 172.8l-633.6 633.6c-12.8 12.8-12.8 32 0 44.8 12.8 12.8 32 12.8 44.8 0l633.6-633.6c12.8-12.8 12.8-32 0-44.8-12.8-12.8-32-12.8-44.8 0z" fill="#e6e6e6" p-id="1468"></path><path d="M172.8 172.8c-12.8 12.8-12.8 32 0 44.8l633.6 633.6c12.8 12.8 32 12.8 44.8 0 12.8-12.8 12.8-32 0-44.8L217.6 172.8c-12.8-12.8-32-12.8-44.8 0z" fill="#e6e6e6" p-id="1469"></path></svg>
@@ -521,7 +533,9 @@ export default function Home() {
                   styleList.map((item: any, index: number) => {
                     return <div key={index} className={`select-item touch-btn ${item.selected ? 'select-item-active' : ''}`} onClick={() => handleSelectStyle(index)}>
                       <div className='select-item-name'>
-                        <FormattedMessage id={item.label || 'label'} />
+                        {
+                          userInfo?.lang == 'zh' ? item?.zh : item?.en
+                        }
                       </div>
                       <div className='close-icon'>
                         <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1467" width="14" height="14"><path d="M806.4 172.8l-633.6 633.6c-12.8 12.8-12.8 32 0 44.8 12.8 12.8 32 12.8 44.8 0l633.6-633.6c12.8-12.8 12.8-32 0-44.8-12.8-12.8-32-12.8-44.8 0z" fill="#e6e6e6" p-id="1468"></path><path d="M172.8 172.8c-12.8 12.8-12.8 32 0 44.8l633.6 633.6c12.8 12.8 32 12.8 44.8 0 12.8-12.8 12.8-32 0-44.8L217.6 172.8c-12.8-12.8-32-12.8-44.8 0z" fill="#e6e6e6" p-id="1469"></path></svg>
@@ -540,7 +554,9 @@ export default function Home() {
                   groupList.map((item: any, index: number) => {
                     return <div key={index} className={`select-item touch-btn ${item.selected ? 'select-item-active' : ''}`} onClick={() => handleSelectGroup(index)}>
                       <div className='select-item-name'>
-                        <FormattedMessage id={item.label || 'label'} />
+                        {
+                          userInfo?.lang == 'zh' ? item?.zh : item?.en
+                        }
                       </div>
                       <div className='close-icon'>
                         <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1467" width="14" height="14"><path d="M806.4 172.8l-633.6 633.6c-12.8 12.8-12.8 32 0 44.8 12.8 12.8 32 12.8 44.8 0l633.6-633.6c12.8-12.8 12.8-32 0-44.8-12.8-12.8-32-12.8-44.8 0z" fill="#e6e6e6" p-id="1468"></path><path d="M172.8 172.8c-12.8 12.8-12.8 32 0 44.8l633.6 633.6c12.8 12.8 32 12.8 44.8 0 12.8-12.8 12.8-32 0-44.8L217.6 172.8c-12.8-12.8-32-12.8-44.8 0z" fill="#e6e6e6" p-id="1469"></path></svg>
