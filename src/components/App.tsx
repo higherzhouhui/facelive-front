@@ -30,9 +30,11 @@ import Footer from './Footer';
 import { IntlProvider } from 'react-intl';
 import en from '@/locale/en.json'
 import zh from '@/locale/zh.json'
+import ru from '@/locale/ru.json'
 const messages: any = {
   en,
   zh,
+  ru,
 };
 
 
@@ -68,7 +70,10 @@ export const App: FC = () => {
         if (data.lang) {
           dispatch(setUserInfoAction(res.data))
         } else {
-          const lang = data.languageCode == 'zh-hans' ? 'zh' : 'en'
+          let lang = data.languageCode
+          if (lang == 'zh-hans') {
+            lang = 'zh'
+          }
           await changeLangReq({ lang: lang })
           dispatch(setUserInfoAction(res.data))
         }

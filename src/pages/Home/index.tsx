@@ -492,7 +492,7 @@ export default function Home() {
                       <div className='select-item-name'>
                         <CountryFlag country={item.flag} />
                         {
-                          userInfo?.lang == 'zh' ? item?.zh : item?.en
+                          userInfo?.lang == 'zh' ? item?.zh : userInfo?.lang =='ru' ? item?.ru :  item?.en
                         }
                       </div>
                       <div className='close-icon'>
@@ -513,7 +513,7 @@ export default function Home() {
                     return <div key={index} className={`select-item touch-btn ${item.selected ? 'select-item-active' : ''}`} onClick={() => handleSelectLanguage(index)}>
                       <div className='select-item-name'>
                         {
-                          userInfo?.lang == 'zh' ? item?.zh : item?.en
+                          userInfo?.lang == 'zh' ? item?.zh : userInfo?.lang =='ru' ? item?.ru :  item?.en
                         }
                       </div>
                       <div className='close-icon'>
@@ -534,7 +534,7 @@ export default function Home() {
                     return <div key={index} className={`select-item touch-btn ${item.selected ? 'select-item-active' : ''}`} onClick={() => handleSelectStyle(index)}>
                       <div className='select-item-name'>
                         {
-                          userInfo?.lang == 'zh' ? item?.zh : item?.en
+                          userInfo?.lang == 'zh' ? item?.zh : userInfo?.lang =='ru' ? item?.ru :  item?.en
                         }
                       </div>
                       <div className='close-icon'>
@@ -555,7 +555,7 @@ export default function Home() {
                     return <div key={index} className={`select-item touch-btn ${item.selected ? 'select-item-active' : ''}`} onClick={() => handleSelectGroup(index)}>
                       <div className='select-item-name'>
                         {
-                          userInfo?.lang == 'zh' ? item?.zh : item?.en
+                          userInfo?.lang == 'zh' ? item?.zh : userInfo?.lang =='ru' ? item?.ru :  item?.en
                         }
                       </div>
                       <div className='close-icon'>
