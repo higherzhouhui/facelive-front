@@ -107,6 +107,14 @@
     .image-content {
       padding: 1rem;
     }
+    .name-text {
+      font-size: 1.4rem;
+      word-break: break-all;
+      white-space: nowrap;
+      max-width: 9rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
     .anchor-wrapper {
       position: relative; 
       cursor: pointer;
