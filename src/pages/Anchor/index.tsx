@@ -41,6 +41,45 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
   const [videoUrl, setVideoUrl] = useState('')
   const loadingTimer = useRef<any>(null)
   const [chatLoading, setChatLoading] = useState(false)
+  const [languageList, setLanguageList] = useState([])
+  const [styleList, setStyleList] = useState([])
+  const config = useSelector((state: any) => state.user.system);
+
+  useEffect(() => {
+    if (config) {
+      setLanguageList(config.language)
+      setStyleList(config.style)
+    }
+  }, [config])
+
+  const getLanguage = (code: any) => {
+    const lang = userinfo?.lang
+    let str = code
+    if (lang) {
+      const _list = languageList.filter((item: any) => {
+        return item.code == code
+      })
+      if (_list.length) {
+        str = _list[0][lang]
+      }
+    }
+    return str
+  }
+
+  const getStyle = (code: any) => {
+    const lang = userinfo?.lang
+    let str = code
+    if (lang) {
+      const _list = styleList.filter((item: any) => {
+        return item.code == code
+      })
+      console.log(_list)
+      if (_list.length) {
+        str = _list[0][lang]
+      }
+    }
+    return str
+  }
 
   const getAnchorDetail = async (info: any) => {
     setIsPlaying(false)
@@ -265,7 +304,7 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
     <div className={`video`}>
       {
         currentId == detail?.id ? <VideoPlayer id='video' poster={getFileUrl(detail?.home_cover)} videoNode={videoRef} src={getFileUrl(videoUrl || detail?.cover)} autoPlay={true} preload='load' />
-        : <VideoPlayer id='video' src='' poster={getFileUrl(detail?.home_cover)} videoNode={videoRef} autoPlay={false} preload='auto'/>
+          : <VideoPlayer id='video' src='' poster={getFileUrl(detail?.home_cover)} videoNode={videoRef} autoPlay={false} preload='auto' />
       }
 
     </div>
@@ -294,14 +333,18 @@ function AnchorDetail({ anchorDetail, currentId, audioRef, endAudioRef }: Anchor
       </div>
       <div className='label'>
         <div className='label-item'>
-          <FormattedMessage id={detail?.language || 'en'} />
+          {
+            getLanguage(detail?.language)
+          }
         </div>
         <div className='label-item'>
           {detail?.age}
           <FormattedMessage id='age' />
         </div>
         <div className='label-item'>
-          <FormattedMessage id={detail?.style || 'hot'} />
+          {
+            getStyle(detail?.style)
+          }
         </div>
       </div>
       <div className='detail'>
