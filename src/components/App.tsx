@@ -73,6 +73,10 @@ export const App: FC = () => {
           let lang = data.languageCode
           if (lang == 'zh-hans') {
             lang = 'zh'
+          } else if (lang == 'ru') {
+            lang = 'ru'
+          } else {
+            lang = 'en'
           }
           await changeLangReq({ lang: lang })
           dispatch(setUserInfoAction(res.data))
