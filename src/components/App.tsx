@@ -155,7 +155,7 @@ export const App: FC = () => {
     // postEvent('web_app_open_link', {url: 'https://www.baidu.com'})
     postEvent('web_app_set_header_color', { color: '#000000' });
     postEvent('web_app_setup_main_button', { color: '#000000' });
-
+    postEvent('web_app_set_background_color', { color: '#000000' });
     disSwipe()
     // const tp = initThemeParams();
     // bindThemeParamsCSSVars(tp);

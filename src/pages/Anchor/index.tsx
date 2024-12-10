@@ -504,6 +504,7 @@ function AnchorPage() {
   const [currentKey, setCurrentKey] = useState(1)
   const endAudioRef = useRef<any>(null)
   const audioRef = useRef<any>(null)
+  const navigate = useNavigate()
 
   const onIndexChange = (next: number) => {
     if (next == details.length - 1) {
@@ -521,11 +522,14 @@ function AnchorPage() {
   }
 
   const initData = async (id: any) => {
-    const res = await getSwiperListReq({ id: id })
-    if (res.code == 0) {
-      const details = res.data.details
-      setDetails((val: any) => [...val, ...details])
-    }
+    await getSwiperListReq({ id: id }).then(res => {
+      if (res.code == 0) {
+        const details = res.data.details
+        setDetails((val: any) => [...val, ...details])
+      } else {
+        navigate('/')
+      }
+    })
   }
 
   useEffect(() => {
