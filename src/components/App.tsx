@@ -7,7 +7,6 @@ import {
   retrieveLaunchParams,
   postEvent,
   on,
-  initMainButton,
   initSettingsButton,
 } from '@telegram-apps/sdk';
 
@@ -39,7 +38,6 @@ const messages: any = {
 
 
 export const App: FC = () => {
-  const [mainButton] = initMainButton();
   const [viewport] = initViewport();
   const [miniApp] = initMiniApp()
   const launchParams = retrieveLaunchParams()
@@ -50,6 +48,22 @@ export const App: FC = () => {
   const [loading, setLoading] = useState(true)
   const userInfo = useSelector((state: any) => state.user.info);
   const timer = useRef<any>(null)
+
+  const handleRouterToAnchor = () => {
+    try {
+      const initData = initInitData() as any;
+      if (initData.startParam) {
+        if (initData.startParam.includes('anchor')) {
+          const anchorId = initData.startParam.split('_')[1]
+          localStorage.setItem('anchorId', `${anchorId}`)
+          navigate(`/anchor`)
+        }
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   const login = async () => {
     setLoading(true)
     try {
@@ -81,6 +95,8 @@ export const App: FC = () => {
           await changeLangReq({ lang: lang })
           dispatch(setUserInfoAction(res.data))
         }
+        handleRouterToAnchor()
+
       } else {
         Toast.show({
           content: res.msg,
@@ -138,6 +154,7 @@ export const App: FC = () => {
     })
     // postEvent('web_app_open_link', {url: 'https://www.baidu.com'})
     postEvent('web_app_set_header_color', { color: '#000000' });
+    postEvent('web_app_setup_main_button', { color: '#000000' });
 
     disSwipe()
     // const tp = initThemeParams();
