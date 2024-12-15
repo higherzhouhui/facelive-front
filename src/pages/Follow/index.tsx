@@ -39,7 +39,7 @@ function FollowPage() {
       setVisible(true)
     } else {
       localStorage.setItem('chat', '1')
-      sessionStorage.setItem('anchorId', item.id)
+      localStorage.setItem('anchorId', item.id)
       navigate(`/anchor`)
     }
   }
