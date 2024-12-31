@@ -56,6 +56,9 @@ export default function Home() {
     } else {
       setList((val: any) => [...val, ...append.data])
     }
+    if (append.data.length == 0) {
+      setLoading(false)
+    }
     setAddNum(append.data.length)
     setHasMore(append.data.length > 0)
     setPage(where.page + 1)
@@ -365,8 +368,6 @@ export default function Home() {
   useEffect(() => {
     if (list.length) {
       getMacy()
-    } else {
-      setLoading(false)
     }
   }, [list])
 
@@ -440,7 +441,7 @@ export default function Home() {
           <div className='image-content'>
             <div className='skeleton-wrapper'>
               {
-                loading ? [...Array(6).fill('')].map((item: any, index: number) => {
+                loading ? [...Array(8).fill('')].map((item: any, index: number) => {
                   return <Skeleton className='skeleton' animated key={index} />
                 }) : null
               }

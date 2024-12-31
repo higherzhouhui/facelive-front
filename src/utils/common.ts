@@ -70,7 +70,7 @@ export function getFileUrl(file: string) {
     return ''
   }
   const dev = import.meta.env.DEV
-  let url = dev ? 'http://localhost:2002' : 'https://mini.facelive.top'
+  let url = dev ? 'https://mini.facelive.top' : 'https://mini.facelive.top'
   if (file && file.includes('http')) {
     url = ''
   }

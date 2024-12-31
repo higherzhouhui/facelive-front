@@ -45,6 +45,7 @@ function RechargePage() {
         }
       </div>
     </div>
+    <div className='fix-bot'>
     <div className='logos'>
       <img src='/assets/recharge/usdt.png' />
       <img src='/assets/recharge/google.png' />
@@ -56,6 +57,7 @@ function RechargePage() {
       <div className='recharge-btn touch-btn' onClick={() => handleToPay()}>
         <FormattedMessage id='recharge' />
       </div>
+    </div>
     </div>
   </div>
 }

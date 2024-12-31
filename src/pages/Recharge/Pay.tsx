@@ -130,7 +130,7 @@ function PayPage() {
       <div className='title'>
         <FormattedMessage id='pay' />
       </div>
-      <div className='coins'>{detail?.score} Coins <img src='/assets/common/coin.png' /></div>
+      <div className='coins'>{detail?.score} Coins <img src='/assets/coin.png' /></div>
       <div className='price'>$ {detail?.price}</div>
       <div className='list'>
         {
@@ -143,13 +143,12 @@ function PayPage() {
     <div className='bot-content'>
       <div className='question'>
         <Popover
-          content={<div style={{ color: '#a9a9e9', fontSize: '12px' }} onClick={() => handleHelp()}><FormattedMessage id='czHint' /></div>}
+          content={<div style={{ color: '#f5f5f5', fontSize: '12px' }} onClick={() => handleHelp()}><FormattedMessage id='czHint' /></div>}
           trigger='click'
           placement='topLeft'
           mode='dark'
-          visible={showQuestion}
         >
-          <span style={{ fontSize: '12px', cursor: 'pointer' }} onClick={() => setShowQuestion(!showQuestion)}>
+          <span style={{ fontSize: '12px', cursor: 'pointer' }}>
             <FormattedMessage id='trouble' />?
           </span>
         </Popover>
